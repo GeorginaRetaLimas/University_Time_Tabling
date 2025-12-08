@@ -252,26 +252,21 @@ bool SolucionadorHorarios::verificarMaximoConsecutivas(int idx_grupo,
                                                         int id_curso,
                                                         int idx_bloque,
                                                         int idx_prof) {
-  // NUEVA RESTRICCIÓN:
+  // ESTRATEGIA MEJORADA:
   // 1. Máximo 2 sesiones de la misma materia en el mismo DÍA
-  // 2. Si hay 2 sesiones en el mismo día, deben ser consecutivas
+  // 2. PREFERIR que sean consecutivas, pero NO es obligatorio
+  // 3. Esto permite llenar mejor todos los días (incluyendo jueves/viernes)
   
   BloqueHorario& bloque_actual = bloques_horarios[idx_bloque];
   int dia_actual = bloque_actual.dia;
   
   // Contar cuántas sesiones de este curso ya hay en este día
   int sesiones_en_dia = 0;
-  int idx_primera_sesion_dia = -1;
-  int idx_ultima_sesion_dia = -1;
   
   for (size_t b = 0; b < bloques_horarios.size(); b++) {
     if (bloques_horarios[b].dia == dia_actual &&
         matriz_asignaciones[idx_prof][b][idx_grupo] == id_curso) {
       sesiones_en_dia++;
-      if (idx_primera_sesion_dia == -1) {
-        idx_primera_sesion_dia = b;
-      }
-      idx_ultima_sesion_dia = b;
     }
   }
   
@@ -280,54 +275,10 @@ bool SolucionadorHorarios::verificarMaximoConsecutivas(int idx_grupo,
     return false;
   }
   
-  // Si ya hay 1 sesión en este día, la nueva debe ser consecutiva
-  if (sesiones_en_dia == 1) {
-    // Verificar que el bloque actual sea consecutivo a la sesión existente
-    bool es_consecutivo = 
-      (obtenerSiguienteBloque(idx_ultima_sesion_dia) == idx_bloque) ||
-      (obtenerSiguienteBloque(idx_bloque) == idx_primera_sesion_dia);
-    
-    if (!es_consecutivo) {
-      return false; // No consecutivo, no permitido
-    }
-  }
+  // ELIMINAMOS la restricción estricta de consecutividad
+  // Ahora permite hasta 2 sesiones en el mismo día, consecutivas o no
   
-  // Validación adicional: contar consecutivas en este punto
-  int consecutivas = 1;
-  
-  // Contar hacia atrás
-  int idx_anterior = idx_bloque;
-  while (consecutivas < 3) {
-    int idx_prev = -1;
-    for (size_t i = 0; i < bloques_horarios.size(); i++) {
-      if (obtenerSiguienteBloque(i) == idx_anterior) {
-        idx_prev = i;
-        break;
-      }
-    }
-    
-    if (idx_prev == -1) break;
-    
-    if (matriz_asignaciones[idx_prof][idx_prev][idx_grupo] == id_curso) {
-      consecutivas++;
-      idx_anterior = idx_prev;
-    } else {
-      break;
-    }
-  }
-  
-  // Contar hacia adelante
-  int idx_siguiente = obtenerSiguienteBloque(idx_bloque);
-  while (idx_siguiente != -1 && consecutivas < 3) {
-    if (matriz_asignaciones[idx_prof][idx_siguiente][idx_grupo] == id_curso) {
-      consecutivas++;
-      idx_siguiente = obtenerSiguienteBloque(idx_siguiente);
-    } else {
-      break;
-    }
-  }
-  
-  return consecutivas <= 2;
+  return true; // OK: menos de 2 sesiones en este día
 }
 
 // ============================================
@@ -341,7 +292,7 @@ bool SolucionadorHorarios::asignarSesionGreedy(SesionClase &sesion) {
 
   int idx_grupo = id_a_indice_grupo[sesion.id_grupo];
 
-  // Buscar profesores capacitados para esta materia
+  // ESTRATEGIA 1: Intentar con TODAS las restricciones
   for (size_t idx_prof = 0; idx_prof < profesores.size(); idx_prof++) {
     const Profesor &prof = profesores[idx_prof];
 
@@ -364,42 +315,54 @@ bool SolucionadorHorarios::asignarSesionGreedy(SesionClase &sesion) {
 
       int idx_bloque = id_a_indice_bloque[id_bloque];
 
-      // Restricción 1: Disponibilidad
-      if (!verificarDisponibilidadProfesor(idx_prof, idx_bloque)) {
-        continue;
-      }
-
-      // Restricción 2: Unicidad de profesor (no dos clases simultáneas)
-      if (verificarConflictoProfesor(idx_prof, idx_bloque)) {
-        continue;
-      }
-
-      // Restricción 3: Unicidad de grupo (no dos materias simultáneas)
-      if (verificarConflictoGrupo(idx_grupo, idx_bloque)) {
-        continue;
-      }
-
-      // Restricción 4: Consecutividad de sesiones
-      if (!verificarConsecutividad(sesion, idx_prof, idx_bloque)) {
-        continue;
-      }
-
-      // Restricción 5: Máximo 2 sesiones consecutivas
-      if (!verificarMaximoConsecutivas(idx_grupo, sesion.id_curso, idx_bloque, idx_prof)) {
-        continue;
-      }
+      if (!verificarDisponibilidadProfesor(idx_prof, idx_bloque)) continue;
+      if (verificarConflictoProfesor(idx_prof, idx_bloque)) continue;
+      if (verificarConflictoGrupo(idx_grupo, idx_bloque)) continue;
+      if (!verificarConsecutividad(sesion, idx_prof, idx_bloque)) continue;
+      if (!verificarMaximoConsecutivas(idx_grupo, sesion.id_curso, idx_bloque, idx_prof)) continue;
 
       // ¡Asignación válida!
       matriz_asignaciones[idx_prof][idx_bloque][idx_grupo] = sesion.id_curso;
-
-      // Registrar en seguimiento de diversidad
       cursos_por_profesor_grupo[sesion.id_grupo][prof.id].insert(sesion.id_curso);
-
-      // Actualizar sesión
       sesion.id_bloque_asignado = id_bloque;
       sesion.id_profesor_asignado = prof.id;
-
       return true;
+    }
+  }
+
+  // ESTRATEGIA 2: Si la sesión NO es la primera, relajar la restricción de diversidad
+  // Esto permite completar las horas semanales aunque sea con otro profesor
+  if (sesion.numero_sesion > 1) {
+    for (size_t idx_prof = 0; idx_prof < profesores.size(); idx_prof++) {
+      const Profesor &prof = profesores[idx_prof];
+
+      if (prof.materias_capacitadas.find(curso->codigo) ==
+          prof.materias_capacitadas.end()) {
+        continue;
+      }
+
+      // OMITIR verificación de diversidad en segunda pasada
+
+      for (int id_bloque : prof.horarios_disponibles) {
+        if (id_a_indice_bloque.find(id_bloque) == id_a_indice_bloque.end()) {
+          continue;
+        }
+
+        int idx_bloque = id_a_indice_bloque[id_bloque];
+
+        if (!verificarDisponibilidadProfesor(idx_prof, idx_bloque)) continue;
+        if (verificarConflictoProfesor(idx_prof, idx_bloque)) continue;
+        if (verificarConflictoGrupo(idx_grupo, idx_bloque)) continue;
+        // RELAJAR consecutividad también
+        if (!verificarMaximoConsecutivas(idx_grupo, sesion.id_curso, idx_bloque, idx_prof)) continue;
+
+        // Asignación relajada
+        matriz_asignaciones[idx_prof][idx_bloque][idx_grupo] = sesion.id_curso;
+        cursos_por_profesor_grupo[sesion.id_grupo][prof.id].insert(sesion.id_curso);
+        sesion.id_bloque_asignado = id_bloque;
+        sesion.id_profesor_asignado = prof.id;
+        return true;
+      }
     }
   }
 

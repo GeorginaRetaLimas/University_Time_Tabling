@@ -18,7 +18,7 @@ def load_timeslots(filepath):
 def load_courses(filepath):
     """
     Carga cursos desde CSV
-    Formato esperado: id, name, code, credits
+    Formato esperado: id, name, code, weekly_hours, semester
     """
     courses = []
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -28,10 +28,10 @@ def load_courses(filepath):
                 continue
             # Convert types
             row['id'] = int(row['id'])
-            row['credits'] = int(row['credits'])
-            # Calcular semester desde el ID (primeros dígitos)
-            # Ej: 101 -> 1, 201 -> 2, 1001 -> 10
-            row['semester'] = int(row['id']) // 100
+            row['weekly_hours'] = int(row['weekly_hours'])
+            row['semester'] = int(row['semester'])
+            # IMPORTANT: El wrapper de Cython espera 'credits', así que hacemos un alias
+            row['credits'] = row['weekly_hours'] * 15  # 1 hora semanal = 15 créditos
             courses.append(row)
     return courses
 
