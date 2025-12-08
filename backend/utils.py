@@ -15,21 +15,23 @@ def load_timeslots(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-def load_courses(file_path):
+def load_courses(filepath):
     """
     Carga cursos desde CSV
-    Formato esperado: id, name, code, weekly_hours, semester
+    Formato esperado: id, name, code, credits
     """
     courses = []
-    with open(file_path, 'r', encoding='utf-8') as f:
+    with open(filepath, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if not row.get('id') or not row['id'].strip():  # Saltar líneas vacías
+            if not row.get('id'):  # Saltar líneas vacías
                 continue
-            # Convertir tipos
+            # Convert types
             row['id'] = int(row['id'])
-            row['weekly_hours'] = int(row['weekly_hours'])
-            row['semester'] = int(row['semester'])
+            row['credits'] = int(row['credits'])
+            # Calcular semester desde el ID (primeros dígitos)
+            # Ej: 101 -> 1, 201 -> 2, 1001 -> 10
+            row['semester'] = int(row['id']) // 100
             courses.append(row)
     return courses
 

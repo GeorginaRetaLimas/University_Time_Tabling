@@ -26,7 +26,7 @@ def solve():
     # Cargar datos
     professors = load_professors(os.path.join(DATA_DIR, 'professors.json'))
     timeslots = load_timeslots(os.path.join(DATA_DIR, 'timeslots.json'))
-    courses = load_courses(os.path.join(DATA_DIR, 'courses.csv'))
+    courses = load_courses(os.path.join(DATA_DIR, 'courses_full.csv'))
     
     # Preparar datos
     profs, crs, slots, groups = prepare_data_for_solver(professors, courses, timeslots, period)
