@@ -2,328 +2,515 @@
 #include <algorithm>
 #include <chrono>
 #include <iostream>
-#include <random>
 
-TimetableSolver::TimetableSolver() {}
+using namespace std;
 
-void TimetableSolver::addTimeSlot(int id, int day, int start_h, int start_m,
-                                  int end_h, int end_m) {
-  timeslots.push_back({id, day, start_h, start_m, end_h, end_m});
+// ============================================
+// Constructor
+// ============================================
+
+SolucionadorHorarios::SolucionadorHorarios() {}
+
+// ============================================
+// Métodos para Agregar Datos
+// ============================================
+
+void SolucionadorHorarios::agregarBloqueHorario(int id, int dia, int h_inicio,
+                                                 int m_inicio, int h_fin,
+                                                 int m_fin) {
+  bloques_horarios.push_back({id, dia, h_inicio, m_inicio, h_fin, m_fin});
 }
 
-void TimetableSolver::addProfessor(int id, string name,
-                                   const vector<int> &available_slots,
-                                   const vector<string> &course_codes) {
-  set<int> slots(available_slots.begin(), available_slots.end());
-  set<string> courses(course_codes.begin(), course_codes.end());
-  professors.push_back({id, name, slots, courses});
+void SolucionadorHorarios::agregarProfesor(int id, string nombre,
+                                            const vector<int> &horarios_disp,
+                                            const vector<string> &codigos_cursos) {
+  set<int> horarios(horarios_disp.begin(), horarios_disp.end());
+  set<string> materias(codigos_cursos.begin(), codigos_cursos.end());
+  profesores.push_back({id, nombre, horarios, materias});
 }
 
-void TimetableSolver::addCourse(int id, string name, string code,
-                                int weekly_hours, int semester,
-                                bool requires_professor) {
-  courses.push_back(
-      {id, name, code, weekly_hours, semester, requires_professor});
+void SolucionadorHorarios::agregarCurso(int id, string nombre, string codigo,
+                                         int creditos, int cuatrimestre,
+                                         bool req_profesor) {
+  cursos.push_back({id, nombre, codigo, creditos, cuatrimestre, req_profesor});
 }
 
-void TimetableSolver::addGroup(int id, int semester,
-                               const vector<int> &course_ids) {
-  groups.push_back({id, semester, course_ids});
+void SolucionadorHorarios::agregarGrupo(int id, int cuatrimestre,
+                                         const vector<int> &ids_cursos) {
+  grupos.push_back({id, cuatrimestre, ids_cursos});
 }
 
-Professor *TimetableSolver::getProfessor(int id) {
-  for (auto &p : professors) {
+// ============================================
+// Métodos Helper
+// ============================================
+
+Profesor *SolucionadorHorarios::obtenerProfesor(int id) {
+  for (auto &p : profesores) {
     if (p.id == id)
       return &p;
   }
   return nullptr;
 }
 
-Course *TimetableSolver::getCourse(int id) {
-  for (auto &c : courses) {
+Curso *SolucionadorHorarios::obtenerCurso(int id) {
+  for (auto &c : cursos) {
     if (c.id == id)
       return &c;
   }
   return nullptr;
 }
 
-void TimetableSolver::generateSessions() {
-  sessions.clear();
-  int session_counter = 0;
+// ============================================
+// Construcción de Índices y Matriz
+// ============================================
 
-  for (const auto &group : groups) {
-    for (int course_id : group.course_ids) {
-      Course *course = getCourse(course_id);
-      if (!course)
-        continue;
-
-      // Create one session per weekly hour
-      for (int i = 0; i < course->weekly_hours; ++i) {
-        ClassSession session;
-        session.id = session_counter++;
-        session.course_id = course_id;
-        session.group_id = group.id;
-        session.duration = 1; // Assuming 1 hour slots for now
-        sessions.push_back(session);
-      }
-    }
+void SolucionadorHorarios::construirMapasIndices() {
+  // Profesores
+  for (size_t i = 0; i < profesores.size(); i++) {
+    id_a_indice_prof[profesores[i].id] = i;
+    indice_a_id_prof[i] = profesores[i].id;
   }
-  cout << "Generated " << sessions.size() << " sessions." << endl;
-}
 
-void TimetableSolver::buildConflictGraph() {
-  int n = sessions.size();
-  conflict_graph.assign(n, vector<int>());
+  // Bloques horarios
+  for (size_t i = 0; i < bloques_horarios.size(); i++) {
+    id_a_indice_bloque[bloques_horarios[i].id] = i;
+    indice_a_id_bloque[i] = bloques_horarios[i].id;
+  }
 
-  for (int i = 0; i < n; ++i) {
-    for (int j = i + 1; j < n; ++j) {
-      // Conflict 1: Same Group (cannot be in two places at once)
-      if (sessions[i].group_id == sessions[j].group_id) {
-        conflict_graph[i].push_back(j);
-        conflict_graph[j].push_back(i);
-        continue;
-      }
-
-      // Conflict 2: Same Professor (handled dynamically during assignment,
-      // as professors are not assigned yet. But if we pre-assigned, we'd add
-      // edges here.) Since we assign professors AND timeslots, the graph mainly
-      // models "Cannot happen at same time" constraints.
-    }
+  // Grupos
+  for (size_t i = 0; i < grupos.size(); i++) {
+    id_a_indice_grupo[grupos[i].id] = i;
+    indice_a_id_grupo[i] = grupos[i].id;
   }
 }
 
-// Helper to check if a timeslot is valid for a session given a professor
-bool isValid(const ClassSession &session, int timeslot_id, int professor_id,
-             const vector<ClassSession> &current_sessions,
-             const vector<TimeSlot> &all_timeslots,
-             const vector<Professor> &all_professors) {
+void SolucionadorHorarios::inicializarMatriz() {
+  int num_profs = profesores.size();
+  int num_bloques = bloques_horarios.size();
+  int num_grupos = grupos.size();
 
-  // 1. Professor Availability
-  const Professor *prof = nullptr;
-  for (const auto &p : all_professors) {
-    if (p.id == professor_id) {
-      prof = &p;
-      break;
-    }
-  }
-  if (!prof || prof->available_timeslots.find(timeslot_id) ==
-                   prof->available_timeslots.end()) {
-    return false;
-  }
-
-  // 2. Professor Overlap
-  for (const auto &s : current_sessions) {
-    if (s.id != session.id && s.assigned_timeslot_id == timeslot_id &&
-        s.assigned_professor_id == professor_id) {
-      return false;
-    }
-  }
-
-  // 3. Group Overlap (Already handled by graph coloring, but good to double
-  // check or if graph is incomplete) The graph coloring ensures that connected
-  // nodes (same group) have different colors (timeslots). So we just need to
-  // ensure the timeslot index matches the color.
-
-  return true;
+  // Inicializar matriz 3D con ceros
+  matriz_asignaciones.assign(
+      num_profs, vector<vector<int>>(num_bloques, vector<int>(num_grupos, 0)));
 }
 
-// Backtracking solver with MRV (Minimum Remaining Values)
-bool TimetableSolver::solveRecursive(int session_idx,
-                                     vector<ClassSession> &sessions,
-                                     const vector<vector<int>> &conflict_graph,
-                                     const vector<TimeSlot> &timeslots,
-                                     const vector<Professor> &professors,
-                                     const vector<Course> &courses) {
+// ============================================
+// Generación de Sesiones desde Créditos
+// ============================================
 
-  // Check timeout
-  if (timeout_limit > 0) {
-    auto current_time = std::chrono::steady_clock::now();
-    std::chrono::duration<double> elapsed = current_time - start_time;
-    if (elapsed.count() > timeout_limit) {
-      cout << "Timeout reached after " << elapsed.count()
-           << " seconds. Returning partial solution." << endl;
-      return true; // Return TRUE to stop backtracking and keep current
-                   // assignments
-    }
-  }
+void SolucionadorHorarios::generarSesiones() {
+  sesiones.clear();
+  int contador_sesiones = 0;
 
-  if (session_idx % 100 == 0) {
-    cout << "Solving session " << session_idx << "/" << sessions.size() << endl;
-  }
-
-  if (session_idx >= sessions.size()) {
-    return true; // All assigned
-  }
-
-  ClassSession &current_session = sessions[session_idx];
-
-  // Find course info
-  const Course *course = nullptr;
-  for (const auto &c : courses) {
-    if (c.id == current_session.course_id) {
-      course = &c;
-      break;
-    }
-  }
-
-  if (!course)
-    return false; // Should not happen
-
-  // If course does NOT require a professor (e.g. Estadia)
-  if (!course->requires_professor) {
-    // Just find a valid timeslot
-    for (const auto &ts : timeslots) {
-      // Check hard constraints with neighbors in conflict graph
-      bool conflict_with_neighbor = false;
-      for (int neighbor_id : conflict_graph[current_session.id]) {
-        if (sessions[neighbor_id].assigned_timeslot_id == ts.id) {
-          conflict_with_neighbor = true;
-          break;
-        }
-      }
-      if (conflict_with_neighbor)
+  for (const auto &grupo : grupos) {
+    for (int id_curso : grupo.ids_cursos) {
+      Curso *curso = obtenerCurso(id_curso);
+      if (!curso)
         continue;
 
-      // Assign without professor
-      current_session.assigned_timeslot_id = ts.id;
-      current_session.assigned_professor_id =
-          0; // 0 or -1 indicates no professor
-
-      if (solveRecursive(session_idx + 1, sessions, conflict_graph, timeslots,
-                         professors, courses)) {
-        return true;
+      // Calcular número de sesiones basado en créditos
+      int num_sesiones;
+      if (curso->creditos >= 600) {
+        // Estadías o cursos especiales
+        num_sesiones = 2;
+      } else {
+        // Fórmula: cada 15 créditos ≈ 1 hora semanal
+        num_sesiones = max(1, curso->creditos / 15);
       }
 
-      // Backtrack
-      current_session.assigned_timeslot_id = -1;
-      current_session.assigned_professor_id = -1;
-    }
-    return false;
-  }
-
-  // Normal case: Requires Professor
-  string course_code = course->code;
-  vector<int> eligible_professors;
-  for (const auto &p : professors) {
-    if (p.available_courses.count(course_code)) {
-      eligible_professors.push_back(p.id);
-    }
-  }
-
-  if (eligible_professors.empty()) {
-    return false;
-  }
-
-  // Try each eligible professor
-  for (int prof_id : eligible_professors) {
-    // Check availability
-    const Professor *p_ptr = nullptr;
-    for (const auto &p : professors) {
-      if (p.id == prof_id) {
-        p_ptr = &p;
-        break;
+      // Crear sesiones individuales
+      for (int i = 0; i < num_sesiones; i++) {
+        SesionClase sesion;
+        sesion.id = contador_sesiones++;
+        sesion.id_curso = id_curso;
+        sesion.id_grupo = grupo.id;
+        sesion.creditos = curso->creditos;
+        sesion.numero_sesion = i + 1;
+        sesion.id_bloque_asignado = -1;
+        sesion.id_profesor_asignado = -1;
+        sesiones.push_back(sesion);
       }
-    }
-
-    // Try timeslots available for this professor
-    for (const auto &ts : timeslots) {
-      // Check if professor is available at this time
-      if (p_ptr->available_timeslots.find(ts.id) ==
-          p_ptr->available_timeslots.end()) {
-        continue;
-      }
-
-      // Check hard constraints with neighbors (Group conflict)
-      bool conflict_with_neighbor = false;
-      for (int neighbor_id : conflict_graph[current_session.id]) {
-        if (sessions[neighbor_id].assigned_timeslot_id == ts.id) {
-          conflict_with_neighbor = true;
-          break;
-        }
-      }
-      if (conflict_with_neighbor)
-        continue;
-
-      // Check Professor Overlap (is this professor already booked at this
-      // time?)
-      bool prof_busy = false;
-      for (int i = 0; i < session_idx; ++i) {
-        if (sessions[i].assigned_professor_id == prof_id &&
-            sessions[i].assigned_timeslot_id == ts.id) {
-          prof_busy = true;
-          break;
-        }
-      }
-      if (prof_busy)
-        continue;
-
-      // Assign
-      current_session.assigned_timeslot_id = ts.id;
-      current_session.assigned_professor_id = prof_id;
-
-      if (solveRecursive(session_idx + 1, sessions, conflict_graph, timeslots,
-                         professors, courses)) {
-        return true;
-      }
-
-      // Backtrack
-      current_session.assigned_timeslot_id = -1;
-      current_session.assigned_professor_id = -1;
     }
   }
 
+  cout << "📚 Generadas " << sesiones.size() << " sesiones de clase." << endl;
+}
+
+// ============================================
+// Métodos de Validación de Restricciones
+// ============================================
+
+int SolucionadorHorarios::obtenerSiguienteBloque(int idx_bloque_actual) {
+  if (idx_bloque_actual < 0 || idx_bloque_actual >= bloques_horarios.size())
+    return -1;
+
+  BloqueHorario &actual = bloques_horarios[idx_bloque_actual];
+
+  // Buscar el siguiente bloque consecutivo
+  for (size_t i = 0; i < bloques_horarios.size(); i++) {
+    BloqueHorario &candidato = bloques_horarios[i];
+
+    // Mismo día, hora de inicio = hora de fin del actual
+    if (candidato.dia == actual.dia && 
+        candidato.hora_inicio == actual.hora_fin &&
+        candidato.minuto_inicio == actual.minuto_fin) {
+      return i;
+    }
+  }
+
+  return -1; // No hay siguiente bloque consecutivo
+}
+
+bool SolucionadorHorarios::sonBloquesConsecutivos(int idx1, int idx2) {
+  return obtenerSiguienteBloque(idx1) == idx2;
+}
+
+bool SolucionadorHorarios::verificarDisponibilidadProfesor(int idx_prof,
+                                                            int idx_bloque) {
+  int id_bloque = indice_a_id_bloque[idx_bloque];
+  const Profesor &prof = profesores[idx_prof];
+  return prof.horarios_disponibles.count(id_bloque) > 0;
+}
+
+bool SolucionadorHorarios::verificarConflictoProfesor(int idx_prof,
+                                                       int idx_bloque) {
+  // Verificar si el profesor ya tiene alguna clase asignada en ese bloque
+  for (int idx_grupo = 0; idx_grupo < matriz_asignaciones[idx_prof][idx_bloque].size();
+       idx_grupo++) {
+    if (matriz_asignaciones[idx_prof][idx_bloque][idx_grupo] != 0) {
+      return true; // Conflicto: ya tiene clase
+    }
+  }
   return false;
 }
 
-bool TimetableSolver::solve(double timeout_seconds) {
-  try {
-    this->timeout_limit = timeout_seconds;
-    this->start_time = std::chrono::steady_clock::now();
-    generateSessions();
-    buildConflictGraph();
+bool SolucionadorHorarios::verificarConflictoGrupo(int idx_grupo,
+                                                    int idx_bloque) {
+  // Verificar si el grupo ya tiene alguna clase asignada en ese bloque
+  for (int idx_prof = 0; idx_prof < matriz_asignaciones.size(); idx_prof++) {
+    if (matriz_asignaciones[idx_prof][idx_bloque][idx_grupo] != 0) {
+      return true; // Conflicto: el grupo ya tiene clase
+    }
+  }
+  return false;
+}
 
-    // Sort sessions by difficulty (weekly hours descending)
-    // We need to keep track of original indices to map back to conflict graph,
-    // but since conflict graph is built on sessions indices, if we sort
-    // sessions we invalidate the graph. BETTER STRATEGY: Sort sessions BEFORE
-    // building conflict graph.
+bool SolucionadorHorarios::verificarDiversidadProfesor(int id_prof,
+                                                        int id_grupo,
+                                                        int id_curso) {
+  // Restricción: Un profesor NO puede dar 2 materias diferentes al mismo grupo
+  if (cursos_por_profesor_grupo[id_grupo][id_prof].size() > 0) {
+    // El profesor ya tiene asignaciones con este grupo
+    for (int curso_previo : cursos_por_profesor_grupo[id_grupo][id_prof]) {
+      if (curso_previo != id_curso) {
+        // El profesor ya da una materia DIFERENTE a este grupo
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
-    // 1. Sort sessions
-    sort(sessions.begin(), sessions.end(),
-         [this](const ClassSession &a, const ClassSession &b) {
-           Course *ca = getCourse(a.course_id);
-           Course *cb = getCourse(b.course_id);
-           // Primary: More hours first
-           if (ca->weekly_hours != cb->weekly_hours)
-             return ca->weekly_hours > cb->weekly_hours;
-           // Secondary: Group ID (keep groups together)
-           return a.group_id < b.group_id;
-         });
+bool SolucionadorHorarios::verificarConsecutividad(const SesionClase &sesion,
+                                                    int idx_prof,
+                                                    int idx_bloque) {
+  // NUEVA LÓGICA: Las sesiones NO tienen que ser todas consecutivas
+  // Solo deben ser impartidas por el MISMO profesor
+  // Y se distribuyen respet and el máximo de 2 consecutivas
+  
+  // Si es la primera sesión, OK
+  if (sesion.numero_sesion == 1) {
+    return true;
+  }
+  
+  int idx_grupo = id_a_indice_grupo[sesion.id_grupo];
+  
+  // Buscar si ya hay sesiones previas de esta materia asignadas
+  bool hay_sesiones_previas = false;
+  int prof_anterior = -1;
+  
+  for (size_t p = 0; p < matriz_asignaciones.size(); p++) {
+    for (size_t b = 0; b < matriz_asignaciones[p].size(); b++) {
+      if (matriz_asignaciones[p][b][idx_grupo] == sesion.id_curso) {
+        hay_sesiones_previas = true;
+        prof_anterior = p;
+        break;
+      }
+    }
+    if (hay_sesiones_previas) break;
+  }
+  
+  // Si hay sesiones previas, debe ser el MISMO profesor
+  if (hay_sesiones_previas && prof_anterior != idx_prof) {
+    return false; // Diferente profesor, no permitido
+  }
+  
+  return true; // OK: mismo profesor o no hay sesiones previas
+}
 
-    // 2. Re-assign IDs to match new order
-    for (int i = 0; i < sessions.size(); ++i) {
-      sessions[i].id = i;
+bool SolucionadorHorarios::verificarMaximoConsecutivas(int idx_grupo,
+                                                        int id_curso,
+                                                        int idx_bloque,
+                                                        int idx_prof) {
+  // NUEVA RESTRICCIÓN:
+  // 1. Máximo 2 sesiones de la misma materia en el mismo DÍA
+  // 2. Si hay 2 sesiones en el mismo día, deben ser consecutivas
+  
+  BloqueHorario& bloque_actual = bloques_horarios[idx_bloque];
+  int dia_actual = bloque_actual.dia;
+  
+  // Contar cuántas sesiones de este curso ya hay en este día
+  int sesiones_en_dia = 0;
+  int idx_primera_sesion_dia = -1;
+  int idx_ultima_sesion_dia = -1;
+  
+  for (size_t b = 0; b < bloques_horarios.size(); b++) {
+    if (bloques_horarios[b].dia == dia_actual &&
+        matriz_asignaciones[idx_prof][b][idx_grupo] == id_curso) {
+      sesiones_en_dia++;
+      if (idx_primera_sesion_dia == -1) {
+        idx_primera_sesion_dia = b;
+      }
+      idx_ultima_sesion_dia = b;
+    }
+  }
+  
+  // Si ya hay 2 sesiones en este día, NO permitir más
+  if (sesiones_en_dia >= 2) {
+    return false;
+  }
+  
+  // Si ya hay 1 sesión en este día, la nueva debe ser consecutiva
+  if (sesiones_en_dia == 1) {
+    // Verificar que el bloque actual sea consecutivo a la sesión existente
+    bool es_consecutivo = 
+      (obtenerSiguienteBloque(idx_ultima_sesion_dia) == idx_bloque) ||
+      (obtenerSiguienteBloque(idx_bloque) == idx_primera_sesion_dia);
+    
+    if (!es_consecutivo) {
+      return false; // No consecutivo, no permitido
+    }
+  }
+  
+  // Validación adicional: contar consecutivas en este punto
+  int consecutivas = 1;
+  
+  // Contar hacia atrás
+  int idx_anterior = idx_bloque;
+  while (consecutivas < 3) {
+    int idx_prev = -1;
+    for (size_t i = 0; i < bloques_horarios.size(); i++) {
+      if (obtenerSiguienteBloque(i) == idx_anterior) {
+        idx_prev = i;
+        break;
+      }
+    }
+    
+    if (idx_prev == -1) break;
+    
+    if (matriz_asignaciones[idx_prof][idx_prev][idx_grupo] == id_curso) {
+      consecutivas++;
+      idx_anterior = idx_prev;
+    } else {
+      break;
+    }
+  }
+  
+  // Contar hacia adelante
+  int idx_siguiente = obtenerSiguienteBloque(idx_bloque);
+  while (idx_siguiente != -1 && consecutivas < 3) {
+    if (matriz_asignaciones[idx_prof][idx_siguiente][idx_grupo] == id_curso) {
+      consecutivas++;
+      idx_siguiente = obtenerSiguienteBloque(idx_siguiente);
+    } else {
+      break;
+    }
+  }
+  
+  return consecutivas <= 2;
+}
+
+// ============================================
+// Asignación Greedy de Sesión
+// ============================================
+
+bool SolucionadorHorarios::asignarSesionGreedy(SesionClase &sesion) {
+  Curso *curso = obtenerCurso(sesion.id_curso);
+  if (!curso)
+    return false;
+
+  int idx_grupo = id_a_indice_grupo[sesion.id_grupo];
+
+  // Buscar profesores capacitados para esta materia
+  for (size_t idx_prof = 0; idx_prof < profesores.size(); idx_prof++) {
+    const Profesor &prof = profesores[idx_prof];
+
+    // ¿Puede dar esta materia?
+    if (prof.materias_capacitadas.find(curso->codigo) ==
+        prof.materias_capacitadas.end()) {
+      continue;
     }
 
-    // 3. Build graph with sorted sessions
-    buildConflictGraph();
+    // Restricción: Diversidad de profesor por grupo
+    if (!verificarDiversidadProfesor(prof.id, sesion.id_grupo, sesion.id_curso)) {
+      continue;
+    }
 
-    return solveRecursive(0, sessions, conflict_graph, timeslots, professors,
-                          courses);
-  } catch (const std::exception &e) {
-    cout << "Exception in solve: " << e.what() << endl;
+    // Probar cada bloque horario disponible del profesor
+    for (int id_bloque : prof.horarios_disponibles) {
+      if (id_a_indice_bloque.find(id_bloque) == id_a_indice_bloque.end()) {
+        continue;
+      }
+
+      int idx_bloque = id_a_indice_bloque[id_bloque];
+
+      // Restricción 1: Disponibilidad
+      if (!verificarDisponibilidadProfesor(idx_prof, idx_bloque)) {
+        continue;
+      }
+
+      // Restricción 2: Unicidad de profesor (no dos clases simultáneas)
+      if (verificarConflictoProfesor(idx_prof, idx_bloque)) {
+        continue;
+      }
+
+      // Restricción 3: Unicidad de grupo (no dos materias simultáneas)
+      if (verificarConflictoGrupo(idx_grupo, idx_bloque)) {
+        continue;
+      }
+
+      // Restricción 4: Consecutividad de sesiones
+      if (!verificarConsecutividad(sesion, idx_prof, idx_bloque)) {
+        continue;
+      }
+
+      // Restricción 5: Máximo 2 sesiones consecutivas
+      if (!verificarMaximoConsecutivas(idx_grupo, sesion.id_curso, idx_bloque, idx_prof)) {
+        continue;
+      }
+
+      // ¡Asignación válida!
+      matriz_asignaciones[idx_prof][idx_bloque][idx_grupo] = sesion.id_curso;
+
+      // Registrar en seguimiento de diversidad
+      cursos_por_profesor_grupo[sesion.id_grupo][prof.id].insert(sesion.id_curso);
+
+      // Actualizar sesión
+      sesion.id_bloque_asignado = id_bloque;
+      sesion.id_profesor_asignado = prof.id;
+
+      return true;
+    }
+  }
+
+  return false; // No se pudo asignar
+}
+
+// ============================================
+// Solver Greedy Principal
+// ============================================
+
+bool SolucionadorHorarios::resolverGreedy() {
+  cout << "🔧 Construyendo mapas de índices..." << endl;
+  construirMapasIndices();
+
+  cout << "🧱 Inicializando matriz 3D..." << endl;
+  inicializarMatriz();
+
+  cout << "📝 Generando sesiones desde créditos..." << endl;
+  generarSesiones();
+
+  // Ordenar sesiones por prioridad
+  cout << "📊 Ordenando sesiones (créditos desc, sesión asc)..." << endl;
+  sort(sesiones.begin(), sesiones.end(),
+       [](const SesionClase &a, const SesionClase &b) {
+         // Prioridad 1: Más créditos primero
+         if (a.creditos != b.creditos)
+           return a.creditos > b.creditos;
+
+         // Prioridad 2: Mismo curso (para mantener sesiones juntas)
+         if (a.id_curso != b.id_curso)
+           return a.id_curso < b.id_curso;
+
+         // Prioridad 3: Número de sesión ascendente (sesión 1, luego 2, etc.)
+         return a.numero_sesion < b.numero_sesion;
+       });
+
+  // Asignar sesiones de forma greedy
+  cout << "🚀 Iniciando asignación greedy..." << endl;
+  int asignadas = 0;
+  int total = sesiones.size();
+
+  for (auto &sesion : sesiones) {
+    if (asignarSesionGreedy(sesion)) {
+      asignadas++;
+    } else {
+      Curso *curso = obtenerCurso(sesion.id_curso);
+      cout << "⚠️  No asignada: " << (curso ? curso->codigo : "???") 
+           << " (Sesión " << sesion.numero_sesion << ") → Grupo "
+           << sesion.id_grupo << endl;
+    }
+  }
+
+  cout << "\n✅ Asignadas: " << asignadas << "/" << total << endl;
+  double tasa = (total > 0) ? (100.0 * asignadas / total) : 0.0;
+  cout << "📊 Tasa de éxito: " << tasa << "%" << endl;
+
+  return asignadas > 0;
+}
+
+// ============================================
+// Método Principal: Resolver
+// ============================================
+
+bool SolucionadorHorarios::resolver(double tiempo_limite_segundos) {
+  try {
+    tiempo_inicio = chrono::steady_clock::now();
+    limite_tiempo = tiempo_limite_segundos;
+
+    cout << "\n========================================" << endl;
+    cout << "🎓 SOLUCIONADOR DE HORARIOS UTP" << endl;
+    cout << "========================================" << endl;
+    cout << "Profesores: " << profesores.size() << endl;
+    cout << "Bloques horarios: " << bloques_horarios.size() << endl;
+    cout << "Grupos: " << grupos.size() << endl;
+    cout << "Cursos: " << cursos.size() << endl;
+    cout << "========================================\n" << endl;
+
+    bool exito = resolverGreedy();
+
+    auto tiempo_fin = chrono::steady_clock::now();
+    chrono::duration<double> transcurrido = tiempo_fin - tiempo_inicio;
+    cout << "\n⏱️  Tiempo de ejecución: " << transcurrido.count() << " segundos"
+         << endl;
+    cout << "========================================\n" << endl;
+
+    return exito;
+
+  } catch (const exception &e) {
+    cout << "❌ Error en resolver(): " << e.what() << endl;
     return false;
   } catch (...) {
-    cout << "Unknown exception in solve" << endl;
+    cout << "❌ Error desconocido en resolver()" << endl;
     return false;
   }
 }
 
-vector<TimetableSolver::Assignment> TimetableSolver::getSolution() {
-  vector<Assignment> result;
-  for (const auto &s : sessions) {
-    result.push_back({s.group_id, s.course_id, s.assigned_professor_id,
-                      s.assigned_timeslot_id});
+// ============================================
+// Obtener Solución
+// ============================================
+
+vector<SolucionadorHorarios::Asignacion>
+SolucionadorHorarios::obtenerSolucion() {
+  vector<Asignacion> resultado;
+
+  for (const auto &sesion : sesiones) {
+    if (sesion.id_bloque_asignado != -1 && sesion.id_profesor_asignado != -1) {
+      resultado.push_back({sesion.id_grupo, sesion.id_curso,
+                           sesion.id_profesor_asignado,
+                           sesion.id_bloque_asignado});
+    }
   }
-  return result;
+
+  return resultado;
 }

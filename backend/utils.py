@@ -15,12 +15,18 @@ def load_timeslots(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-def load_courses(filepath):
+def load_courses(file_path):
+    """
+    Carga cursos desde CSV
+    Formato esperado: id, name, code, weekly_hours, semester
+    """
     courses = []
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            # Convert types
+            if not row.get('id') or not row['id'].strip():  # Saltar líneas vacías
+                continue
+            # Convertir tipos
             row['id'] = int(row['id'])
             row['weekly_hours'] = int(row['weekly_hours'])
             row['semester'] = int(row['semester'])
@@ -28,34 +34,38 @@ def load_courses(filepath):
     return courses
 
 def get_groups_for_period(period_key):
+    """
+    Genera grupos para el período académico.
+    Cada cuatrimestre tiene UN grupo que toma todas las materias del cuatrimestre.
+    
+    Los números en PERIODOS[period_key]['cuatrimestres'][X] son IDs de MATERIAS,
+    no IDs de grupos.
+    """
     if period_key not in PERIODOS:
         return []
     
     groups = []
     period_data = PERIODOS[period_key]
     
-    # Iterate over semesters in this period
-    for semester, group_ids in period_data['cuatrimestres'].items():
-        for gid in group_ids:
-            groups.append({
-                'id': gid,
-                'semester': semester,
-                'course_ids': [] # Will be populated based on courses matching this semester
-            })
+    # Para cada cuatrimestre en este período
+    for semester, course_ids in period_data['cuatrimestres'].items():
+        # Crear UN grupo por cuatrimestre
+        # ID del grupo = cuatrimestre * 100 (ej: cuatri 8 -> grupo 800)
+        group_id = semester * 100
+        
+        groups.append({
+            'id': group_id,
+            'semester': semester,
+            'course_ids': course_ids  # Todas las materias del cuatrimestre
+        })
+    
     return groups
 
 def prepare_data_for_solver(professors, courses, timeslots, period_key):
     groups = get_groups_for_period(period_key)
     
-    # Assign courses to groups based on semester
-    # A group takes ALL courses for its semester
-    # Optimization: Filter courses that are actually relevant for this period
-    
+    # Filtrar cursos relevantes para este período
     relevant_semesters = PERIODOS[period_key]['cuatrimestres'].keys()
     relevant_courses = [c for c in courses if c['semester'] in relevant_semesters]
     
-    for group in groups:
-        group_courses = [c['id'] for c in relevant_courses if c['semester'] == group['semester']]
-        group['course_ids'] = group_courses
-        
     return professors, relevant_courses, timeslots, groups

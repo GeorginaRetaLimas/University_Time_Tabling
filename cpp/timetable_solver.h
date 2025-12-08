@@ -11,102 +11,121 @@
 
 using namespace std;
 
-struct TimeSlot {
+// ============================================
+// Estructuras de Datos (en español)
+// ============================================
+
+struct BloqueHorario {
   int id;
-  int day; // 1=Mon, 2=Tue, ...
-  int start_hour;
-  int start_minute;
-  int end_hour;
-  int end_minute;
+  int dia; // 1=Lun, 2=Mar, 3=Mié, 4=Jue, 5=Vie
+  int hora_inicio;
+  int minuto_inicio;
+  int hora_fin;
+  int minuto_fin;
 };
 
-struct Professor {
+struct Profesor {
   int id;
-  string name;
-  set<int> available_timeslots;
-  set<string> available_courses; // Course codes
+  string nombre;
+  set<int> horarios_disponibles;     // IDs de bloques horarios disponibles
+  set<string> materias_capacitadas;  // Códigos de cursos que puede impartir
 };
 
-struct Course {
+struct Curso {
   int id;
-  string name;
-  string code;
-  int weekly_hours;
-  int semester;
-  bool requires_professor;
+  string nombre;
+  string codigo;
+  int creditos;           // Antes: weekly_hours
+  int cuatrimestre;       // Antes: semester
+  bool requiere_profesor; // Para casos especiales como Estadías
 };
 
-struct Group {
+struct Grupo {
   int id;
-  int semester;
-  // A group needs to take a set of courses
-  vector<int> course_ids;
+  int cuatrimestre;
+  vector<int> ids_cursos; // Cursos que debe tomar este grupo
 };
 
-// Represents a single class session to be scheduled
-struct ClassSession {
+struct SesionClase {
   int id;
-  int course_id;
-  int group_id;
-  int duration; // usually 1 hour (55 mins)
-  int assigned_timeslot_id = -1;
-  int assigned_professor_id = -1;
+  int id_curso;
+  int id_grupo;
+  int creditos;
+  int numero_sesion;           // 1, 2, 3... para sesiones de la misma materia
+  int id_bloque_asignado = -1;
+  int id_profesor_asignado = -1;
 };
 
-class TimetableSolver {
+// ============================================
+// Clase Principal del Solver
+// ============================================
+
+class SolucionadorHorarios {
 private:
-  vector<TimeSlot> timeslots;
-  vector<Professor> professors;
-  vector<Course> courses;
-  vector<Group> groups;
-  vector<ClassSession> sessions;
+  // Datos del problema
+  vector<BloqueHorario> bloques_horarios;
+  vector<Profesor> profesores;
+  vector<Curso> cursos;
+  vector<Grupo> grupos;
+  vector<SesionClase> sesiones;
 
-  // Graph representation
-  // Adjacency list: session_id -> list of conflicting session_ids
-  vector<vector<int>> conflict_graph;
+  // Matriz 3D de asignaciones: [índice_prof][índice_bloque][índice_grupo] = id_curso
+  vector<vector<vector<int>>> matriz_asignaciones;
 
-  // Timeout handling
-  std::chrono::steady_clock::time_point start_time;
-  double timeout_limit;
+  // Mapas de conversión ID ↔ Índice
+  map<int, int> id_a_indice_prof, id_a_indice_bloque, id_a_indice_grupo;
+  map<int, int> indice_a_id_prof, indice_a_id_bloque, indice_a_id_grupo;
 
-  // Helper to find professor by ID
-  Professor *getProfessor(int id);
+  // Seguimiento: qué materias da cada profesor a cada grupo
+  // [id_grupo][id_profesor] = {set de id_curso}
+  map<int, map<int, set<int>>> cursos_por_profesor_grupo;
 
-  // Helper to find course by ID
-  Course *getCourse(int id);
+  // Control de tiempo
+  chrono::steady_clock::time_point tiempo_inicio;
+  double limite_tiempo;
 
-  // Recursive backtracking solver
-  bool solveRecursive(int session_idx, vector<ClassSession> &sessions,
-                      const vector<vector<int>> &conflict_graph,
-                      const vector<TimeSlot> &timeslots,
-                      const vector<Professor> &professors,
-                      const vector<Course> &courses);
+  // Métodos privados (helpers)
+  Profesor *obtenerProfesor(int id);
+  Curso *obtenerCurso(int id);
+  
+  void construirMapasIndices();
+  void inicializarMatriz();
+  void generarSesiones();
+  
+  int obtenerSiguienteBloque(int idx_bloque_actual);
+  bool sonBloquesConsecutivos(int idx_bloque1, int idx_bloque2);
+  
+  bool verificarDisponibilidadProfesor(int idx_prof, int idx_bloque);
+  bool verificarConflictoProfesor(int idx_prof, int idx_bloque);
+  bool verificarConflictoGrupo(int idx_grupo, int idx_bloque);
+  bool verificarDiversidadProfesor(int id_prof, int id_grupo, int id_curso);
+  bool verificarConsecutividad(const SesionClase &sesion, int idx_prof, int idx_bloque);
+  bool verificarMaximoConsecutivas(int idx_grupo, int id_curso, int idx_bloque, int idx_prof);
+  
+  bool asignarSesionGreedy(SesionClase &sesion);
+  bool resolverGreedy();
 
 public:
-  TimetableSolver();
+  SolucionadorHorarios();
 
-  void addTimeSlot(int id, int day, int start_h, int start_m, int end_h,
-                   int end_m);
-  void addProfessor(int id, string name, const vector<int> &available_slots,
-                    const vector<string> &course_codes);
-  void addCourse(int id, string name, string code, int weekly_hours,
-                 int semester, bool requires_professor);
-  void addGroup(int id, int semester, const vector<int> &course_ids);
+  // Métodos para agregar datos
+  void agregarBloqueHorario(int id, int dia, int h_inicio, int m_inicio, int h_fin, int m_fin);
+  void agregarProfesor(int id, string nombre, const vector<int> &horarios_disp, const vector<string> &codigos_cursos);
+  void agregarCurso(int id, string nombre, string codigo, int creditos, int cuatrimestre, bool req_profesor);
+  void agregarGrupo(int id, int cuatrimestre, const vector<int> &ids_cursos);
 
-  // Core logic
-  void generateSessions();
-  void buildConflictGraph();
-  bool solve(double timeout); // Main solver function
+  // Método principal de resolución
+  bool resolver(double tiempo_limite_segundos);
 
-  // Output
-  struct Assignment {
-    int group_id;
-    int course_id;
-    int professor_id;
-    int timeslot_id;
+  // Obtener solución
+  struct Asignacion {
+    int id_grupo;
+    int id_curso;
+    int id_profesor;
+    int id_bloque;
   };
 
-  vector<Assignment> getSolution();
+  vector<Asignacion> obtenerSolucion();
 };
 
 #endif
