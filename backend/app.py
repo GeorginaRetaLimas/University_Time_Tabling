@@ -73,5 +73,78 @@ def get_courses():
     courses = load_courses(os.path.join(DATA_DIR, 'courses_full.csv'))
     return jsonify(courses)
 
+@app.route('/api/professors/save', methods=['POST'])
+def save_professor():
+    data = request.json
+    prof_id = data.get('id')
+    name = data.get('name')
+    
+    file_path = os.path.join(DATA_DIR, 'professors.json')
+    profs = load_professors(file_path)
+    
+    if prof_id:
+        # Edit existing
+        for p in profs:
+            if p['id'] == prof_id:
+                p['name'] = name
+                break
+    else:
+        # Create new (simple ID generation)
+        new_id = max([p['id'] for p in profs]) + 1 if profs else 1
+        profs.append({
+            "id": new_id,
+            "name": name,
+            "available_timeslots": [],
+            "available_courses": []
+        })
+    
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(profs, f, indent=2, ensure_ascii=False)
+        
+    return jsonify({'status': 'success'})
+
+@app.route('/api/professors/availability', methods=['POST'])
+def save_availability():
+    data = request.json
+    prof_id = data.get('id')
+    slots = data.get('available_timeslots')
+    
+    file_path = os.path.join(DATA_DIR, 'professors.json')
+    profs = load_professors(file_path)
+    
+    for p in profs:
+        if p['id'] == prof_id:
+            p['available_timeslots'] = slots
+            break
+            
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(profs, f, indent=2, ensure_ascii=False)
+        
+    return jsonify({'status': 'success'})
+
+@app.route('/api/professors/subjects', methods=['POST'])
+def save_subjects():
+    data = request.json
+    prof_id = data.get('id')
+    courses = data.get('available_courses')
+    
+    file_path = os.path.join(DATA_DIR, 'professors.json')
+    profs = load_professors(file_path)
+    
+    for p in profs:
+        if p['id'] == prof_id:
+            p['available_courses'] = courses
+            break
+            
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(profs, f, indent=2, ensure_ascii=False)
+        
+    return jsonify({'status': 'success'})
+
+@app.route('/api/timeslots', methods=['GET'])
+def get_timeslots():
+    slots = load_timeslots(os.path.join(DATA_DIR, 'timeslots.json'))
+    return jsonify(slots)
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

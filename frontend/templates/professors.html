@@ -1,48 +1,38 @@
 {% extends "layout.html" %}
 {% set active_page = "professors" %}
 
+
 {% block content %}
 <div class="dashboard-container">
     <h2 class="header-title">Maestros</h2>
 
-    <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-        <div style="position: relative; width: 300px;">
-            <i class="fas fa-search"
-                style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray);"></i>
-            <input type="text" placeholder="Buscar Maestro"
-                style="width: 100%; padding: 10px 10px 10px 36px; border-radius: 8px; border: 1px solid var(--border);">
-        </div>
-
-        <div style="display: flex; gap: 12px;">
-            <button
-                style="background: #f1f5f9; border: 1px solid var(--border); padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 500;">
-                <i class="fas fa-save"></i> Guardar en Archivo
-            </button>
-            <button class="btn-primary">
-                <i class="fas fa-plus"></i> Añadir Maestro
-            </button>
-        </div>
-    </div>
-
-    <div class="card" style="padding: 0; overflow: hidden;">
+    <div class="card" style="padding: 0; overflow: hidden; margin-top: 24px;">
         <table>
             <thead>
                 <tr>
                     <th style="width: 50px;">ID</th>
                     <th>MAESTRO</th>
-                    <th>CORREO</th>
-                    <th style="width: 100px; text-align: center;">ACCIONES</th>
+                    <th>MATERIAS</th>
+                    <th style="width: 150px; text-align: center;">ACCIONES</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="professors-table-body">
                 {% for prof in professors %}
                 <tr>
                     <td>{{ prof.id }}</td>
                     <td style="font-weight: 500;">{{ prof.name }}</td>
-                    <td>{{ prof.email if prof.email else 'N/A' }}</td>
+                    <td>
+                        <span class="badge" style="background: #f1f5f9; color: var(--text-gray);">{{
+                            prof.available_courses|length }} materias</span>
+                    </td>
                     <td style="text-align: center;">
-                        <button class="action-btn"><i class="fas fa-pen"></i></button>
-                        <button class="action-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
+                        <button class="action-btn" title="Editar Datos" onclick="openEditModal({{ prof.id }})">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="action-btn" title="Editar Disponibilidad"
+                            onclick="openAvailabilityModal({{ prof.id }})" style="color: var(--primary);">
+                            <i class="fas fa-calendar-alt"></i>
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -50,4 +40,352 @@
         </table>
     </div>
 </div>
+
+<!-- Edit Professor Modal -->
+<div id="edit-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <h3 id="modal-title">Editar Maestro</h3>
+        <input type="hidden" id="edit-id">
+        <div style="margin-bottom: 16px;">
+            <label style="display: block; margin-bottom: 8px;">Nombre Completo</label>
+            <input type="text" id="edit-name"
+                style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+            <button class="btn-secondary" onclick="closeModal('edit-modal')">Cancelar</button>
+            <button class="btn-primary" onclick="saveProfessor()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Availability Modal -->
+<div id="availability-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="max-width: 800px; width: 90%;">
+        <h3>Editar Disponibilidad: <span id="avail-prof-name" style="color: var(--primary);"></span></h3>
+        <input type="hidden" id="avail-prof-id">
+        <p style="color: var(--text-gray); margin-bottom: 16px;">Selecciona los bloques horarios disponibles (Verde =
+            Disponible).</p>
+
+        <div style="overflow-x: auto; max-height: 500px; overflow-y: auto;">
+            <table class="timetable-grid">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Lun</th>
+                        <th>Mar</th>
+                        <th>Mié</th>
+                        <th>Jue</th>
+                        <th>Vie</th>
+                    </tr>
+                </thead>
+                <tbody id="availability-grid-body">
+                    <!-- Dynamic Grid -->
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+            <button class="btn-secondary" onclick="closeModal('availability-modal')">Cancelar</button>
+            <button class="btn-primary" onclick="saveAvailability()">Guardar Disponibilidad</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        width: 400px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .slot-btn {
+        width: 100%;
+        padding: 8px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .slot-btn.on {
+        background: var(--success);
+        color: white;
+    }
+
+    .slot-btn.off {
+        background: #f1f5f9;
+        color: #94a3b8;
+    }
+
+    .subject-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .subject-item:hover {
+        background: #f8fafc;
+    }
+</style>
+
+<script>
+    let allCourses = [];
+    let allTimeslots = [];
+
+    // Load initial data
+    fetch('/api/courses').then(r => r.json()).then(data => allCourses = data);
+</script>
+
+<!-- Embed timeslots for availability grid -->
+<script type="application/json" id="timeslots-data-embed">
+    {{ timeslots | tojson if timeslots else '[]' }}
+</script>
+
+<script>
+    // Store professor data for modals
+    const professorsData = {};
+    {% for prof in professors %}
+    professorsData["{{ prof.id }}"] = {{ prof | tojson | safe }};
+    {% endfor %}
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    // --- Edit Professor ---
+    function openEditModal(profId) {
+        const modal = document.getElementById('edit-modal');
+        const title = document.getElementById('modal-title');
+        const idInput = document.getElementById('edit-id');
+        const nameInput = document.getElementById('edit-name');
+
+        const prof = professorsData[String(profId)];
+        if (prof) {
+            title.textContent = "Editar Maestro";
+            idInput.value = prof.id;
+            nameInput.value = prof.name;
+        } else { // For adding a new professor
+            title.textContent = "Añadir Maestro";
+            idInput.value = "";
+            nameInput.value = "";
+        }
+        modal.style.display = 'flex';
+    }
+
+    async function saveProfessor() {
+        const id = document.getElementById('edit-id').value;
+        const name = document.getElementById('edit-name').value;
+
+        if (!name) return alert("El nombre es requerido");
+
+        const payload = { id: id ? parseInt(id) : null, name };
+
+        await fetch('/api/professors/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        location.reload();
+    }
+
+    // --- Availability ---
+    let currentAvailProfId = null;
+    let currentAvailSlots = new Set();
+
+    function openAvailabilityModal(profId) {
+        const prof = professorsData[String(profId)];
+        if (!prof) return;
+
+        currentAvailProfId = prof.id;
+        currentAvailSlots = new Set(prof.available_timeslots);
+        document.getElementById('avail-prof-name').textContent = prof.name;
+        document.getElementById('avail-prof-id').value = prof.id;
+
+        renderAvailabilityGrid();
+        document.getElementById('availability-modal').style.display = 'flex';
+    }
+
+    function renderAvailabilityGrid() {
+        const tbody = document.getElementById('availability-grid-body');
+        tbody.innerHTML = '';
+
+        if (allTimeslots.length === 0) {
+            fetch('/api/timeslots').then(r => r.json()).then(data => {
+                allTimeslots = data;
+                renderAvailabilityGrid();
+            });
+            return;
+        }
+
+        const uniqueTimes = [...new Set(allTimeslots.map(t => `${t.start_hour}:${t.start_minute.toString().padStart(2, '0')}-${t.end_hour}:${t.end_minute.toString().padStart(2, '0')}`))];
+
+        uniqueTimes.forEach(timeRange => {
+            let row = `<tr><td style="font-weight: 500;">${timeRange}</td>`;
+            for (let day = 1; day <= 5; day++) {
+                const slot = allTimeslots.find(t => {
+                    const range = `${t.start_hour}:${t.start_minute.toString().padStart(2, '0')}-${t.end_hour}:${t.end_minute.toString().padStart(2, '0')}`;
+                    const tDay = t.day === 'Lunes' ? 1 : t.day === 'Martes' ? 2 : t.day === 'Miércoles' ? 3 : t.day === 'Jueves' ? 4 : 5;
+                    return range === timeRange && tDay === day;
+                });
+
+                if (slot) {
+                    const isOn = currentAvailSlots.has(slot.id);
+                    row += `<td>
+                        <button class="slot-btn ${isOn ? 'on' : 'off'}" onclick="toggleSlot(this, ${slot.id})">
+                            ${isOn ? 'ON' : 'OFF'}
+                        </button>
+                    </td>`;
+                } else {
+                    row += `<td></td>`;
+                }
+            }
+            row += `</tr>`;
+            tbody.innerHTML += row;
+        });
+    }
+
+    function toggleSlot(btn, slotId) {
+        if (currentAvailSlots.has(slotId)) {
+            currentAvailSlots.delete(slotId);
+            btn.classList.remove('on');
+            btn.classList.add('off');
+            btn.textContent = 'OFF';
+        } else {
+            currentAvailSlots.add(slotId);
+            btn.classList.remove('off');
+            btn.classList.add('on');
+            btn.textContent = 'ON';
+        }
+    }
+
+    async function saveAvailability() {
+        const payload = {
+            id: currentAvailProfId,
+            available_timeslots: Array.from(currentAvailSlots)
+        };
+
+        await fetch('/api/professors/availability', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        location.reload();
+    }
+
+    // --- Subjects ---
+    let currentSubjProfId = null;
+    let currentSubjects = new Set();
+
+    function openSubjectsModal(prof) {
+        currentSubjProfId = prof.id;
+        currentSubjects = new Set(prof.available_courses); // These are CODES (e.g. "ING1")
+        document.getElementById('subj-prof-name').textContent = prof.name;
+        document.getElementById('subj-prof-id').value = prof.id;
+
+        renderSubjectsList();
+        document.getElementById('subjects-modal').style.display = 'flex';
+    }
+
+    function renderSubjectsList(filter = "") {
+        const container = document.getElementById('subjects-list');
+        container.innerHTML = '';
+
+        // Filter unique courses by code
+        const uniqueCourses = [];
+        const seen = new Set();
+
+        // Ensure we have all courses
+        if (!allCourses || allCourses.length === 0) {
+            container.innerHTML = '<div style="color: var(--text-gray); text-align: center;">Cargando materias...</div>';
+            return;
+        }
+
+        allCourses.forEach(c => {
+            if (!seen.has(c.code)) {
+                seen.add(c.code);
+                uniqueCourses.push(c);
+            }
+        });
+
+        const filtered = uniqueCourses.filter(c =>
+            c.name.toLowerCase().includes(filter.toLowerCase()) ||
+            c.code.toLowerCase().includes(filter.toLowerCase())
+        );
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="color: var(--text-gray); text-align: center;">No se encontraron materias.</div>';
+            return;
+        }
+
+        filtered.forEach(c => {
+            const isChecked = currentSubjects.has(c.code);
+            const div = document.createElement('div');
+            div.className = 'subject-item';
+            // Add click handler to the whole row for better UX
+            div.onclick = (e) => {
+                // Prevent double toggle if clicking checkbox directly
+                if (e.target.type !== 'checkbox') {
+                    const cb = document.getElementById(`subj-${c.code}`);
+                    cb.checked = !cb.checked;
+                    toggleSubject(c.code);
+                }
+            };
+
+            div.innerHTML = `
+                    <input type="checkbox" id="subj-${c.code}" ${isChecked ? 'checked' : ''} onchange="toggleSubject('${c.code}')">
+                    <label for="subj-${c.code}" style="cursor: pointer; flex: 1; margin-left: 12px;">
+                        <span style="font-weight: 600; color: var(--primary);">${c.code}</span> - ${c.name}
+                    </label>
+                `;
+            container.appendChild(div);
+        });
+    }
+
+    document.getElementById('subject-search').addEventListener('input', (e) => {
+        renderSubjectsList(e.target.value);
+    });
+
+    function toggleSubject(code) {
+        if (currentSubjects.has(code)) {
+            currentSubjects.delete(code);
+        } else {
+            currentSubjects.add(code);
+        }
+    }
+
+    async function saveSubjects() {
+        const payload = {
+            id: currentSubjProfId,
+            available_courses: Array.from(currentSubjects)
+        };
+
+        await fetch('/api/professors/subjects', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        location.reload();
+    }
+</script>
 {% endblock %}

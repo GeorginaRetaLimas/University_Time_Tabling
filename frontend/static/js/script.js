@@ -34,49 +34,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    periodSelect.addEventListener('change', updatePeriodInfo);
-    updatePeriodInfo();
+    if (generateBtn && statusMsg && periodSelect) {
+        periodSelect.addEventListener('change', updatePeriodInfo);
+        updatePeriodInfo();
 
-    generateBtn.addEventListener('click', async () => {
-        loadingModal.style.display = 'flex';
-        statusMsg.textContent = "Generando horario...";
-        statusMsg.style.color = "#fbbf24";
+        generateBtn.addEventListener('click', async () => {
+            loadingModal.style.display = 'flex';
+            statusMsg.textContent = "Generando horario...";
+            statusMsg.style.color = "#fbbf24";
 
-        const period = periodSelect.value;
+            const period = periodSelect.value;
 
-        let timeout = 60;
-        const timeVal = timeLimitSelect.value;
-        if (timeVal.includes('1 minuto')) timeout = 60;
-        else if (timeVal.includes('5 minutos')) timeout = 300;
-        else timeout = 0;
+            let timeout = 60;
+            // Removed timeLimitSelect logic as it was removed from HTML
+            // Default to 60s or use hardcoded value if needed
 
-        try {
-            const response = await fetch('/api/solve', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ period: period, timeout: timeout })
-            });
+            try {
+                const response = await fetch('/api/solve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ period: period, timeout: timeout })
+                });
 
-            const data = await response.json();
+                const data = await response.json();
 
-            if (data.status === 'success') {
-                statusMsg.textContent = "Horario generado con éxito!";
-                statusMsg.style.color = "#4ade80";
-                renderTimetable(data.solution);
-                resultsSection.classList.remove('results-hidden');
-            } else {
-                statusMsg.textContent = "Error: " + data.message;
+                if (data.status === 'success') {
+                    statusMsg.textContent = "Horario generado con éxito!";
+                    statusMsg.style.color = "#4ade80";
+                    renderTimetable(data.solution);
+                    resultsSection.classList.remove('results-hidden');
+                } else {
+                    statusMsg.textContent = "Error: " + data.message;
+                    statusMsg.style.color = "#f87171";
+                }
+            } catch (error) {
+                statusMsg.textContent = "Error de conexión: " + error;
                 statusMsg.style.color = "#f87171";
+            } finally {
+                loadingModal.style.display = 'none';
             }
-        } catch (error) {
-            statusMsg.textContent = "Error de conexión: " + error;
-            statusMsg.style.color = "#f87171";
-        } finally {
-            loadingModal.style.display = 'none';
-        }
-    });
+        });
+    }
 
     function renderTimetable(solution) {
         // Paleta de 7 colores vibrantes (uno por cada materia del grupo)

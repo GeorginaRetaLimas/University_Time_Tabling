@@ -28,10 +28,24 @@ def load_courses(filepath):
                 continue
             # Convert types
             row['id'] = int(row['id'])
-            row['weekly_hours'] = int(row['weekly_hours'])
-            row['semester'] = int(row['semester'])
-            # IMPORTANT: El wrapper de Cython espera 'credits', así que hacemos un alias
-            row['credits'] = row['weekly_hours'] * 15  # 1 hora semanal = 15 créditos
+            row['id'] = int(row['id'])
+            # El CSV tiene 'credits', no 'weekly_hours'
+            if 'credits' in row:
+                row['credits'] = int(row['credits'])
+                row['weekly_hours'] = row['credits'] // 15
+            elif 'weekly_hours' in row:
+                row['weekly_hours'] = int(row['weekly_hours'])
+                row['credits'] = row['weekly_hours'] * 15
+            else:
+                # Default fallback
+                row['credits'] = 60
+                row['weekly_hours'] = 4
+                
+            # Infer semester from ID (e.g., 101 -> 1, 801 -> 8)
+            if 'semester' in row:
+                row['semester'] = int(row['semester'])
+            else:
+                row['semester'] = row['id'] // 100
             courses.append(row)
     return courses
 
