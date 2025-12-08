@@ -28,7 +28,7 @@ C. Estrategia "Best-Effort" con Tiempo Límite
    - Si el tiempo se agota antes de encontrar una solución perfecta completa, el sistema detiene la ejecución y devuelve la "Mejor Solución Parcial" encontrada hasta el momento.
    - Esto garantiza que el usuario siempre obtenga un resultado, incluso en escenarios de alta complejidad.
 
-3. RESTRICCIONES DEL SISTEMA
+3. RESTRICCIONES DEL SISTEMA 
 ----------------------------
 El solver garantiza el cumplimiento de las siguientes reglas:
 
