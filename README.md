@@ -1,283 +1,125 @@
-# Sistema de Generación de Horarios Universitarios UTP
+# Generador de Horarios UTP
 
-Sistema optimizado de generación de horarios con **algoritmo greedy** y **matrices 3D** en C++.
+## 📖 Descripción del Proyecto
+Este sistema es una solución integral para la automatización de la generación de horarios académicos en la **Universidad Tecnológica de Puebla (UTP)**. Combina la eficiencia de **C++** para el procesamiento lógico con la flexibilidad de **Python** y **tecnologías web** para la interfaz de usuario.
 
-## 🚀 Características
-
-- **Motor C++ de Alto Rendimiento**: Algoritmo greedy con matrices tridimensionales
-- **Restricciones Inteligentes**:
-  - ✅ Disponibilidad de profesores
-  - ✅ Unicidad (profesor y grupo)
-  - ✅ Diversidad (un profesor no da 2 materias al mismo grupo)
-  - ✅ Sesiones consecutivas (máximo 2 seguidas)
-  - ✅ Priorización por carga horaria (créditos)
-- **Interfaz Web**: Frontend HTML/CSS/JS con visualización de horarios
-- **API REST**: Backend Flask con endpoints JSON
+El objetivo principal es resolver el complejo problema de asignación de recursos (profesores, grupos, materias y tiempos) de manera óptima, respetando estrictas reglas académicas y laborales.
 
 ---
 
-## 📋 Requisitos Previos
+## 🎯 ¿Qué Resolvemos?
+La planificación manual de horarios enfrenta múltiples desafíos: choques de horarios, profesores asignados fuera de su disponibilidad, y grupos con múltiples profesores para una misma materia.
 
-### General
-- Python 3.8+ (recomendado 3.11)
-- Navegador Web Moderno
-- Compilador C++ compatible con C++17
+Nuestro sistema garantiza:
+1. **Cero Choques**: Ningún profesor o grupo tiene dos clases al mismo tiempo.
+2. **Consistencia Académica**: **Un grupo tiene un SOLO maestro para una sola materia.** No se fragmentan las materias entre múltiples docentes.
+3. **Respeto a la Disponibilidad**: Se asignan clases solo en los horarios que los profesores han marcado como disponibles.
+4. **Distribución Equilibrada**: Se intenta evitar cargas excesivas en un solo día (máximo 2 horas de la misma materia por día).
 
-### Windows
-- **Visual Studio Build Tools** (con carga de trabajo "Desarrollo para el escritorio con C++")
-- O **MinGW-w64**
+---
 
-### Linux (Ubuntu/Debian)
-```bash
-sudo apt install build-essential python3-dev
+## 🧠 Algoritmo Utilizado
+El núcleo del sistema ("El Cerebro") está construido en **C++ moderno (C++17)** y utiliza un enfoque **Greedy (Voraz) con Heurísticas de Prioridad**.
+
+### Estructura de Datos: La Matriz 3D
+Para gestionar las asignaciones de manera eficiente, utilizamos una estructura tridimensional:
+```cpp
+vector<vector<vector<int>>> matriz_asignaciones;
+// Acceso: matriz[id_profesor][id_bloque_tiempo][id_grupo] = id_materia
 ```
+Esto permite verificar conflictos en tiempo constante O(1).
+
+### Estrategia de Resolución
+1. **Generación de Sesiones**: Se desglosan las materias en sesiones individuales (bloques de 1 hora) basadas en sus créditos.
+2. **Ordenamiento Inteligente**: Las sesiones se ordenan por dificultad de asignación:
+   - Primero las materias con más horas semanales (más difíciles de encajar).
+   - Luego por orden de sesión para mantener secuencia.
+3. **Asignación Voraz (Greedy)**:
+   - Para cada sesión, se busca el **primer profesor y bloque horario** que cumpla con TODAS las restricciones.
+   - Si falla, se intenta una "Estrategia de Relajación" (Strategy 2) que permite huecos en el horario pero **MANTIENE ESTRICTAMENTE** la regla de un solo profesor por materia.
 
 ---
 
-## 🔧 Instalación y Ejecución
+## 📂 Archivos Principales y Estructura
 
-### 🪟 Windows
+### 1. Núcleo de Procesamiento (`/cpp`)
+Aquí reside la lógica pesada.
+- **`timetable_solver.h`**: Define las estructuras de datos (`Profesor`, `Curso`, `Grupo`, `Sesion`).
+- **`timetable_solver.cpp`**: Implementa la clase `SolucionadorHorarios` y toda la lógica de validación (`verificarConsecutividad`, `verificarDisponibilidad`, etc.).
 
-1. **Instalar dependencias de Python**:
-   ```cmd
-   pip install -r requirements.txt
-   ```
+### 2. Puente de Integración (`/cython`)
+Permite que Python hable con C++.
+- **`timetable_wrapper.pyx`**: Define la interfaz que Python puede importar. Traduce los objetos de Python a estructuras de C++.
+- **`setup.py`**: Script de configuración para compilar el código C++ como un módulo de Python (`.so` o `.pyd`).
 
-2. **Compilar el módulo C++**:
-   ```cmd
+### 3. Backend y API (`/backend`)
+El servidor web.
+- **`app.py`**: Aplicación Flask. Define rutas como `/api/solve` para recibir peticiones del frontend.
+- **`data_loader.py`**: Se encarga de leer los CSVs y JSONs y prepararlos para el solver.
+
+### 4. Frontend (`/frontend`)
+La interfaz visual.
+- **`templates/availability.html`**: La página principal donde se visualizan los horarios generados.
+- **`static/`**: Estilos CSS y scripts JS para la interactividad.
+
+---
+
+## ⚙️ Funciones Básicas
+
+### Carga de Datos
+El sistema acepta:
+- **`courses.csv`**: Catálogo de materias con sus créditos y cuatrimestre.
+- **`professors.json`**: Lista de profesores con sus materias capacitadas y disponibilidad horaria.
+
+### Generación
+Al pulsar "Generar Horario", el sistema:
+1. Compila los datos.
+2. Ejecuta el solver C++.
+3. Retorna un JSON con todas las asignaciones exitosas.
+
+### Visualización
+- Muestra el horario en una cuadrícula semanal.
+- Permite filtrar por semestre.
+- Muestra detalles (Nombre del Profesor, Materia) en cada celda.
+
+---
+
+## 🚀 Guía de Instalación y Ejecución
+
+### Requisitos
+- Python 3.8+
+- Compilador C++ (GCC en Linux, MSVC en Windows)
+
+### Pasos
+1. **Compilar el Módulo C++**:
+   ```bash
+   # En Linux
+   ./compile.sh
+   
+   # En Windows
    python cython/setup.py build_ext --build-lib backend
    ```
-   > **Nota**: Si usas MinGW, agrega `--compiler=mingw32` al final del comando.
 
-3. **Ejecutar la aplicación**:
-   ```cmd
-   cd backend
-   python app.py
-   ```
-
-4. **Acceder**:
-   Abre [http://localhost:5000](http://localhost:5000) en tu navegador.
-
-### 🐧 Linux
-
-1. **Instalar dependencias**:
+2. **Ejecutar el Servidor**:
    ```bash
-   pip install -r requirements.txt
+   python backend/app.py
    ```
 
-2. **Compilar el módulo C++**:
-   ```bash
-   chmod +x compile.sh
-   ./compile.sh
-   ```
-
-3. **Ejecutar**:
-   ```bash
-   cd backend
-   python3 app.py
-   ```
-
-4. **Acceder**:
-   Abre [http://localhost:5000](http://localhost:5000) en tu navegador.
+3. **Usar**:
+   Abre tu navegador en `http://localhost:5000`.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📋 Documentación de Restricciones
+El solver valida las siguientes reglas antes de asignar cualquier clase:
 
-```
-University_Time_Tabling/
-├── cpp/                          # Motor C++ (algoritmo greedy)
-│   ├── timetable_solver.h        # Definiciones de clases
-│   └── timetable_solver.cpp      # Implementación del solver
-├── cython/                       # Interfaz Python-C++
-│   ├── timetable_wrapper.pyx     # Wrapper de Cython
-│   └── setup.py                  # Script de compilación
-├── backend/                      # Servidor Flask
-│   ├── app.py                    # API REST
-│   └── utils.py                  # Utilidades (carga de datos)
-├── frontend/                     # Interfaz web
-│   ├── templates/                # HTML
-│   └── static/                   # CSS, JS, imágenes
-└── data/                         # Datos del problema
-    ├── courses_full.csv          # Catálogo de materias
-    ├── professors.json           # Profesores y disponibilidad
-    ├── timeslots.json            # Bloques horarios
-    └── periods.py                # Configuración de períodos académicos
-```
+| Regla | Descripción |
+|-------|-------------|
+| **Disponibilidad** | El profesor debe tener el bloque marcado como libre. |
+| **No Choques Prof** | El profesor no puede estar dando otra clase a esa hora. |
+| **No Choques Grupo** | El grupo no puede tener otra clase a esa hora. |
+| **Mismo Profesor** | Si el grupo ya tiene esa materia asignada, DEBE ser el mismo profesor. |
+| **Carga Diaria** | Máximo 2 horas de la misma materia por día para evitar fatiga. |
 
 ---
-
-## 🧮 Algoritmo Greedy con Matrices 3D
-
-### Estructura de Datos Principal
-
-```cpp
-// Matriz 3D: [profesores][bloques_horarios][grupos] = id_curso
-vector<vector<vector<int>>> matriz_asignaciones;
-```
-
-### Flujo del Algoritmo
-
-1. **Generación de Sesiones**: Calcular sesiones desde créditos (`creditos / 15`)
-2. **Ordenamiento**: Priorizar por créditos (descendente)
-3. **Asignación Greedy**: Para cada sesión:
-   - Buscar profesor capacitado
-   - Buscar bloque disponible
-   - Validar todas las restricciones
-   - Asignar en matriz 3D
-4. **Resultado**: Lista de asignaciones válidas
-
-### Restricciones Implementadas
-
-| Restricción | Descripción |
-|-------------|-------------|
-| **Disponibilidad** | Solo asignar en horarios disponibles del profesor |
-| **Unicidad Profesor** | Un profesor no puede dar 2 clases simultáneas |
-| **Unicidad Grupo** | Un grupo no puede tener 2 materias simultáneas |
-| **Diversidad** | Un profesor NO puede dar 2 materias diferentes al mismo grupo |
-| **Consecutividad** | Sesiones de una materia deben ser consecutivas |
-| **Máximo 2 Consecutivas** | No más de 2 sesiones seguidas de la misma materia |
-
----
-
-## 📊 Formato de Datos
-
-### courses_full.csv
-```csv
-id,name,code,credits
-101,INGLÉS I,ING1,75
-102,DESARROLLO HUMANO Y VALORES,DHV,60
-...
-```
-
-### professors.json
-```json
-[
-  {
-    "id": 1,
-    "name": "Myriam Ornelas (ITI)",
-    "available_timeslots": [2, 3, 4, 5, ...],
-    "available_courses": ["LEAD", "PE", "CI", ...]
-  },
-  ...
-]
-```
-
-### timeslots.json
-```json
-[
-  {
-    "id": 1,
-    "day": "Lunes",
-    "start_hour": 7,
-    "start_minute": 0,
-    "end_hour": 7,
-    "end_minute": 55,
-    "display": "Lunes 07:00-07:55"
-  },
-  ...
-]
-```
-
----
-
-## 🔍 Solución de Problemas
-
-### Error de Compilación
-
-**Windows**: Asegúrate de tener instalado Visual Studio Build Tools con componente C++.
-
-**Linux**: Verifica que tengas `python3-dev`:
-```bash
-sudo apt install python3-dev
-```
-
-### Error "Python.h not found"
-
-Instala los archivos de desarrollo de Python:
-- **Windows**: Reinstala Python marcando "Include development headers"
-- **Linux**: `sudo apt install python3-dev`
-
-### Error en tiempo de ejecución
-
-Verifica que el módulo `.pyd` o `.so` esté en la carpeta `backend/`:
-```bash
-ls backend/*.pyd   # Windows
-ls backend/*.so    # Linux
-```
-
----
-
-## 📝 Uso de la API
-
-### Endpoint Principal: `/api/solve`
-
-**Request**:
-```json
-{
-  "period": "sept-dec",
-  "timeout": 60
-}
-```
-
-**Response**:
-```json
-{
-  "status": "success",
-  "assignments": [
-    {
-      "group_id": 101,
-      "course_id": 101,
-      "course_name": "INGLÉS I",
-      "course_code": "ING1",
-      "professor_id": 1,
-      "professor_name": "Myriam Ornelas (ITI)",
-      "timeslot_id": 2,
-      "timeslot_display": "Lunes 07:55-08:50"
-    },
-    ...
-  ]
-}
-```
-
----
-
-## 🎯 Períodos Académicos
-
-El sistema soporta 3 períodos por año:
-
-- **sept-dec**: Septiembre-Diciembre (Cuatrimestres 1, 4, 7, 10)
-- **jan-apr**: Enero-Abril (Cuatrimestres 2, 5, 8)
-- **may-aug**: Mayo-Agosto (Cuatrimestres 3, 6, 9)
-
----
-
-## 👨‍💻 Desarrollo
-
-El código está completamente en **español** para facilitar el mantenimiento:
-
-- Variables en español (`id_profesor`, `id_grupo`, `creditos`)
-- Comentarios en español
-- Mensajes de consola en español con emojis
-
----
-
-## 📄 Licencia
-
-Este proyecto es para uso académico de la Universidad Tecnológica de Puebla.
-
----
-
-## 🤝 Contribución
-
-Para contribuir al proyecto:
-
-1. Haz fork del repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-restriccion`)
-3. Commit tus cambios (`git commit -am 'Agregar nueva restricción'`)
-4. Push a la rama (`git push origin feature/nueva-restriccion`)
-5. Crea un Pull Request
-
----
-
-**Desarrollado con ❤️ para la Universidad Tecnológica de Puebla**
+**Proyecto de Estructura de Datos - UTP**

@@ -16,27 +16,27 @@ SolucionadorHorarios::SolucionadorHorarios() {}
 // ============================================
 
 void SolucionadorHorarios::agregarBloqueHorario(int id, int dia, int h_inicio,
-                                                 int m_inicio, int h_fin,
-                                                 int m_fin) {
+                                                int m_inicio, int h_fin,
+                                                int m_fin) {
   bloques_horarios.push_back({id, dia, h_inicio, m_inicio, h_fin, m_fin});
 }
 
-void SolucionadorHorarios::agregarProfesor(int id, string nombre,
-                                            const vector<int> &horarios_disp,
-                                            const vector<string> &codigos_cursos) {
+void SolucionadorHorarios::agregarProfesor(
+    int id, string nombre, const vector<int> &horarios_disp,
+    const vector<string> &codigos_cursos) {
   set<int> horarios(horarios_disp.begin(), horarios_disp.end());
   set<string> materias(codigos_cursos.begin(), codigos_cursos.end());
   profesores.push_back({id, nombre, horarios, materias});
 }
 
 void SolucionadorHorarios::agregarCurso(int id, string nombre, string codigo,
-                                         int creditos, int cuatrimestre,
-                                         bool req_profesor) {
+                                        int creditos, int cuatrimestre,
+                                        bool req_profesor) {
   cursos.push_back({id, nombre, codigo, creditos, cuatrimestre, req_profesor});
 }
 
 void SolucionadorHorarios::agregarGrupo(int id, int cuatrimestre,
-                                         const vector<int> &ids_cursos) {
+                                        const vector<int> &ids_cursos) {
   grupos.push_back({id, cuatrimestre, ids_cursos});
 }
 
@@ -92,6 +92,9 @@ void SolucionadorHorarios::inicializarMatriz() {
   // Inicializar matriz 3D con ceros
   matriz_asignaciones.assign(
       num_profs, vector<vector<int>>(num_bloques, vector<int>(num_grupos, 0)));
+
+  // Limpiar mapa de carga
+  carga_grupo_dia.clear();
 }
 
 // ============================================
@@ -151,7 +154,7 @@ int SolucionadorHorarios::obtenerSiguienteBloque(int idx_bloque_actual) {
     BloqueHorario &candidato = bloques_horarios[i];
 
     // Mismo día, hora de inicio = hora de fin del actual
-    if (candidato.dia == actual.dia && 
+    if (candidato.dia == actual.dia &&
         candidato.hora_inicio == actual.hora_fin &&
         candidato.minuto_inicio == actual.minuto_fin) {
       return i;
@@ -166,16 +169,17 @@ bool SolucionadorHorarios::sonBloquesConsecutivos(int idx1, int idx2) {
 }
 
 bool SolucionadorHorarios::verificarDisponibilidadProfesor(int idx_prof,
-                                                            int idx_bloque) {
+                                                           int idx_bloque) {
   int id_bloque = indice_a_id_bloque[idx_bloque];
   const Profesor &prof = profesores[idx_prof];
   return prof.horarios_disponibles.count(id_bloque) > 0;
 }
 
 bool SolucionadorHorarios::verificarConflictoProfesor(int idx_prof,
-                                                       int idx_bloque) {
+                                                      int idx_bloque) {
   // Verificar si el profesor ya tiene alguna clase asignada en ese bloque
-  for (int idx_grupo = 0; idx_grupo < matriz_asignaciones[idx_prof][idx_bloque].size();
+  for (int idx_grupo = 0;
+       idx_grupo < matriz_asignaciones[idx_prof][idx_bloque].size();
        idx_grupo++) {
     if (matriz_asignaciones[idx_prof][idx_bloque][idx_grupo] != 0) {
       return true; // Conflicto: ya tiene clase
@@ -185,7 +189,7 @@ bool SolucionadorHorarios::verificarConflictoProfesor(int idx_prof,
 }
 
 bool SolucionadorHorarios::verificarConflictoGrupo(int idx_grupo,
-                                                    int idx_bloque) {
+                                                   int idx_bloque) {
   // Verificar si el grupo ya tiene alguna clase asignada en ese bloque
   for (int idx_prof = 0; idx_prof < matriz_asignaciones.size(); idx_prof++) {
     if (matriz_asignaciones[idx_prof][idx_bloque][idx_grupo] != 0) {
@@ -196,8 +200,8 @@ bool SolucionadorHorarios::verificarConflictoGrupo(int idx_grupo,
 }
 
 bool SolucionadorHorarios::verificarDiversidadProfesor(int id_prof,
-                                                        int id_grupo,
-                                                        int id_curso) {
+                                                       int id_grupo,
+                                                       int id_curso) {
   // Restricción: Un profesor NO puede dar 2 materias diferentes al mismo grupo
   if (cursos_por_profesor_grupo[id_grupo][id_prof].size() > 0) {
     // El profesor ya tiene asignaciones con este grupo
@@ -212,23 +216,23 @@ bool SolucionadorHorarios::verificarDiversidadProfesor(int id_prof,
 }
 
 bool SolucionadorHorarios::verificarConsecutividad(const SesionClase &sesion,
-                                                    int idx_prof,
-                                                    int idx_bloque) {
+                                                   int idx_prof,
+                                                   int idx_bloque) {
   // NUEVA LÓGICA: Las sesiones NO tienen que ser todas consecutivas
   // Solo deben ser impartidas por el MISMO profesor
   // Y se distribuyen respet and el máximo de 2 consecutivas
-  
+
   // Si es la primera sesión, OK
   if (sesion.numero_sesion == 1) {
     return true;
   }
-  
+
   int idx_grupo = id_a_indice_grupo[sesion.id_grupo];
-  
+
   // Buscar si ya hay sesiones previas de esta materia asignadas
   bool hay_sesiones_previas = false;
   int prof_anterior = -1;
-  
+
   for (size_t p = 0; p < matriz_asignaciones.size(); p++) {
     for (size_t b = 0; b < matriz_asignaciones[p].size(); b++) {
       if (matriz_asignaciones[p][b][idx_grupo] == sesion.id_curso) {
@@ -237,47 +241,48 @@ bool SolucionadorHorarios::verificarConsecutividad(const SesionClase &sesion,
         break;
       }
     }
-    if (hay_sesiones_previas) break;
+    if (hay_sesiones_previas)
+      break;
   }
-  
+
   // Si hay sesiones previas, debe ser el MISMO profesor
   if (hay_sesiones_previas && prof_anterior != idx_prof) {
     return false; // Diferente profesor, no permitido
   }
-  
+
   return true; // OK: mismo profesor o no hay sesiones previas
 }
 
 bool SolucionadorHorarios::verificarMaximoConsecutivas(int idx_grupo,
-                                                        int id_curso,
-                                                        int idx_bloque,
-                                                        int idx_prof) {
+                                                       int id_curso,
+                                                       int idx_bloque,
+                                                       int idx_prof) {
   // ESTRATEGIA MEJORADA:
   // 1. Máximo 2 sesiones de la misma materia en el mismo DÍA
   // 2. PREFERIR que sean consecutivas, pero NO es obligatorio
   // 3. Esto permite llenar mejor todos los días (incluyendo jueves/viernes)
-  
-  BloqueHorario& bloque_actual = bloques_horarios[idx_bloque];
+
+  BloqueHorario &bloque_actual = bloques_horarios[idx_bloque];
   int dia_actual = bloque_actual.dia;
-  
+
   // Contar cuántas sesiones de este curso ya hay en este día
   int sesiones_en_dia = 0;
-  
+
   for (size_t b = 0; b < bloques_horarios.size(); b++) {
     if (bloques_horarios[b].dia == dia_actual &&
         matriz_asignaciones[idx_prof][b][idx_grupo] == id_curso) {
       sesiones_en_dia++;
     }
   }
-  
+
   // Si ya hay 2 sesiones en este día, NO permitir más
   if (sesiones_en_dia >= 2) {
     return false;
   }
-  
+
   // ELIMINAMOS la restricción estricta de consecutividad
   // Ahora permite hasta 2 sesiones en el mismo día, consecutivas o no
-  
+
   return true; // OK: menos de 2 sesiones en este día
 }
 
@@ -292,81 +297,179 @@ bool SolucionadorHorarios::asignarSesionGreedy(SesionClase &sesion) {
 
   int idx_grupo = id_a_indice_grupo[sesion.id_grupo];
 
-  // ESTRATEGIA 1: Intentar con TODAS las restricciones
-  for (size_t idx_prof = 0; idx_prof < profesores.size(); idx_prof++) {
+  // Lambda para intentar asignar con un profesor específico
+  auto intentarAsignar = [&](int idx_prof, bool verificar_materia,
+                             bool relajar_consecutividad) -> bool {
     const Profesor &prof = profesores[idx_prof];
 
-    // ¿Puede dar esta materia?
-    if (prof.materias_capacitadas.find(curso->codigo) ==
-        prof.materias_capacitadas.end()) {
-      continue;
+    if (verificar_materia) {
+      if (prof.materias_capacitadas.find(curso->codigo) ==
+          prof.materias_capacitadas.end()) {
+        return false;
+      }
     }
 
-    // Restricción: Diversidad de profesor por grupo
-    if (!verificarDiversidadProfesor(prof.id, sesion.id_grupo, sesion.id_curso)) {
-      continue;
+    // Restricción: Diversidad de profesor por grupo (solo si no estamos en modo
+    // emergencia extrema)
+    if (verificar_materia && !verificarDiversidadProfesor(
+                                 prof.id, sesion.id_grupo, sesion.id_curso)) {
+      return false;
     }
 
-    // Probar cada bloque horario disponible del profesor
-    for (int id_bloque : prof.horarios_disponibles) {
+    // Helper para verificar adyacencia (minimizar huecos)
+    auto esAdyacente = [&](int id_bloque) -> bool {
+      if (id_a_indice_bloque.find(id_bloque) == id_a_indice_bloque.end())
+        return false;
+      int idx = id_a_indice_bloque[id_bloque];
+      int dia = bloques_horarios[idx].dia;
+
+      // Verificar bloque anterior
+      if (idx > 0 && bloques_horarios[idx - 1].dia == dia) {
+        if (matriz_asignaciones[idx_prof][idx - 1][idx_grupo] != 0)
+          return true; // El profe ya da clase antes (ideal)
+        // Verificar si el GRUPO tiene clase antes con CUALQUIER profe
+        for (const auto &p : matriz_asignaciones) {
+          if (p[idx - 1][idx_grupo] != 0)
+            return true;
+        }
+      }
+
+      // Verificar bloque siguiente
+      if (idx < bloques_horarios.size() - 1 &&
+          bloques_horarios[idx + 1].dia == dia) {
+        if (matriz_asignaciones[idx_prof][idx + 1][idx_grupo] != 0)
+          return true;
+        for (const auto &p : matriz_asignaciones) {
+          if (p[idx + 1][idx_grupo] != 0)
+            return true;
+        }
+      }
+      return false;
+    };
+
+    // ORDENAMIENTO INTELIGENTE: Balanceo con Tolerancia y Adyacencia
+    vector<int> bloques_ordenados(prof.horarios_disponibles.begin(),
+                                  prof.horarios_disponibles.end());
+    sort(bloques_ordenados.begin(), bloques_ordenados.end(),
+         [&](int id_a, int id_b) {
+           if (id_a_indice_bloque.find(id_a) == id_a_indice_bloque.end())
+             return false;
+           if (id_a_indice_bloque.find(id_b) == id_a_indice_bloque.end())
+             return true;
+
+           int dia_a = bloques_horarios[id_a_indice_bloque[id_a]].dia;
+           int dia_b = bloques_horarios[id_a_indice_bloque[id_b]].dia;
+
+           int carga_a = carga_grupo_dia[sesion.id_grupo][dia_a];
+           int carga_b = carga_grupo_dia[sesion.id_grupo][dia_b];
+
+           bool adj_a = esAdyacente(id_a);
+           bool adj_b = esAdyacente(id_b);
+
+           // 1. REGLA DE ORO: "No haya días sin mínimo 2 clases"
+           // Si alguno tiene menos de 2 clases, priorizar llenarlo
+           if (carga_a < 2 || carga_b < 2) {
+             if (carga_a != carga_b)
+               return carga_a < carga_b;
+             // Si ambos tienen < 2, preferir el adyacente
+             if (adj_a != adj_b)
+               return adj_a > adj_b;
+             return carga_a < carga_b;
+           }
+
+           // 2. BALANCEO CON TOLERANCIA
+           // Si la diferencia de carga es pequeña (<= 1), permitimos desbalance
+           // para ganar Adyacencia
+           if (abs(carga_a - carga_b) <= 1) {
+             // Preferir adyacencia sobre balance perfecto
+             if (adj_a != adj_b)
+               return adj_a > adj_b;
+             // Si adyacencia es igual, preferir menor carga
+             return carga_a < carga_b;
+           }
+
+           // 3. BALANCEO ESTRICTO
+           // Si la diferencia es grande, priorizar estrictamente el de menor
+           // carga
+           return carga_a < carga_b;
+         });
+    for (int id_bloque : bloques_ordenados) {
       if (id_a_indice_bloque.find(id_bloque) == id_a_indice_bloque.end()) {
         continue;
       }
 
       int idx_bloque = id_a_indice_bloque[id_bloque];
 
-      if (!verificarDisponibilidadProfesor(idx_prof, idx_bloque)) continue;
-      if (verificarConflictoProfesor(idx_prof, idx_bloque)) continue;
-      if (verificarConflictoGrupo(idx_grupo, idx_bloque)) continue;
-      if (!verificarConsecutividad(sesion, idx_prof, idx_bloque)) continue;
-      if (!verificarMaximoConsecutivas(idx_grupo, sesion.id_curso, idx_bloque, idx_prof)) continue;
+      if (!verificarDisponibilidadProfesor(idx_prof, idx_bloque))
+        continue;
+      if (verificarConflictoProfesor(idx_prof, idx_bloque))
+        continue;
+      if (verificarConflictoGrupo(idx_grupo, idx_bloque))
+        continue;
+
+      // MANTENER restricción de mismo profesor (Consecutividad)
+      if (!verificarConsecutividad(sesion, idx_prof, idx_bloque))
+        continue;
+
+      if (!relajar_consecutividad) {
+        if (!verificarMaximoConsecutivas(idx_grupo, sesion.id_curso, idx_bloque,
+                                         idx_prof))
+          continue;
+      }
 
       // ¡Asignación válida!
       matriz_asignaciones[idx_prof][idx_bloque][idx_grupo] = sesion.id_curso;
-      cursos_por_profesor_grupo[sesion.id_grupo][prof.id].insert(sesion.id_curso);
+      cursos_por_profesor_grupo[sesion.id_grupo][prof.id].insert(
+          sesion.id_curso);
       sesion.id_bloque_asignado = id_bloque;
       sesion.id_profesor_asignado = prof.id;
+
+      // Actualizar carga del día
+      int dia = bloques_horarios[idx_bloque].dia;
+      carga_grupo_dia[sesion.id_grupo][dia]++;
+
+      return true;
+    }
+    return false;
+  };
+
+  // ESTRATEGIA 1: Estricta (verificar materia, no relajar)
+  for (size_t idx_prof = 0; idx_prof < profesores.size(); idx_prof++) {
+    if (intentarAsignar(idx_prof, true, false))
+      return true;
+  }
+
+  // ESTRATEGIA 2: Relajada (verificar materia, relajar huecos/maximo)
+  // Solo si no es la primera sesión (para intentar llenar huecos)
+  if (sesion.numero_sesion > 1) {
+    for (size_t idx_prof = 0; idx_prof < profesores.size(); idx_prof++) {
+      if (intentarAsignar(idx_prof, true, true))
+        return true;
+    }
+  }
+
+  // ESTRATEGIA 3: EMERGENCIA (NO verificar materia, relajar todo)
+  // "Si sientes que es necesario agregale mas materias a los profesores"
+  // Buscamos CUALQUIER profesor disponible para cubrir la hora
+  for (size_t idx_prof = 0; idx_prof < profesores.size(); idx_prof++) {
+    // Intentamos asignar asumiendo que el profesor PUEDE dar la materia (force)
+    // Mantenemos 'false' en relajar_consecutividad para intentar mantener un
+    // horario decente primero
+    if (intentarAsignar(idx_prof, false, false)) {
+      // cout << "⚠️  Emergencia: Profe " << profesores[idx_prof].nombre << "
+      // asignado a " << curso->codigo << endl;
       return true;
     }
   }
 
-  // ESTRATEGIA 2: Si la sesión NO es la primera, relajar la restricción de diversidad
-  // Esto permite completar las horas semanales aunque sea con otro profesor
-  if (sesion.numero_sesion > 1) {
-    for (size_t idx_prof = 0; idx_prof < profesores.size(); idx_prof++) {
-      const Profesor &prof = profesores[idx_prof];
-
-      if (prof.materias_capacitadas.find(curso->codigo) ==
-          prof.materias_capacitadas.end()) {
-        continue;
-      }
-
-      // OMITIR verificación de diversidad en segunda pasada
-
-      for (int id_bloque : prof.horarios_disponibles) {
-        if (id_a_indice_bloque.find(id_bloque) == id_a_indice_bloque.end()) {
-          continue;
-        }
-
-        int idx_bloque = id_a_indice_bloque[id_bloque];
-
-        if (!verificarDisponibilidadProfesor(idx_prof, idx_bloque)) continue;
-        if (verificarConflictoProfesor(idx_prof, idx_bloque)) continue;
-        if (verificarConflictoGrupo(idx_grupo, idx_bloque)) continue;
-        // RELAJAR consecutividad también
-        if (!verificarMaximoConsecutivas(idx_grupo, sesion.id_curso, idx_bloque, idx_prof)) continue;
-
-        // Asignación relajada
-        matriz_asignaciones[idx_prof][idx_bloque][idx_grupo] = sesion.id_curso;
-        cursos_por_profesor_grupo[sesion.id_grupo][prof.id].insert(sesion.id_curso);
-        sesion.id_bloque_asignado = id_bloque;
-        sesion.id_profesor_asignado = prof.id;
-        return true;
-      }
+  // ESTRATEGIA 4: EMERGENCIA TOTAL (NO verificar materia, SI relajar todo)
+  for (size_t idx_prof = 0; idx_prof < profesores.size(); idx_prof++) {
+    if (intentarAsignar(idx_prof, false, true)) {
+      return true;
     }
   }
 
-  return false; // No se pudo asignar
+  return false; // No se pudo asignar ni en emergencia
 }
 
 // ============================================
@@ -409,7 +512,7 @@ bool SolucionadorHorarios::resolverGreedy() {
       asignadas++;
     } else {
       Curso *curso = obtenerCurso(sesion.id_curso);
-      cout << "⚠️  No asignada: " << (curso ? curso->codigo : "???") 
+      cout << "⚠️  No asignada: " << (curso ? curso->codigo : "???")
            << " (Sesión " << sesion.numero_sesion << ") → Grupo "
            << sesion.id_grupo << endl;
     }

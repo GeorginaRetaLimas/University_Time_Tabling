@@ -27,8 +27,8 @@ struct BloqueHorario {
 struct Profesor {
   int id;
   string nombre;
-  set<int> horarios_disponibles;     // IDs de bloques horarios disponibles
-  set<string> materias_capacitadas;  // Códigos de cursos que puede impartir
+  set<int> horarios_disponibles;    // IDs de bloques horarios disponibles
+  set<string> materias_capacitadas; // Códigos de cursos que puede impartir
 };
 
 struct Curso {
@@ -51,7 +51,7 @@ struct SesionClase {
   int id_curso;
   int id_grupo;
   int creditos;
-  int numero_sesion;           // 1, 2, 3... para sesiones de la misma materia
+  int numero_sesion; // 1, 2, 3... para sesiones de la misma materia
   int id_bloque_asignado = -1;
   int id_profesor_asignado = -1;
 };
@@ -69,7 +69,8 @@ private:
   vector<Grupo> grupos;
   vector<SesionClase> sesiones;
 
-  // Matriz 3D de asignaciones: [índice_prof][índice_bloque][índice_grupo] = id_curso
+  // Matriz 3D de asignaciones: [índice_prof][índice_bloque][índice_grupo] =
+  // id_curso
   vector<vector<vector<int>>> matriz_asignaciones;
 
   // Mapas de conversión ID ↔ Índice
@@ -80,6 +81,10 @@ private:
   // [id_grupo][id_profesor] = {set de id_curso}
   map<int, map<int, set<int>>> cursos_por_profesor_grupo;
 
+  // Seguimiento: carga horaria por día para cada grupo (para distribución
+  // equitativa) [id_grupo][dia] = cantidad_sesiones
+  map<int, map<int, int>> carga_grupo_dia;
+
   // Control de tiempo
   chrono::steady_clock::time_point tiempo_inicio;
   double limite_tiempo;
@@ -87,21 +92,23 @@ private:
   // Métodos privados (helpers)
   Profesor *obtenerProfesor(int id);
   Curso *obtenerCurso(int id);
-  
+
   void construirMapasIndices();
   void inicializarMatriz();
   void generarSesiones();
-  
+
   int obtenerSiguienteBloque(int idx_bloque_actual);
   bool sonBloquesConsecutivos(int idx_bloque1, int idx_bloque2);
-  
+
   bool verificarDisponibilidadProfesor(int idx_prof, int idx_bloque);
   bool verificarConflictoProfesor(int idx_prof, int idx_bloque);
   bool verificarConflictoGrupo(int idx_grupo, int idx_bloque);
   bool verificarDiversidadProfesor(int id_prof, int id_grupo, int id_curso);
-  bool verificarConsecutividad(const SesionClase &sesion, int idx_prof, int idx_bloque);
-  bool verificarMaximoConsecutivas(int idx_grupo, int id_curso, int idx_bloque, int idx_prof);
-  
+  bool verificarConsecutividad(const SesionClase &sesion, int idx_prof,
+                               int idx_bloque);
+  bool verificarMaximoConsecutivas(int idx_grupo, int id_curso, int idx_bloque,
+                                   int idx_prof);
+
   bool asignarSesionGreedy(SesionClase &sesion);
   bool resolverGreedy();
 
@@ -109,9 +116,12 @@ public:
   SolucionadorHorarios();
 
   // Métodos para agregar datos
-  void agregarBloqueHorario(int id, int dia, int h_inicio, int m_inicio, int h_fin, int m_fin);
-  void agregarProfesor(int id, string nombre, const vector<int> &horarios_disp, const vector<string> &codigos_cursos);
-  void agregarCurso(int id, string nombre, string codigo, int creditos, int cuatrimestre, bool req_profesor);
+  void agregarBloqueHorario(int id, int dia, int h_inicio, int m_inicio,
+                            int h_fin, int m_fin);
+  void agregarProfesor(int id, string nombre, const vector<int> &horarios_disp,
+                       const vector<string> &codigos_cursos);
+  void agregarCurso(int id, string nombre, string codigo, int creditos,
+                    int cuatrimestre, bool req_profesor);
   void agregarGrupo(int id, int cuatrimestre, const vector<int> &ids_cursos);
 
   // Método principal de resolución

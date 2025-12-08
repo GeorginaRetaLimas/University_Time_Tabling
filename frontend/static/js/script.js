@@ -90,38 +90,40 @@ document.addEventListener('DOMContentLoaded', () => {
             { bg: '#FCE4EC', border: '#EC407A', text: '#AD1457' }   // Rosa
         ];
 
-        const semesters = {};
+        // Agrupar por Grupo ID
+        const groups = {};
 
         solution.forEach(item => {
-            let sem = Math.floor(item.group_id / 100);
-            if (item.group_id >= 1000) sem = Math.floor(item.group_id / 100);
-
-            if (!semesters[sem]) semesters[sem] = [];
-            semesters[sem].push(item);
+            if (!groups[item.group_id]) groups[item.group_id] = [];
+            groups[item.group_id].push(item);
         });
 
         let html = '';
 
-        Object.keys(semesters).sort((a, b) => a - b).forEach(sem => {
-            const items = semesters[sem];
-            
+        Object.keys(groups).sort((a, b) => a - b).forEach(groupId => {
+            const items = groups[groupId];
+            const sem = Math.floor(groupId / 100); // Asumiendo convención de ID
+
             // Asignar colores únicos a cada materia de este grupo
             const uniqueCourses = [...new Set(items.map(i => i.course_id))];
             const courseColorMap = {};
             uniqueCourses.forEach((courseId, index) => {
                 courseColorMap[courseId] = colorPalette[index % 7];
             });
-            
-            html += `<div class="card" style="margin-bottom: 32px;">
-                <h3 style="color: var(--primary); border-bottom: 2px solid #f3e8ff; padding-bottom: 12px; margin-bottom: 24px;">
-                    Cuatrimestre ${sem}
-                </h3>`;
+
+            html += `<div class="card" style="margin-bottom: 48px; border-top: 4px solid var(--primary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h3 style="color: var(--primary); margin: 0;">
+                        <i class="fas fa-users"></i> Grupo ${groupId}
+                    </h3>
+                    <span class="badge" style="font-size: 1rem;">Cuatrimestre ${sem}</span>
+                </div>`;
 
             html += `<div style="overflow-x: auto;">
                 <table class="timetable-grid">
                     <thead>
                         <tr>
-                            <th>Horario</th>
+                            <th style="width: 100px;">Horario</th>
                             <th>Lunes</th>
                             <th>Martes</th>
                             <th>Miércoles</th>
@@ -150,10 +152,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (cellItems.length > 0) {
                         cellItems.forEach(ci => {
                             const colors = courseColorMap[ci.course_id];
-                            html += `<div class="session-block" style="background: ${colors.bg}; border-left: 3px solid ${colors.border}; padding: 4px 8px; margin-bottom: 4px; border-radius: 4px; font-size: 0.75rem;">
-                                <div style="font-weight: 700; color: ${colors.text};">${ci.course_name}</div>
-                                <div style="color: var(--text-gray); font-size: 0.7rem;">${ci.professor_name}</div>
-                                <div style="font-size: 0.65rem; color: #94a3b8;">G: ${ci.group_id}</div>
+                            html += `<div class="session-block" style="background: ${colors.bg}; border-left: 3px solid ${colors.border}; padding: 6px 8px; margin-bottom: 4px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                <div style="font-weight: 700; color: ${colors.text}; font-size: 0.85rem;">${ci.course_name}</div>
+                                <div style="color: var(--text-gray); font-size: 0.75rem; margin-top: 2px;">
+                                    <i class="fas fa-chalkboard-teacher"></i> ${ci.professor_name}
+                                </div>
                             </div>`;
                         });
                     }
