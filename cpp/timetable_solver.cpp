@@ -140,9 +140,10 @@ bool TimetableSolver::solveRecursive(int session_idx,
     auto current_time = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed = current_time - start_time;
     if (elapsed.count() > timeout_limit) {
-      cout << "Timeout reached after " << elapsed.count() << " seconds."
-           << endl;
-      return false; // Timeout reached
+      cout << "Timeout reached after " << elapsed.count()
+           << " seconds. Returning partial solution." << endl;
+      return true; // Return TRUE to stop backtracking and keep current
+                   // assignments
     }
   }
 
@@ -275,17 +276,47 @@ bool TimetableSolver::solveRecursive(int session_idx,
 }
 
 bool TimetableSolver::solve(double timeout_seconds) {
-  this->timeout_limit = timeout_seconds;
-  this->start_time = std::chrono::steady_clock::now();
-  generateSessions();
-  buildConflictGraph();
+  try {
+    this->timeout_limit = timeout_seconds;
+    this->start_time = std::chrono::steady_clock::now();
+    generateSessions();
+    buildConflictGraph();
 
-  // Sort sessions by degree (heuristic) to fail fast
-  // But we need to keep track of original IDs if we sort.
-  // For now, let's just solve linearly.
+    // Sort sessions by difficulty (weekly hours descending)
+    // We need to keep track of original indices to map back to conflict graph,
+    // but since conflict graph is built on sessions indices, if we sort
+    // sessions we invalidate the graph. BETTER STRATEGY: Sort sessions BEFORE
+    // building conflict graph.
 
-  return solveRecursive(0, sessions, conflict_graph, timeslots, professors,
-                        courses);
+    // 1. Sort sessions
+    sort(sessions.begin(), sessions.end(),
+         [this](const ClassSession &a, const ClassSession &b) {
+           Course *ca = getCourse(a.course_id);
+           Course *cb = getCourse(b.course_id);
+           // Primary: More hours first
+           if (ca->weekly_hours != cb->weekly_hours)
+             return ca->weekly_hours > cb->weekly_hours;
+           // Secondary: Group ID (keep groups together)
+           return a.group_id < b.group_id;
+         });
+
+    // 2. Re-assign IDs to match new order
+    for (int i = 0; i < sessions.size(); ++i) {
+      sessions[i].id = i;
+    }
+
+    // 3. Build graph with sorted sessions
+    buildConflictGraph();
+
+    return solveRecursive(0, sessions, conflict_graph, timeslots, professors,
+                          courses);
+  } catch (const std::exception &e) {
+    cout << "Exception in solve: " << e.what() << endl;
+    return false;
+  } catch (...) {
+    cout << "Unknown exception in solve" << endl;
+    return false;
+  }
 }
 
 vector<TimetableSolver::Assignment> TimetableSolver::getSolution() {
