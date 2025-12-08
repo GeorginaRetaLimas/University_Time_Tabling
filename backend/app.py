@@ -70,7 +70,7 @@ def get_professors():
 
 @app.route('/api/courses', methods=['GET'])
 def get_courses():
-    courses = load_courses(os.path.join(DATA_DIR, 'courses_full.csv'))
+    courses = load_courses(os.path.join(DATA_DIR, 'courses.csv'))
     return jsonify(courses)
 
 @app.route('/api/professors/save', methods=['POST'])
