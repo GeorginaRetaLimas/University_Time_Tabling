@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+{% set active_page = "availability" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="header-title">Disponibilidad</h2>
+
+    <div class="card">
+        <div style="display: flex; gap: 24px; align-items: flex-end;">
+            <div style="flex: 1;">
+                <label
+                    style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-gray);">Maestro</label>
+                <select id="prof-select"
+                    style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+                    <option value="">Seleccionar Maestro...</option>
+                    {% for prof in professors %}
+                    <option value="{{ prof.id }}">{{ prof.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-gray);">Filtrar
+                    por Materia</label>
+                <input type="text" placeholder="Buscar materia..."
+                    style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+            </div>
+            <div>
+                <button id="save-availability-btn" class="btn-primary"
+                    style="height: 42px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-save"></i> Guardar Datos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Disponibilidad Semanal</h3>
+        <p style="color: var(--text-gray); margin-bottom: 24px;">Los días en las columnas, los intervalos de tiempo en
+            las filas.</p>
+
+        <div class="availability-grid">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Horas</th>
+                        <th style="text-align: center;">Lun</th>
+                        <th style="text-align: center;">Mar</th>
+                        <th style="text-align: center;">Mié</th>
+                        <th style="text-align: center;">Jue</th>
+                        <th style="text-align: center;">Vie</th>
+                    </tr>
+                </thead>
+                <tbody id="availability-tbody">
+                    <!-- Dynamic rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="application/json" id="timeslots-data">
+    {{ timeslots | tojson }}
+</script>
+
+<script>
+    // Embedded script for availability logic
+    const timeslots = JSON.parse(document.getElementById('timeslots-data').textContent);
+    const profSelect = document.getElementById('prof-select');
+    const tbody = document.getElementById('availability-tbody');
+
+
+    // Group timeslots by time range (assuming same slots for all days)
+    // We need to organize timeslots by row (time) and column (day)
+    // Unique start times
+    const uniqueTimes = [...new Set(timeslots.map(t => `${t.start_hour}:${t.start_minute.toString().padStart(2, '0')}-${t.end_hour}:${t.end_minute.toString().padStart(2, '0')}`))];
+
+    function renderGrid() {
+        let html = '';
+        uniqueTimes.forEach(timeRange => {
+            html += `<tr><td style="font-weight: 500;">${timeRange}</td>`;
+            // Days 1 to 5 (Mon-Fri)
+            for (let day = 1; day <= 5; day++) {
+                // Find timeslot id for this day and time
+                // This is a bit inefficient but works for small data
+                const slot = timeslots.find(t => {
+                    const range = `${t.start_hour}:${t.start_minute.toString().padStart(2, '0')}-${t.end_hour}:${t.end_minute.toString().padStart(2, '0')}`;
+                    const tDay = t.day === 'Lunes' ? 1 : t.day === 'Martes' ? 2 : t.day === 'Miércoles' ? 3 : t.day === 'Jueves' ? 4 : 5;
+                    return range === timeRange && tDay === day;
+                });
+
+                if (slot) {
+                    html += `<td style="text-align: center;">
+                        <button class="slot-toggle on" data-id="${slot.id}" onclick="toggleSlot(this)">On</button>
+                    </td>`;
+                } else {
+                    html += `<td></td>`;
+                }
+            }
+            html += `</tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    function toggleSlot(btn) {
+        if (btn.classList.contains('on')) {
+            btn.classList.remove('on');
+            btn.classList.add('off');
+            btn.textContent = 'Off';
+            btn.style.backgroundColor = '#f1f5f9';
+            btn.style.color = '#64748b';
+        } else {
+            btn.classList.remove('off');
+            btn.classList.add('on');
+            btn.textContent = 'On';
+            btn.style.backgroundColor = 'var(--primary)';
+            btn.style.color = 'white';
+        }
+    }
+
+    renderGrid();
+
+    // Initial styling for buttons
+    document.querySelectorAll('.slot-toggle').forEach(btn => {
+        btn.style.width = '100%';
+        btn.style.padding = '8px';
+        btn.style.borderRadius = '6px';
+        btn.style.border = 'none';
+        btn.style.cursor = 'pointer';
+        btn.style.fontWeight = '600';
+        // Default ON style
+        btn.style.backgroundColor = 'var(--primary)';
+        btn.style.color = 'white';
+    });
+</script>
+{% endblock %}

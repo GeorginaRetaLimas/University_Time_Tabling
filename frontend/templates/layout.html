@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universidad Horarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-university fa-2x" style="color: var(--primary);"></i>
+                <div>
+                    <h2>Universidad</h2>
+                    <span style="font-weight: 600;">Horarios</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/" class="{{ 'active' if active_page == 'dashboard' else '' }}"><i
+                                class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="/professors" class="{{ 'active' if active_page == 'professors' else '' }}"><i
+                                class="fas fa-users"></i> Maestros</a></li>
+                    <li><a href="#" class="{{ 'active' if active_page == 'availability' else '' }}"><i
+                                class="fas fa-calendar-alt"></i> Disponibilidad</a></li>
+                    <li><a href="#" class="{{ 'active' if active_page == 'timetable' else '' }}"><i
+                                class="fas fa-clock"></i> Horario</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

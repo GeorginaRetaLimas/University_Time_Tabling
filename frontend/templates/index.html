@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+{% set active_page = "dashboard" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="header-title">Panel de Control</h2>
+
+    <!-- Stats Row -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-info">
+                <h4>Ciclo Actual</h4>
+                <p>Mayo - Agosto</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-book"></i></div>
+            <div class="stat-info">
+                <h4>Cursos</h4>
+                <p>15</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+            <div class="stat-info">
+                <h4>Profesores</h4>
+                <p>33</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+                <h4>Horarios</h4>
+                <p>45</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selection Section -->
+    <div class="card">
+        <h3><i class="fas fa-calendar-alt" style="color: var(--primary); margin-right: 8px;"></i> Seleccionar Ciclo
+            Académico</h3>
+        <p style="color: var(--text-gray); margin-bottom: 24px;">Elige el periodo cuatrimestral para generar el horario
+        </p>
+
+        <div style="display: flex; gap: 32px;">
+            <div class="selection-form" style="flex: 1;">
+                <label
+                    style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--primary);">
+                    <i class="fas fa-graduation-cap"></i> CICLO CUATRIMESTRAL
+                </label>
+                <select id="period-select"
+                    style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+                    <option value="may-aug">Mayo - Agosto</option>
+                    <option value="sept-dec">Septiembre - Diciembre</option>
+                    <option value="jan-apr">Enero - Abril</option>
+                </select>
+            </div>
+
+            <div class="info-panel" style="flex: 1;">
+                <div class="info-header">
+                    <i class="fas fa-info-circle"></i> Información del Ciclo
+                </div>
+                <div class="info-body">
+                    <div class="info-row">
+                        <span><i class="fas fa-calendar"></i> Periodo</span>
+                        <span style="font-weight: 600;">Mayo - Agosto</span>
+                    </div>
+                    <div class="info-row">
+                        <span><i class="fas fa-columns"></i> Cuatrimestres</span>
+                        <div>
+                            <span class="badge">3°</span>
+                            <span class="badge">6°</span>
+                            <span class="badge">9°</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Section -->
+    <h3 style="margin-bottom: 8px;">Cargar Datos</h3>
+    <p style="color: var(--text-gray); margin-bottom: 24px;">Sube archivos CSV, JSON o Excel, o carga datos de ejemplo.
+    </p>
+
+    <div class="upload-grid">
+        <div class="upload-card">
+            <div class="upload-icon"><i class="fas fa-file-alt" style="color: var(--success);"></i></div>
+            <h4>Profesores y Disponibilidad</h4>
+            <p style="font-size: 0.8rem; color: var(--text-gray);">Sube el archivo JSON completo (professors.json)</p>
+        </div>
+        <div class="upload-card">
+            <div class="upload-icon"><i class="fas fa-book" style="color: var(--success);"></i></div>
+            <h4>Cursos</h4>
+            <p style="font-size: 0.8rem; color: var(--text-gray);">Sube el archivo CSV de cursos (courses.csv)</p>
+        </div>
+        <div class="upload-card">
+            <div class="upload-icon"><i class="fas fa-clock" style="color: var(--success);"></i></div>
+            <h4>Horarios</h4>
+            <p style="font-size: 0.8rem; color: var(--text-gray);">Sube el archivo JSON de horarios (timeslots.json)</p>
+        </div>
+    </div>
+
+    <!-- Generate Section -->
+    <div class="card">
+        <h3><i class="fas fa-magic"></i> Generar Horario</h3>
+        <p style="color: var(--text-gray); margin-bottom: 24px;">Configura y genera el horario óptimo para la
+            institución.</p>
+
+        <div style="display: flex; gap: 24px; margin-bottom: 24px;">
+            <div style="flex: 1;">
+                <label
+                    style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--primary);">
+                    <i class="fas fa-stopwatch"></i> Límite de Tiempo
+                </label>
+                <select style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+                    <option>Sin límite (Mejor Calidad)</option>
+                    <option>1 minuto</option>
+                    <option>5 minutos</option>
+                </select>
+                <p style="font-size: 0.75rem; color: var(--text-gray); margin-top: 4px;">Más tiempo permite encontrar
+                    mejores horarios.</p>
+            </div>
+            <div style="flex: 1;">
+                <label
+                    style="display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--primary);">
+                    <i class="fas fa-cogs"></i> Estrategia
+                </label>
+                <select style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+                    <option>Optimización Completa (Recomendado)</option>
+                    <option>Rápida</option>
+                </select>
+                <p style="font-size: 0.75rem; color: var(--text-gray); margin-top: 4px;">"Optimización Completa" busca
+                    activamente la mejor solución.</p>
+            </div>
+        </div>
+
+        <div style="text-align: right;">
+            <button id="generate-btn" class="btn-primary">
+                <i class="fas fa-bolt"></i> Generar Horario Ahora
+            </button>
+        </div>
+        <div id="status-message" style="margin-top: 16px; font-weight: 500;"></div>
+    </div>
+
+    <div id="results-section" class="results-hidden" style="margin-top: 32px;">
+        <h2>Horario Generado</h2>
+        <div id="timetable-display"></div>
+    </div>
+</div>
+
+<script type="application/json" id="periods-data">
+    {{ periods | tojson }}
+</script>
+{% endblock %}

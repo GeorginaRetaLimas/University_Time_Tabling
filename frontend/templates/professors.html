@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% set active_page = "professors" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="header-title">Maestros</h2>
+
+    <div class="card" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <div style="position: relative; width: 300px;">
+            <i class="fas fa-search"
+                style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray);"></i>
+            <input type="text" placeholder="Buscar Maestro"
+                style="width: 100%; padding: 10px 10px 10px 36px; border-radius: 8px; border: 1px solid var(--border);">
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+            <button
+                style="background: #f1f5f9; border: 1px solid var(--border); padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                <i class="fas fa-save"></i> Guardar en Archivo
+            </button>
+            <button class="btn-primary">
+                <i class="fas fa-plus"></i> Añadir Maestro
+            </button>
+        </div>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th>MAESTRO</th>
+                    <th>CORREO</th>
+                    <th style="width: 100px; text-align: center;">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prof in professors %}
+                <tr>
+                    <td>{{ prof.id }}</td>
+                    <td style="font-weight: 500;">{{ prof.name }}</td>
+                    <td>{{ prof.email if prof.email else 'N/A' }}</td>
+                    <td style="text-align: center;">
+                        <button class="action-btn"><i class="fas fa-pen"></i></button>
+                        <button class="action-btn" style="color: #ef4444;"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

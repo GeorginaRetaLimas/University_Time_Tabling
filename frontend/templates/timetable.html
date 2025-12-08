@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% set active_page = "timetable" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="header-title">Horario General</h2>
+
+    <div class="card">
+        <p>Visualización completa de horarios por grupo.</p>
+        <!-- This would be populated dynamically or via a separate API call -->
+        <div id="timetable-display"></div>
+    </div>
+</div>
+{% endblock %}
