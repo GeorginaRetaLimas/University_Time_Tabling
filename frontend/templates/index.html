@@ -120,8 +120,22 @@
     </div>
 
     <div id="results-section" class="results-hidden" style="margin-top: 32px;">
-        <h2>Horario Generado</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h2>Horario Generado</h2>
+            <div class="tabs" style="display: flex; gap: 8px;">
+                <button id="tab-students" class="btn-tab active"
+                    style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--primary); background: var(--primary); color: white; cursor: pointer;">
+                    <i class="fas fa-users"></i> Vista Estudiantes
+                </button>
+                <button id="tab-professors" class="btn-tab"
+                    style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer;">
+                    <i class="fas fa-chalkboard-teacher"></i> Vista Profesores
+                </button>
+            </div>
+        </div>
+
         <div id="timetable-display"></div>
+        <div id="professor-timetable-display" style="display: none;"></div>
     </div>
 </div>
 

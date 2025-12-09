@@ -112,14 +112,9 @@ void SolucionadorHorarios::generarSesiones() {
         continue;
 
       // Calcular número de sesiones basado en créditos
-      int num_sesiones;
-      if (curso->creditos >= 600) {
-        // Estadías o cursos especiales
-        num_sesiones = 2;
-      } else {
-        // Fórmula: cada 15 créditos ≈ 1 hora semanal
-        num_sesiones = max(1, curso->creditos / 15);
-      }
+      // Fórmula: cada 15 créditos ≈ 1 hora semanal
+      // Ejemplo: 600 créditos → 40 sesiones semanales (Estadía)
+      int num_sesiones = max(1, curso->creditos / 15);
 
       // Crear sesiones individuales
       for (int i = 0; i < num_sesiones; i++) {
@@ -391,7 +386,18 @@ bool SolucionadorHorarios::asignarSesionGreedy(SesionClase &sesion) {
            // 3. BALANCEO ESTRICTO
            // Si la diferencia es grande, priorizar estrictamente el de menor
            // carga
-           return carga_a < carga_b;
+           if (carga_a != carga_b)
+             return carga_a < carga_b;
+
+           // 4. TIE-BREAKER: Preferir horas más tempranas (menor ID)
+           // Modificado para distribución equitativa: ordenar por índice de
+           // bloque (id % 100) Esto llena 7am en todos los días, luego 8am en
+           // todos los días, etc.
+           int slot_a = id_a % 100;
+           int slot_b = id_b % 100;
+           if (slot_a != slot_b)
+             return slot_a < slot_b;
+           return id_a < id_b;
          });
     for (int id_bloque : bloques_ordenados) {
       if (id_a_indice_bloque.find(id_bloque) == id_a_indice_bloque.end()) {

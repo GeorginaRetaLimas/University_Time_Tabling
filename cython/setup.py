@@ -4,7 +4,7 @@ from Cython.Build import cythonize
 extensions = [
     Extension(
         "timetable_wrapper",
-        sources=["cython/timetable_wrapper.pyx", "cpp/timetable_solver.cpp"],
+        sources=["timetable_wrapper.pyx", "../cpp/timetable_solver.cpp"],
         language="c++",
         extra_compile_args=["-std=c++17", "-O3"],
     )

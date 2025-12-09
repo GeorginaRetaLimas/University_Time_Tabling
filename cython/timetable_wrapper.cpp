@@ -4,20 +4,17 @@
 {
     "distutils": {
         "depends": [
-            "cpp/timetable_solver.h"
+            "../cpp/timetable_solver.h"
         ],
         "extra_compile_args": [
             "-std=c++17",
             "-O3"
         ],
-        "include_dirs": [
-            "cython"
-        ],
         "language": "c++",
         "name": "timetable_wrapper",
         "sources": [
-            "cython/timetable_wrapper.pyx",
-            "cpp/timetable_solver.cpp"
+            "timetable_wrapper.pyx",
+            "../cpp/timetable_solver.cpp"
         ]
     },
     "module_name": "timetable_wrapper"
@@ -1384,7 +1381,7 @@ static const char *__pyx_filename;
 /* #### Code section: filename_table ### */
 
 static const char* const __pyx_f[] = {
-  "cython/timetable_wrapper.pyx",
+  "timetable_wrapper.pyx",
   "<stringsource>",
 };
 /* #### Code section: utility_code_proto_before_types ### */
@@ -1957,6 +1954,14 @@ static PyObject *__Pyx_PyObject_FastCallMethod(PyObject *name, PyObject *const *
   #define __PYX_STD_MOVE_IF_SUPPORTED(x) x
 #endif
 
+/* PyRange_Check.proto */
+#if CYTHON_COMPILING_IN_PYPY && !defined(PyRange_Check)
+  #define PyRange_Check(obj)  __Pyx_TypeCheck((obj), &PyRange_Type)
+#endif
+
+/* PyLongCompare.proto */
+static CYTHON_INLINE int __Pyx_PyLong_BoolEqObjC(PyObject *op1, PyObject *op2, long intval, long inplace);
+
 /* PyObjectFormatSimple.proto */
 #if CYTHON_COMPILING_IN_PYPY
     #define __Pyx_PyObject_FormatSimple(s, f) (\
@@ -2476,10 +2481,10 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_items;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_values;
-  PyObject *__pyx_tuple[3];
+  PyObject *__pyx_tuple[4];
   PyObject *__pyx_codeobj_tab[1];
-  PyObject *__pyx_string_tab[94];
-  PyObject *__pyx_number_tab[7];
+  PyObject *__pyx_string_tab[103];
+  PyObject *__pyx_number_tab[10];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
 PyTypeObject *__pyx_CommonTypesMetaclassType;
@@ -2535,85 +2540,94 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_kp_u_Solucin_encontrada __pyx_string_tab[12]
 #define __pyx_kp_u_Total_de_asignaciones __pyx_string_tab[13]
 #define __pyx_kp_u__2 __pyx_string_tab[14]
-#define __pyx_kp_u_cython_timetable_wrapper_pyx __pyx_string_tab[15]
+#define __pyx_kp_u__3 __pyx_string_tab[15]
 #define __pyx_kp_u_s __pyx_string_tab[16]
-#define __pyx_kp_u_utf_8 __pyx_string_tab[17]
-#define __pyx_n_u_EDSM __pyx_string_tab[18]
-#define __pyx_n_u_Jueves __pyx_string_tab[19]
-#define __pyx_n_u_LITIID __pyx_string_tab[20]
-#define __pyx_n_u_Lunes __pyx_string_tab[21]
-#define __pyx_n_u_Martes __pyx_string_tab[22]
-#define __pyx_n_u_Mircoles __pyx_string_tab[23]
-#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[24]
-#define __pyx_n_u_Viernes __pyx_string_tab[25]
-#define __pyx_n_u_asig __pyx_string_tab[26]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[27]
-#define __pyx_n_u_available_courses __pyx_string_tab[28]
-#define __pyx_n_u_available_timeslots __pyx_string_tab[29]
-#define __pyx_n_u_c __pyx_string_tab[30]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[31]
-#define __pyx_n_u_code __pyx_string_tab[32]
-#define __pyx_n_u_codigos __pyx_string_tab[33]
-#define __pyx_n_u_course_code __pyx_string_tab[34]
-#define __pyx_n_u_course_id __pyx_string_tab[35]
-#define __pyx_n_u_course_ids __pyx_string_tab[36]
-#define __pyx_n_u_course_map __pyx_string_tab[37]
-#define __pyx_n_u_course_name __pyx_string_tab[38]
-#define __pyx_n_u_courses __pyx_string_tab[39]
-#define __pyx_n_u_creditos __pyx_string_tab[40]
-#define __pyx_n_u_credits __pyx_string_tab[41]
-#define __pyx_n_u_cuatrimestre __pyx_string_tab[42]
-#define __pyx_n_u_day __pyx_string_tab[43]
-#define __pyx_n_u_dia_map __pyx_string_tab[44]
-#define __pyx_n_u_dia_num __pyx_string_tab[45]
-#define __pyx_n_u_display __pyx_string_tab[46]
-#define __pyx_n_u_display_bloque __pyx_string_tab[47]
-#define __pyx_n_u_encode __pyx_string_tab[48]
-#define __pyx_n_u_end_hour __pyx_string_tab[49]
-#define __pyx_n_u_end_minute __pyx_string_tab[50]
-#define __pyx_n_u_func __pyx_string_tab[51]
-#define __pyx_n_u_g __pyx_string_tab[52]
-#define __pyx_n_u_get __pyx_string_tab[53]
-#define __pyx_n_u_group_id __pyx_string_tab[54]
-#define __pyx_n_u_groups __pyx_string_tab[55]
-#define __pyx_n_u_id __pyx_string_tab[56]
-#define __pyx_n_u_info_curso __pyx_string_tab[57]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[58]
-#define __pyx_n_u_items __pyx_string_tab[59]
-#define __pyx_n_u_main __pyx_string_tab[60]
-#define __pyx_n_u_module __pyx_string_tab[61]
-#define __pyx_n_u_name __pyx_string_tab[62]
-#define __pyx_n_u_name_2 __pyx_string_tab[63]
-#define __pyx_n_u_nombre_prof __pyx_string_tab[64]
-#define __pyx_n_u_p __pyx_string_tab[65]
-#define __pyx_n_u_pop __pyx_string_tab[66]
-#define __pyx_n_u_print __pyx_string_tab[67]
-#define __pyx_n_u_prof_map __pyx_string_tab[68]
-#define __pyx_n_u_professor_id __pyx_string_tab[69]
-#define __pyx_n_u_professor_name __pyx_string_tab[70]
-#define __pyx_n_u_professors __pyx_string_tab[71]
-#define __pyx_n_u_qualname __pyx_string_tab[72]
-#define __pyx_n_u_requires_prof __pyx_string_tab[73]
-#define __pyx_n_u_resultado __pyx_string_tab[74]
-#define __pyx_n_u_semester __pyx_string_tab[75]
-#define __pyx_n_u_set_name __pyx_string_tab[76]
-#define __pyx_n_u_setdefault __pyx_string_tab[77]
-#define __pyx_n_u_solucion __pyx_string_tab[78]
-#define __pyx_n_u_solve_timetable __pyx_string_tab[79]
-#define __pyx_n_u_solver __pyx_string_tab[80]
-#define __pyx_n_u_start_hour __pyx_string_tab[81]
-#define __pyx_n_u_start_minute __pyx_string_tab[82]
-#define __pyx_n_u_test __pyx_string_tab[83]
-#define __pyx_n_u_timeout __pyx_string_tab[84]
-#define __pyx_n_u_timeslot_display __pyx_string_tab[85]
-#define __pyx_n_u_timeslot_id __pyx_string_tab[86]
-#define __pyx_n_u_timeslot_map __pyx_string_tab[87]
-#define __pyx_n_u_timeslots __pyx_string_tab[88]
-#define __pyx_n_u_timetable_wrapper __pyx_string_tab[89]
-#define __pyx_n_u_ts __pyx_string_tab[90]
-#define __pyx_n_u_values __pyx_string_tab[91]
-#define __pyx_n_u_weekly_hours __pyx_string_tab[92]
-#define __pyx_kp_b_iso88591_A_a_Q_a_a_q_Qb_1_aq_a_b_a_Baq_Q __pyx_string_tab[93]
+#define __pyx_kp_u_timetable_wrapper_pyx __pyx_string_tab[17]
+#define __pyx_kp_u_utf_8 __pyx_string_tab[18]
+#define __pyx_n_u_EDSM __pyx_string_tab[19]
+#define __pyx_n_u_Jueves __pyx_string_tab[20]
+#define __pyx_n_u_LITIID __pyx_string_tab[21]
+#define __pyx_n_u_Lunes __pyx_string_tab[22]
+#define __pyx_n_u_Martes __pyx_string_tab[23]
+#define __pyx_n_u_Mircoles __pyx_string_tab[24]
+#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[25]
+#define __pyx_n_u_Viernes __pyx_string_tab[26]
+#define __pyx_n_u_asig __pyx_string_tab[27]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[28]
+#define __pyx_n_u_available_courses __pyx_string_tab[29]
+#define __pyx_n_u_available_timeslots __pyx_string_tab[30]
+#define __pyx_n_u_c __pyx_string_tab[31]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[32]
+#define __pyx_n_u_code __pyx_string_tab[33]
+#define __pyx_n_u_codigos __pyx_string_tab[34]
+#define __pyx_n_u_course_code __pyx_string_tab[35]
+#define __pyx_n_u_course_id __pyx_string_tab[36]
+#define __pyx_n_u_course_ids __pyx_string_tab[37]
+#define __pyx_n_u_course_map __pyx_string_tab[38]
+#define __pyx_n_u_course_name __pyx_string_tab[39]
+#define __pyx_n_u_courses __pyx_string_tab[40]
+#define __pyx_n_u_creditos __pyx_string_tab[41]
+#define __pyx_n_u_credits __pyx_string_tab[42]
+#define __pyx_n_u_cuatrimestre __pyx_string_tab[43]
+#define __pyx_n_u_day __pyx_string_tab[44]
+#define __pyx_n_u_dia_map __pyx_string_tab[45]
+#define __pyx_n_u_dia_num __pyx_string_tab[46]
+#define __pyx_n_u_display __pyx_string_tab[47]
+#define __pyx_n_u_display_bloque __pyx_string_tab[48]
+#define __pyx_n_u_encode __pyx_string_tab[49]
+#define __pyx_n_u_end_hour __pyx_string_tab[50]
+#define __pyx_n_u_end_minute __pyx_string_tab[51]
+#define __pyx_n_u_func __pyx_string_tab[52]
+#define __pyx_n_u_g __pyx_string_tab[53]
+#define __pyx_n_u_get __pyx_string_tab[54]
+#define __pyx_n_u_group_id __pyx_string_tab[55]
+#define __pyx_n_u_groups __pyx_string_tab[56]
+#define __pyx_n_u_id __pyx_string_tab[57]
+#define __pyx_n_u_info_curso __pyx_string_tab[58]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[59]
+#define __pyx_n_u_items __pyx_string_tab[60]
+#define __pyx_n_u_main __pyx_string_tab[61]
+#define __pyx_n_u_module __pyx_string_tab[62]
+#define __pyx_n_u_name __pyx_string_tab[63]
+#define __pyx_n_u_name_2 __pyx_string_tab[64]
+#define __pyx_n_u_nombre_prof __pyx_string_tab[65]
+#define __pyx_n_u_p __pyx_string_tab[66]
+#define __pyx_n_u_pop __pyx_string_tab[67]
+#define __pyx_n_u_print __pyx_string_tab[68]
+#define __pyx_n_u_prof_map __pyx_string_tab[69]
+#define __pyx_n_u_professor_id __pyx_string_tab[70]
+#define __pyx_n_u_professor_name __pyx_string_tab[71]
+#define __pyx_n_u_professors __pyx_string_tab[72]
+#define __pyx_n_u_qualname __pyx_string_tab[73]
+#define __pyx_n_u_requires_prof __pyx_string_tab[74]
+#define __pyx_n_u_resultado __pyx_string_tab[75]
+#define __pyx_n_u_semester __pyx_string_tab[76]
+#define __pyx_n_u_semestre __pyx_string_tab[77]
+#define __pyx_n_u_set_name __pyx_string_tab[78]
+#define __pyx_n_u_setdefault __pyx_string_tab[79]
+#define __pyx_n_u_solucion __pyx_string_tab[80]
+#define __pyx_n_u_solve_timetable __pyx_string_tab[81]
+#define __pyx_n_u_solver __pyx_string_tab[82]
+#define __pyx_n_u_start_hour __pyx_string_tab[83]
+#define __pyx_n_u_start_minute __pyx_string_tab[84]
+#define __pyx_n_u_test __pyx_string_tab[85]
+#define __pyx_n_u_timeout __pyx_string_tab[86]
+#define __pyx_n_u_timeslot_display __pyx_string_tab[87]
+#define __pyx_n_u_timeslot_id __pyx_string_tab[88]
+#define __pyx_n_u_timeslot_map __pyx_string_tab[89]
+#define __pyx_n_u_timeslots __pyx_string_tab[90]
+#define __pyx_n_u_timetable_wrapper __pyx_string_tab[91]
+#define __pyx_n_u_ts __pyx_string_tab[92]
+#define __pyx_n_u_values __pyx_string_tab[93]
+#define __pyx_n_u_virtual_courses __pyx_string_tab[94]
+#define __pyx_n_u_virtual_prof_id __pyx_string_tab[95]
+#define __pyx_n_u_virtual_prof_name __pyx_string_tab[96]
+#define __pyx_n_u_virtual_timeslots __pyx_string_tab[97]
+#define __pyx_n_u_weekly_hours __pyx_string_tab[98]
+#define __pyx_kp_b_iso88591_A_a_Q_a_a_q_Qb_1_aq_a_b_a_Baq_Q __pyx_string_tab[99]
+#define __pyx_n_b_EDSM __pyx_string_tab[100]
+#define __pyx_n_b_Estadia __pyx_string_tab[101]
+#define __pyx_n_b_LITIID __pyx_string_tab[102]
 #define __pyx_float_60_0 __pyx_number_tab[0]
 #define __pyx_int_0 __pyx_number_tab[1]
 #define __pyx_int_1 __pyx_number_tab[2]
@@ -2621,6 +2635,9 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_int_3 __pyx_number_tab[4]
 #define __pyx_int_4 __pyx_number_tab[5]
 #define __pyx_int_5 __pyx_number_tab[6]
+#define __pyx_int_6 __pyx_number_tab[7]
+#define __pyx_int_10 __pyx_number_tab[8]
+#define __pyx_int_500 __pyx_number_tab[9]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
 static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
@@ -2635,10 +2652,10 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   __Pyx_State_RemoveModule(NULL);
   #endif
-  for (int i=0; i<3; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<4; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
   for (int i=0; i<1; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<94; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<7; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<103; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<10; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
 Py_CLEAR(clear_module_state->__pyx_CommonTypesMetaclassType);
@@ -2661,10 +2678,10 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_empty_tuple);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_empty_bytes);
   __Pyx_VISIT_CONST(traverse_module_state->__pyx_empty_unicode);
-  for (int i=0; i<3; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
+  for (int i=0; i<4; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
   for (int i=0; i<1; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<94; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
-  for (int i=0; i<7; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
+  for (int i=0; i<103; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<10; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
 Py_VISIT(traverse_module_state->__pyx_CommonTypesMetaclassType);
@@ -3240,7 +3257,12 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
   PyObject *__pyx_v_dia_num = NULL;
   PyObject *__pyx_v_p = NULL;
   PyObject *__pyx_v_codigos = NULL;
+  long __pyx_v_virtual_prof_id;
+  PyObject *__pyx_v_virtual_prof_name = NULL;
+  PyObject *__pyx_v_virtual_timeslots = NULL;
+  PyObject *__pyx_v_virtual_courses = NULL;
   PyObject *__pyx_v_c = NULL;
+  PyObject *__pyx_v_semestre = NULL;
   int __pyx_v_requires_prof;
   PyObject *__pyx_v_creditos = NULL;
   PyObject *__pyx_v_g = NULL;
@@ -3274,12 +3296,12 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
   PyObject *__pyx_t_13 = NULL;
   Py_ssize_t __pyx_t_14;
   PyObject *(*__pyx_t_15)(PyObject *);
-  PyObject *__pyx_t_16 = NULL;
-  std::string __pyx_t_17;
-  std::vector<int>  __pyx_t_18;
-  std::vector<std::string>  __pyx_t_19;
-  int __pyx_t_20;
-  int __pyx_t_21;
+  int __pyx_t_16;
+  int __pyx_t_17;
+  PyObject *__pyx_t_18 = NULL;
+  std::string __pyx_t_19;
+  std::vector<int>  __pyx_t_20;
+  std::vector<std::string>  __pyx_t_21;
   std::string __pyx_t_22;
   PyObject *__pyx_t_23[3];
   double __pyx_t_24;
@@ -3478,7 +3500,7 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
  *     # 2. Agregar profesores
  *     print(" Agregando profesores...")             # <<<<<<<<<<<<<<
  *     for p in professors:
- *         # Convertir cdigos de cursos a bytes
+ *         # Convertir cdigos de cursos a bytes, EXCLUYENDO Estadas
 */
   __pyx_t_6 = NULL;
   __pyx_t_3 = 1;
@@ -3495,8 +3517,8 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
  *     # 2. Agregar profesores
  *     print(" Agregando profesores...")
  *     for p in professors:             # <<<<<<<<<<<<<<
- *         # Convertir cdigos de cursos a bytes
- *         codigos = [c.encode('utf-8') for c in p['available_courses']]
+ *         # Convertir cdigos de cursos a bytes, EXCLUYENDO Estadas
+ *         codigos = [
 */
   if (likely(PyList_CheckExact(__pyx_v_professors)) || PyTuple_CheckExact(__pyx_v_professors)) {
     __pyx_t_1 = __pyx_v_professors; __Pyx_INCREF(__pyx_t_1);
@@ -3552,24 +3574,32 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
 
     /* "timetable_wrapper.pyx":65
  *     for p in professors:
- *         # Convertir cdigos de cursos a bytes
- *         codigos = [c.encode('utf-8') for c in p['available_courses']]             # <<<<<<<<<<<<<<
- *         solver.agregarProfesor(
- *             p['id'],
+ *         # Convertir cdigos de cursos a bytes, EXCLUYENDO Estadas
+ *         codigos = [             # <<<<<<<<<<<<<<
+ *             c.encode('utf-8')
+ *             for c in p['available_courses']
 */
     { /* enter inner scope */
       __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 65, __pyx_L10_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_p, __pyx_mstate_global->__pyx_n_u_available_courses); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L10_error)
+
+      /* "timetable_wrapper.pyx":67
+ *         codigos = [
+ *             c.encode('utf-8')
+ *             for c in p['available_courses']             # <<<<<<<<<<<<<<
+ *             if c not in ['EDSM', 'LITIID']
+ *         ]
+*/
+      __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_p, __pyx_mstate_global->__pyx_n_u_available_courses); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L10_error)
       __Pyx_GOTREF(__pyx_t_2);
       if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
         __pyx_t_13 = __pyx_t_2; __Pyx_INCREF(__pyx_t_13);
         __pyx_t_14 = 0;
         __pyx_t_15 = NULL;
       } else {
-        __pyx_t_14 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 65, __pyx_L10_error)
+        __pyx_t_14 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 67, __pyx_L10_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_15 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_13); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 65, __pyx_L10_error)
+        __pyx_t_15 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_13); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 67, __pyx_L10_error)
       }
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       for (;;) {
@@ -3578,7 +3608,7 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
             {
               Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_13);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 65, __pyx_L10_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 67, __pyx_L10_error)
               #endif
               if (__pyx_t_14 >= __pyx_temp) break;
             }
@@ -3588,7 +3618,7 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
             {
               Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_13);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 65, __pyx_L10_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 67, __pyx_L10_error)
               #endif
               if (__pyx_t_14 >= __pyx_temp) break;
             }
@@ -3599,13 +3629,13 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
             #endif
             ++__pyx_t_14;
           }
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L10_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L10_error)
         } else {
           __pyx_t_2 = __pyx_t_15(__pyx_t_13);
           if (unlikely(!__pyx_t_2)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
-              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 65, __pyx_L10_error)
+              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 67, __pyx_L10_error)
               PyErr_Clear();
             }
             break;
@@ -3614,50 +3644,97 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_XDECREF_SET(__pyx_7genexpr__pyx_v_c, __pyx_t_2);
         __pyx_t_2 = 0;
-        __pyx_t_16 = __pyx_7genexpr__pyx_v_c;
-        __Pyx_INCREF(__pyx_t_16);
-        __pyx_t_3 = 0;
-        {
-          PyObject *__pyx_callargs[2] = {__pyx_t_16, __pyx_mstate_global->__pyx_kp_u_utf_8};
-          __pyx_t_2 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-          __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 65, __pyx_L10_error)
-          __Pyx_GOTREF(__pyx_t_2);
+
+        /* "timetable_wrapper.pyx":68
+ *             c.encode('utf-8')
+ *             for c in p['available_courses']
+ *             if c not in ['EDSM', 'LITIID']             # <<<<<<<<<<<<<<
+ *         ]
+ *         solver.agregarProfesor(
+*/
+        __Pyx_INCREF(__pyx_7genexpr__pyx_v_c);
+        __pyx_t_2 = __pyx_7genexpr__pyx_v_c;
+        __pyx_t_17 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_EDSM, Py_NE)); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 68, __pyx_L10_error)
+        if (__pyx_t_17) {
+        } else {
+          __pyx_t_16 = __pyx_t_17;
+          goto __pyx_L14_bool_binop_done;
         }
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 65, __pyx_L10_error)
+        __pyx_t_17 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_LITIID, Py_NE)); if (unlikely((__pyx_t_17 < 0))) __PYX_ERR(0, 68, __pyx_L10_error)
+        __pyx_t_16 = __pyx_t_17;
+        __pyx_L14_bool_binop_done:;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __pyx_t_17 = __pyx_t_16;
+        if (__pyx_t_17) {
+
+          /* "timetable_wrapper.pyx":66
+ *         # Convertir cdigos de cursos a bytes, EXCLUYENDO Estadas
+ *         codigos = [
+ *             c.encode('utf-8')             # <<<<<<<<<<<<<<
+ *             for c in p['available_courses']
+ *             if c not in ['EDSM', 'LITIID']
+*/
+          __pyx_t_18 = __pyx_7genexpr__pyx_v_c;
+          __Pyx_INCREF(__pyx_t_18);
+          __pyx_t_3 = 0;
+          {
+            PyObject *__pyx_callargs[2] = {__pyx_t_18, __pyx_mstate_global->__pyx_kp_u_utf_8};
+            __pyx_t_2 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+            __Pyx_XDECREF(__pyx_t_18); __pyx_t_18 = 0;
+            if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 66, __pyx_L10_error)
+            __Pyx_GOTREF(__pyx_t_2);
+          }
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_2))) __PYX_ERR(0, 65, __pyx_L10_error)
+          __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+          /* "timetable_wrapper.pyx":68
+ *             c.encode('utf-8')
+ *             for c in p['available_courses']
+ *             if c not in ['EDSM', 'LITIID']             # <<<<<<<<<<<<<<
+ *         ]
+ *         solver.agregarProfesor(
+*/
+        }
+
+        /* "timetable_wrapper.pyx":67
+ *         codigos = [
+ *             c.encode('utf-8')
+ *             for c in p['available_courses']             # <<<<<<<<<<<<<<
+ *             if c not in ['EDSM', 'LITIID']
+ *         ]
+*/
       }
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       __Pyx_XDECREF(__pyx_7genexpr__pyx_v_c); __pyx_7genexpr__pyx_v_c = 0;
-      goto __pyx_L14_exit_scope;
+      goto __pyx_L17_exit_scope;
       __pyx_L10_error:;
       __Pyx_XDECREF(__pyx_7genexpr__pyx_v_c); __pyx_7genexpr__pyx_v_c = 0;
       goto __pyx_L1_error;
-      __pyx_L14_exit_scope:;
+      __pyx_L17_exit_scope:;
     } /* exit inner scope */
     __Pyx_XDECREF_SET(__pyx_v_codigos, ((PyObject*)__pyx_t_6));
     __pyx_t_6 = 0;
 
-    /* "timetable_wrapper.pyx":67
- *         codigos = [c.encode('utf-8') for c in p['available_courses']]
+    /* "timetable_wrapper.pyx":71
+ *         ]
  *         solver.agregarProfesor(
  *             p['id'],             # <<<<<<<<<<<<<<
  *             p['name'].encode('utf-8'),
  *             p['available_timeslots'],
 */
-    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_p, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 67, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_p, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 71, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_12 = __Pyx_PyLong_As_int(__pyx_t_6); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 67, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyLong_As_int(__pyx_t_6); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 71, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "timetable_wrapper.pyx":68
+    /* "timetable_wrapper.pyx":72
  *         solver.agregarProfesor(
  *             p['id'],
  *             p['name'].encode('utf-8'),             # <<<<<<<<<<<<<<
  *             p['available_timeslots'],
  *             codigos
 */
-    __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_p, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 68, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_p, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 72, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_13 = __pyx_t_2;
     __Pyx_INCREF(__pyx_t_13);
@@ -3667,343 +3744,433 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
       __pyx_t_6 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 68, __pyx_L1_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 72, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
     }
-    __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_6); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L1_error)
+    __pyx_t_19 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_6); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 72, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "timetable_wrapper.pyx":69
+    /* "timetable_wrapper.pyx":73
  *             p['id'],
  *             p['name'].encode('utf-8'),
  *             p['available_timeslots'],             # <<<<<<<<<<<<<<
  *             codigos
  *         )
 */
-    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_p, __pyx_mstate_global->__pyx_n_u_available_timeslots); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 69, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_p, __pyx_mstate_global->__pyx_n_u_available_timeslots); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 73, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_18 = __pyx_convert_vector_from_py_int(__pyx_t_6); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 69, __pyx_L1_error)
+    __pyx_t_20 = __pyx_convert_vector_from_py_int(__pyx_t_6); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "timetable_wrapper.pyx":70
+    /* "timetable_wrapper.pyx":74
  *             p['name'].encode('utf-8'),
  *             p['available_timeslots'],
  *             codigos             # <<<<<<<<<<<<<<
  *         )
  * 
 */
-    __pyx_t_19 = __pyx_convert_vector_from_py_std_3a__3a_string(__pyx_v_codigos); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L1_error)
+    __pyx_t_21 = __pyx_convert_vector_from_py_std_3a__3a_string(__pyx_v_codigos); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 74, __pyx_L1_error)
 
-    /* "timetable_wrapper.pyx":66
- *         # Convertir cdigos de cursos a bytes
- *         codigos = [c.encode('utf-8') for c in p['available_courses']]
+    /* "timetable_wrapper.pyx":70
+ *             if c not in ['EDSM', 'LITIID']
+ *         ]
  *         solver.agregarProfesor(             # <<<<<<<<<<<<<<
  *             p['id'],
  *             p['name'].encode('utf-8'),
 */
-    __pyx_v_solver.agregarProfesor(__pyx_t_12, __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17), __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_18), __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_19));
+    __pyx_v_solver.agregarProfesor(__pyx_t_12, __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_19), __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_20), __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_21));
 
     /* "timetable_wrapper.pyx":63
  *     # 2. Agregar profesores
  *     print(" Agregando profesores...")
  *     for p in professors:             # <<<<<<<<<<<<<<
- *         # Convertir cdigos de cursos a bytes
- *         codigos = [c.encode('utf-8') for c in p['available_courses']]
+ *         # Convertir cdigos de cursos a bytes, EXCLUYENDO Estadas
+ *         codigos = [
 */
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "timetable_wrapper.pyx":74
+  /* "timetable_wrapper.pyx":78
+ * 
+ *     # Agregar Profesor Virtual para Estadas
+ *     virtual_prof_id = 99999             # <<<<<<<<<<<<<<
+ *     virtual_prof_name = b"Estadia"
+ *     # Disponibilidad total (todos los bloques del 1 al 500)
+*/
+  __pyx_v_virtual_prof_id = 0x1869F;
+
+  /* "timetable_wrapper.pyx":79
+ *     # Agregar Profesor Virtual para Estadas
+ *     virtual_prof_id = 99999
+ *     virtual_prof_name = b"Estadia"             # <<<<<<<<<<<<<<
+ *     # Disponibilidad total (todos los bloques del 1 al 500)
+ *     virtual_timeslots = list(range(1, 500))
+*/
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_n_b_Estadia);
+  __pyx_v_virtual_prof_name = __pyx_mstate_global->__pyx_n_b_Estadia;
+
+  /* "timetable_wrapper.pyx":81
+ *     virtual_prof_name = b"Estadia"
+ *     # Disponibilidad total (todos los bloques del 1 al 500)
+ *     virtual_timeslots = list(range(1, 500))             # <<<<<<<<<<<<<<
+ *     # Materias que puede dar
+ *     virtual_courses = [b"EDSM", b"LITIID"]
+*/
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&PyRange_Type)), __pyx_mstate_global->__pyx_tuple[0], NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_6 = PySequence_List(__pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 81, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_virtual_timeslots = ((PyObject*)__pyx_t_6);
+  __pyx_t_6 = 0;
+
+  /* "timetable_wrapper.pyx":83
+ *     virtual_timeslots = list(range(1, 500))
+ *     # Materias que puede dar
+ *     virtual_courses = [b"EDSM", b"LITIID"]             # <<<<<<<<<<<<<<
+ * 
+ *     solver.agregarProfesor(
+*/
+  __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 83, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_n_b_EDSM);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_b_EDSM);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 0, __pyx_mstate_global->__pyx_n_b_EDSM) != (0)) __PYX_ERR(0, 83, __pyx_L1_error);
+  __Pyx_INCREF(__pyx_mstate_global->__pyx_n_b_LITIID);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_n_b_LITIID);
+  if (__Pyx_PyList_SET_ITEM(__pyx_t_6, 1, __pyx_mstate_global->__pyx_n_b_LITIID) != (0)) __PYX_ERR(0, 83, __pyx_L1_error);
+  __pyx_v_virtual_courses = ((PyObject*)__pyx_t_6);
+  __pyx_t_6 = 0;
+
+  /* "timetable_wrapper.pyx":87
+ *     solver.agregarProfesor(
+ *         virtual_prof_id,
+ *         virtual_prof_name,             # <<<<<<<<<<<<<<
+ *         virtual_timeslots,
+ *         virtual_courses
+*/
+  __pyx_t_19 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_v_virtual_prof_name); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L1_error)
+
+  /* "timetable_wrapper.pyx":88
+ *         virtual_prof_id,
+ *         virtual_prof_name,
+ *         virtual_timeslots,             # <<<<<<<<<<<<<<
+ *         virtual_courses
+ *     )
+*/
+  __pyx_t_20 = __pyx_convert_vector_from_py_int(__pyx_v_virtual_timeslots); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L1_error)
+
+  /* "timetable_wrapper.pyx":89
+ *         virtual_prof_name,
+ *         virtual_timeslots,
+ *         virtual_courses             # <<<<<<<<<<<<<<
+ *     )
+ * 
+*/
+  __pyx_t_21 = __pyx_convert_vector_from_py_std_3a__3a_string(__pyx_v_virtual_courses); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 89, __pyx_L1_error)
+
+  /* "timetable_wrapper.pyx":85
+ *     virtual_courses = [b"EDSM", b"LITIID"]
+ * 
+ *     solver.agregarProfesor(             # <<<<<<<<<<<<<<
+ *         virtual_prof_id,
+ *         virtual_prof_name,
+*/
+  __pyx_v_solver.agregarProfesor(__pyx_v_virtual_prof_id, __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_19), __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_20), __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_21));
+
+  /* "timetable_wrapper.pyx":93
  * 
  *     # 3. Agregar cursos
  *     print(" Agregando cursos...")             # <<<<<<<<<<<<<<
  *     for c in courses:
- *         # Determinar si requiere profesor
+ *         semestre = c.get('semester', c.get('cuatrimestre', 1))
 */
-  __pyx_t_6 = NULL;
+  __pyx_t_1 = NULL;
   __pyx_t_3 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_mstate_global->__pyx_kp_u_Agregando_cursos};
-    __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 74, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_mstate_global->__pyx_kp_u_Agregando_cursos};
+    __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 93, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
   }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "timetable_wrapper.pyx":75
+  /* "timetable_wrapper.pyx":94
  *     # 3. Agregar cursos
  *     print(" Agregando cursos...")
  *     for c in courses:             # <<<<<<<<<<<<<<
- *         # Determinar si requiere profesor
- *         requires_prof = True
+ *         semestre = c.get('semester', c.get('cuatrimestre', 1))
+ * 
 */
   if (likely(PyList_CheckExact(__pyx_v_courses)) || PyTuple_CheckExact(__pyx_v_courses)) {
-    __pyx_t_1 = __pyx_v_courses; __Pyx_INCREF(__pyx_t_1);
+    __pyx_t_6 = __pyx_v_courses; __Pyx_INCREF(__pyx_t_6);
     __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_courses); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 75, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 75, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_v_courses); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 94, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 94, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_5)) {
-      if (likely(PyList_CheckExact(__pyx_t_1))) {
+      if (likely(PyList_CheckExact(__pyx_t_6))) {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
+          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_6);
           #if !CYTHON_ASSUME_SAFE_SIZE
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 75, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 94, __pyx_L1_error)
           #endif
           if (__pyx_t_4 >= __pyx_temp) break;
         }
-        __pyx_t_6 = __Pyx_PyList_GetItemRefFast(__pyx_t_1, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+        __pyx_t_1 = __Pyx_PyList_GetItemRefFast(__pyx_t_6, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
         ++__pyx_t_4;
       } else {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_1);
+          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_6);
           #if !CYTHON_ASSUME_SAFE_SIZE
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 75, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 94, __pyx_L1_error)
           #endif
           if (__pyx_t_4 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_6 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4));
+        __pyx_t_1 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_4));
         #else
-        __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_4);
+        __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_6, __pyx_t_4);
         #endif
         ++__pyx_t_4;
       }
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 75, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
     } else {
-      __pyx_t_6 = __pyx_t_5(__pyx_t_1);
-      if (unlikely(!__pyx_t_6)) {
+      __pyx_t_1 = __pyx_t_5(__pyx_t_6);
+      if (unlikely(!__pyx_t_1)) {
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
-          if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 75, __pyx_L1_error)
+          if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 94, __pyx_L1_error)
           PyErr_Clear();
         }
         break;
       }
     }
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_XDECREF_SET(__pyx_v_c, __pyx_t_6);
-    __pyx_t_6 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_XDECREF_SET(__pyx_v_c, __pyx_t_1);
+    __pyx_t_1 = 0;
 
-    /* "timetable_wrapper.pyx":77
+    /* "timetable_wrapper.pyx":95
+ *     print(" Agregando cursos...")
  *     for c in courses:
- *         # Determinar si requiere profesor
- *         requires_prof = True             # <<<<<<<<<<<<<<
- *         if c.get('code') in ['EDSM', 'LITIID']:
- *             requires_prof = False
-*/
-    __pyx_v_requires_prof = 1;
-
-    /* "timetable_wrapper.pyx":78
- *         # Determinar si requiere profesor
- *         requires_prof = True
- *         if c.get('code') in ['EDSM', 'LITIID']:             # <<<<<<<<<<<<<<
- *             requires_prof = False
+ *         semestre = c.get('semester', c.get('cuatrimestre', 1))             # <<<<<<<<<<<<<<
  * 
+ *         # EXCLUIR SEMESTRES 6 y 10 (Estadas)
 */
     __pyx_t_2 = __pyx_v_c;
     __Pyx_INCREF(__pyx_t_2);
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_get); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 95, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_18 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_mstate_global->__pyx_tuple[1], NULL); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 95, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_18);
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __pyx_t_3 = 0;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_n_u_code};
-      __pyx_t_6 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_get, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      PyObject *__pyx_callargs[3] = {__pyx_t_2, __pyx_mstate_global->__pyx_n_u_semester, __pyx_t_18};
+      __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_get, __pyx_callargs+__pyx_t_3, (3-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 78, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
     }
-    __pyx_t_21 = (__Pyx_PyUnicode_Equals(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_EDSM, Py_EQ)); if (unlikely((__pyx_t_21 < 0))) __PYX_ERR(0, 78, __pyx_L1_error)
-    if (!__pyx_t_21) {
-    } else {
-      __pyx_t_20 = __pyx_t_21;
-      goto __pyx_L19_bool_binop_done;
-    }
-    __pyx_t_21 = (__Pyx_PyUnicode_Equals(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_LITIID, Py_EQ)); if (unlikely((__pyx_t_21 < 0))) __PYX_ERR(0, 78, __pyx_L1_error)
-    __pyx_t_20 = __pyx_t_21;
-    __pyx_L19_bool_binop_done:;
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_21 = __pyx_t_20;
-    if (__pyx_t_21) {
+    __Pyx_XDECREF_SET(__pyx_v_semestre, __pyx_t_1);
+    __pyx_t_1 = 0;
 
-      /* "timetable_wrapper.pyx":79
- *         requires_prof = True
- *         if c.get('code') in ['EDSM', 'LITIID']:
- *             requires_prof = False             # <<<<<<<<<<<<<<
+    /* "timetable_wrapper.pyx":98
  * 
- *         # Usar 'credits' si existe, sino 'weekly_hours' (compatibilidad)
+ *         # EXCLUIR SEMESTRES 6 y 10 (Estadas)
+ *         if semestre in [6, 10]:             # <<<<<<<<<<<<<<
+ *             continue
+ * 
 */
-      __pyx_v_requires_prof = 0;
+    __Pyx_INCREF(__pyx_v_semestre);
+    __pyx_t_1 = __pyx_v_semestre;
+    __pyx_t_16 = (__Pyx_PyLong_BoolEqObjC(__pyx_t_1, __pyx_mstate_global->__pyx_int_6, 6, 0)); if (unlikely((__pyx_t_16 < 0))) __PYX_ERR(0, 98, __pyx_L1_error)
+    if (!__pyx_t_16) {
+    } else {
+      __pyx_t_17 = __pyx_t_16;
+      goto __pyx_L22_bool_binop_done;
+    }
+    __pyx_t_16 = (__Pyx_PyLong_BoolEqObjC(__pyx_t_1, __pyx_mstate_global->__pyx_int_10, 10, 0)); if (unlikely((__pyx_t_16 < 0))) __PYX_ERR(0, 98, __pyx_L1_error)
+    __pyx_t_17 = __pyx_t_16;
+    __pyx_L22_bool_binop_done:;
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_16 = __pyx_t_17;
+    if (__pyx_t_16) {
 
-      /* "timetable_wrapper.pyx":78
+      /* "timetable_wrapper.pyx":99
+ *         # EXCLUIR SEMESTRES 6 y 10 (Estadas)
+ *         if semestre in [6, 10]:
+ *             continue             # <<<<<<<<<<<<<<
+ * 
+ *         # Determinar si requiere profesor
+*/
+      goto __pyx_L19_continue;
+
+      /* "timetable_wrapper.pyx":98
+ * 
+ *         # EXCLUIR SEMESTRES 6 y 10 (Estadas)
+ *         if semestre in [6, 10]:             # <<<<<<<<<<<<<<
+ *             continue
+ * 
+*/
+    }
+
+    /* "timetable_wrapper.pyx":102
+ * 
+ *         # Determinar si requiere profesor
+ *         requires_prof = True             # <<<<<<<<<<<<<<
+ *         creditos = c.get('credits', c.get('weekly_hours', 0))
+ * 
+*/
+    __pyx_v_requires_prof = 1;
+
+    /* "timetable_wrapper.pyx":103
  *         # Determinar si requiere profesor
  *         requires_prof = True
- *         if c.get('code') in ['EDSM', 'LITIID']:             # <<<<<<<<<<<<<<
- *             requires_prof = False
- * 
-*/
-    }
-
-    /* "timetable_wrapper.pyx":82
- * 
- *         # Usar 'credits' si existe, sino 'weekly_hours' (compatibilidad)
  *         creditos = c.get('credits', c.get('weekly_hours', 0))             # <<<<<<<<<<<<<<
  * 
  *         solver.agregarCurso(
 */
-    __pyx_t_2 = __pyx_v_c;
-    __Pyx_INCREF(__pyx_t_2);
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_get); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 82, __pyx_L1_error)
+    __pyx_t_18 = __pyx_v_c;
+    __Pyx_INCREF(__pyx_t_18);
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_get); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 103, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[2], NULL); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 103, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_16 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_mstate_global->__pyx_tuple[0], NULL); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 82, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_16);
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_3 = 0;
     {
-      PyObject *__pyx_callargs[3] = {__pyx_t_2, __pyx_mstate_global->__pyx_n_u_credits, __pyx_t_16};
-      __pyx_t_6 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_get, __pyx_callargs+__pyx_t_3, (3-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 82, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
+      PyObject *__pyx_callargs[3] = {__pyx_t_18, __pyx_mstate_global->__pyx_n_u_credits, __pyx_t_13};
+      __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_get, __pyx_callargs+__pyx_t_3, (3-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_18); __pyx_t_18 = 0;
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 103, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
     }
-    __Pyx_XDECREF_SET(__pyx_v_creditos, __pyx_t_6);
-    __pyx_t_6 = 0;
+    __Pyx_XDECREF_SET(__pyx_v_creditos, __pyx_t_1);
+    __pyx_t_1 = 0;
 
-    /* "timetable_wrapper.pyx":85
+    /* "timetable_wrapper.pyx":106
  * 
  *         solver.agregarCurso(
  *             c['id'],             # <<<<<<<<<<<<<<
  *             c['name'].encode('utf-8'),
  *             c['code'].encode('utf-8'),
 */
-    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 85, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_12 = __Pyx_PyLong_As_int(__pyx_t_6); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 85, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_12 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 106, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "timetable_wrapper.pyx":86
+    /* "timetable_wrapper.pyx":107
  *         solver.agregarCurso(
  *             c['id'],
  *             c['name'].encode('utf-8'),             # <<<<<<<<<<<<<<
  *             c['code'].encode('utf-8'),
  *             creditos,
 */
-    __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 86, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_16 = __pyx_t_2;
-    __Pyx_INCREF(__pyx_t_16);
+    __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 107, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_18);
+    __pyx_t_13 = __pyx_t_18;
+    __Pyx_INCREF(__pyx_t_13);
     __pyx_t_3 = 0;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_16, __pyx_mstate_global->__pyx_kp_u_utf_8};
-      __pyx_t_6 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
-      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 86, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
+      PyObject *__pyx_callargs[2] = {__pyx_t_13, __pyx_mstate_global->__pyx_kp_u_utf_8};
+      __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 107, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
     }
-    __pyx_t_17 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_6); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 86, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_19 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 107, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "timetable_wrapper.pyx":87
+    /* "timetable_wrapper.pyx":108
  *             c['id'],
  *             c['name'].encode('utf-8'),
  *             c['code'].encode('utf-8'),             # <<<<<<<<<<<<<<
  *             creditos,
- *             c.get('semester', c.get('cuatrimestre', 1)),
+ *             semestre,
 */
-    __pyx_t_16 = __Pyx_PyObject_Dict_GetItem(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_code); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 87, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_16);
-    __pyx_t_2 = __pyx_t_16;
-    __Pyx_INCREF(__pyx_t_2);
+    __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_code); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 108, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_18 = __pyx_t_13;
+    __Pyx_INCREF(__pyx_t_18);
     __pyx_t_3 = 0;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_2, __pyx_mstate_global->__pyx_kp_u_utf_8};
-      __pyx_t_6 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 87, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
+      PyObject *__pyx_callargs[2] = {__pyx_t_18, __pyx_mstate_global->__pyx_kp_u_utf_8};
+      __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_encode, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_18); __pyx_t_18 = 0;
+      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
     }
-    __pyx_t_22 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_6); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_22 = __pyx_convert_string_from_py_6libcpp_6string_std__in_string(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 108, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "timetable_wrapper.pyx":88
+    /* "timetable_wrapper.pyx":109
  *             c['name'].encode('utf-8'),
  *             c['code'].encode('utf-8'),
  *             creditos,             # <<<<<<<<<<<<<<
- *             c.get('semester', c.get('cuatrimestre', 1)),
+ *             semestre,
  *             requires_prof
 */
-    __pyx_t_11 = __Pyx_PyLong_As_int(__pyx_v_creditos); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyLong_As_int(__pyx_v_creditos); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 109, __pyx_L1_error)
 
-    /* "timetable_wrapper.pyx":89
+    /* "timetable_wrapper.pyx":110
  *             c['code'].encode('utf-8'),
  *             creditos,
- *             c.get('semester', c.get('cuatrimestre', 1)),             # <<<<<<<<<<<<<<
+ *             semestre,             # <<<<<<<<<<<<<<
  *             requires_prof
  *         )
 */
-    __pyx_t_16 = __pyx_v_c;
-    __Pyx_INCREF(__pyx_t_16);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_c, __pyx_mstate_global->__pyx_n_u_get); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 89, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[1], NULL); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 89, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_3 = 0;
-    {
-      PyObject *__pyx_callargs[3] = {__pyx_t_16, __pyx_mstate_global->__pyx_n_u_semester, __pyx_t_13};
-      __pyx_t_6 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_get, __pyx_callargs+__pyx_t_3, (3-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
-      __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 89, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-    }
-    __pyx_t_10 = __Pyx_PyLong_As_int(__pyx_t_6); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 89, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_10 = __Pyx_PyLong_As_int(__pyx_v_semestre); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 110, __pyx_L1_error)
 
-    /* "timetable_wrapper.pyx":84
+    /* "timetable_wrapper.pyx":105
  *         creditos = c.get('credits', c.get('weekly_hours', 0))
  * 
  *         solver.agregarCurso(             # <<<<<<<<<<<<<<
  *             c['id'],
  *             c['name'].encode('utf-8'),
 */
-    __pyx_v_solver.agregarCurso(__pyx_t_12, __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_17), __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_22), __pyx_t_11, __pyx_t_10, __pyx_v_requires_prof);
+    __pyx_v_solver.agregarCurso(__pyx_t_12, __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_19), __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_22), __pyx_t_11, __pyx_t_10, __pyx_v_requires_prof);
 
-    /* "timetable_wrapper.pyx":75
+    /* "timetable_wrapper.pyx":94
  *     # 3. Agregar cursos
  *     print(" Agregando cursos...")
  *     for c in courses:             # <<<<<<<<<<<<<<
- *         # Determinar si requiere profesor
- *         requires_prof = True
+ *         semestre = c.get('semester', c.get('cuatrimestre', 1))
+ * 
 */
+    __pyx_L19_continue:;
   }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "timetable_wrapper.pyx":94
+  /* "timetable_wrapper.pyx":115
  * 
  *     # 4. Agregar grupos
  *     print(" Agregando grupos...")             # <<<<<<<<<<<<<<
  *     for g in groups:
  *         solver.agregarGrupo(
 */
-  __pyx_t_6 = NULL;
+  __pyx_t_1 = NULL;
   __pyx_t_3 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_mstate_global->__pyx_kp_u_Agregando_grupos};
-    __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 94, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_mstate_global->__pyx_kp_u_Agregando_grupos};
+    __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
   }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "timetable_wrapper.pyx":95
+  /* "timetable_wrapper.pyx":116
  *     # 4. Agregar grupos
  *     print(" Agregando grupos...")
  *     for g in groups:             # <<<<<<<<<<<<<<
@@ -4011,103 +4178,103 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
  *             g['id'],
 */
   if (likely(PyList_CheckExact(__pyx_v_groups)) || PyTuple_CheckExact(__pyx_v_groups)) {
-    __pyx_t_1 = __pyx_v_groups; __Pyx_INCREF(__pyx_t_1);
+    __pyx_t_6 = __pyx_v_groups; __Pyx_INCREF(__pyx_t_6);
     __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
   } else {
-    __pyx_t_4 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_groups); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 95, __pyx_L1_error)
+    __pyx_t_4 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_v_groups); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 116, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_5)) {
-      if (likely(PyList_CheckExact(__pyx_t_1))) {
+      if (likely(PyList_CheckExact(__pyx_t_6))) {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_1);
+          Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_6);
           #if !CYTHON_ASSUME_SAFE_SIZE
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 95, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 116, __pyx_L1_error)
           #endif
           if (__pyx_t_4 >= __pyx_temp) break;
         }
-        __pyx_t_6 = __Pyx_PyList_GetItemRefFast(__pyx_t_1, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+        __pyx_t_1 = __Pyx_PyList_GetItemRefFast(__pyx_t_6, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
         ++__pyx_t_4;
       } else {
         {
-          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_1);
+          Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_6);
           #if !CYTHON_ASSUME_SAFE_SIZE
-          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 95, __pyx_L1_error)
+          if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 116, __pyx_L1_error)
           #endif
           if (__pyx_t_4 >= __pyx_temp) break;
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_6 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_4));
+        __pyx_t_1 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_4));
         #else
-        __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_1, __pyx_t_4);
+        __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_6, __pyx_t_4);
         #endif
         ++__pyx_t_4;
       }
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 95, __pyx_L1_error)
+      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 116, __pyx_L1_error)
     } else {
-      __pyx_t_6 = __pyx_t_5(__pyx_t_1);
-      if (unlikely(!__pyx_t_6)) {
+      __pyx_t_1 = __pyx_t_5(__pyx_t_6);
+      if (unlikely(!__pyx_t_1)) {
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
-          if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 95, __pyx_L1_error)
+          if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 116, __pyx_L1_error)
           PyErr_Clear();
         }
         break;
       }
     }
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_XDECREF_SET(__pyx_v_g, __pyx_t_6);
-    __pyx_t_6 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_XDECREF_SET(__pyx_v_g, __pyx_t_1);
+    __pyx_t_1 = 0;
 
-    /* "timetable_wrapper.pyx":97
+    /* "timetable_wrapper.pyx":118
  *     for g in groups:
  *         solver.agregarGrupo(
  *             g['id'],             # <<<<<<<<<<<<<<
  *             g['semester'],
  *             g['course_ids']
 */
-    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_g, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 97, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_10 = __Pyx_PyLong_As_int(__pyx_t_6); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 97, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_v_g, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_10 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "timetable_wrapper.pyx":98
+    /* "timetable_wrapper.pyx":119
  *         solver.agregarGrupo(
  *             g['id'],
  *             g['semester'],             # <<<<<<<<<<<<<<
  *             g['course_ids']
  *         )
 */
-    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_g, __pyx_mstate_global->__pyx_n_u_semester); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 98, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_11 = __Pyx_PyLong_As_int(__pyx_t_6); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 98, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_v_g, __pyx_mstate_global->__pyx_n_u_semester); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 119, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_11 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_11 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 119, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "timetable_wrapper.pyx":99
+    /* "timetable_wrapper.pyx":120
  *             g['id'],
  *             g['semester'],
  *             g['course_ids']             # <<<<<<<<<<<<<<
  *         )
  * 
 */
-    __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_v_g, __pyx_mstate_global->__pyx_n_u_course_ids); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 99, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_18 = __pyx_convert_vector_from_py_int(__pyx_t_6); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 99, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_v_g, __pyx_mstate_global->__pyx_n_u_course_ids); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 120, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_20 = __pyx_convert_vector_from_py_int(__pyx_t_1); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 120, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "timetable_wrapper.pyx":96
+    /* "timetable_wrapper.pyx":117
  *     print(" Agregando grupos...")
  *     for g in groups:
  *         solver.agregarGrupo(             # <<<<<<<<<<<<<<
  *             g['id'],
  *             g['semester'],
 */
-    __pyx_v_solver.agregarGrupo(__pyx_t_10, __pyx_t_11, __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_18));
+    __pyx_v_solver.agregarGrupo(__pyx_t_10, __pyx_t_11, __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_20));
 
-    /* "timetable_wrapper.pyx":95
+    /* "timetable_wrapper.pyx":116
  *     # 4. Agregar grupos
  *     print(" Agregando grupos...")
  *     for g in groups:             # <<<<<<<<<<<<<<
@@ -4115,72 +4282,72 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
  *             g['id'],
 */
   }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "timetable_wrapper.pyx":103
+  /* "timetable_wrapper.pyx":124
  * 
  *     # 5. Resolver
  *     print(f"\n Iniciando solver C++ (timeout: {timeout}s)...")             # <<<<<<<<<<<<<<
  *     if solver.resolver(timeout):
  *         print(" Solucin encontrada!")
 */
-  __pyx_t_6 = NULL;
-  __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_timeout, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 103, __pyx_L1_error)
+  __pyx_t_1 = NULL;
+  __pyx_t_13 = __Pyx_PyObject_FormatSimple(__pyx_v_timeout, __pyx_mstate_global->__pyx_empty_unicode); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __pyx_t_23[0] = __pyx_mstate_global->__pyx_kp_u_Iniciando_solver_C_timeout;
   __pyx_t_23[1] = __pyx_t_13;
   __pyx_t_23[2] = __pyx_mstate_global->__pyx_kp_u_s;
-  __pyx_t_16 = __Pyx_PyUnicode_Join(__pyx_t_23, 3, 34 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_13) + 5, 1114111 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_13));
-  if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 103, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_18 = __Pyx_PyUnicode_Join(__pyx_t_23, 3, 34 + __Pyx_PyUnicode_GET_LENGTH(__pyx_t_13) + 5, 1114111 | __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_13));
+  if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_18);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
   __pyx_t_3 = 1;
   {
-    PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_t_16};
-    __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 103, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
+    PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_t_18};
+    __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
   }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "timetable_wrapper.pyx":104
+  /* "timetable_wrapper.pyx":125
  *     # 5. Resolver
  *     print(f"\n Iniciando solver C++ (timeout: {timeout}s)...")
  *     if solver.resolver(timeout):             # <<<<<<<<<<<<<<
  *         print(" Solucin encontrada!")
  *         solucion = solver.obtenerSolucion()
 */
-  __pyx_t_24 = __Pyx_PyFloat_AsDouble(__pyx_v_timeout); if (unlikely((__pyx_t_24 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 104, __pyx_L1_error)
+  __pyx_t_24 = __Pyx_PyFloat_AsDouble(__pyx_v_timeout); if (unlikely((__pyx_t_24 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 125, __pyx_L1_error)
   try {
     __pyx_t_25 = __pyx_v_solver.resolver(__pyx_t_24);
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 104, __pyx_L1_error)
+    __PYX_ERR(0, 125, __pyx_L1_error)
   }
-  __pyx_t_21 = (__pyx_t_25 != 0);
-  if (__pyx_t_21) {
+  __pyx_t_16 = (__pyx_t_25 != 0);
+  if (__pyx_t_16) {
 
-    /* "timetable_wrapper.pyx":105
+    /* "timetable_wrapper.pyx":126
  *     print(f"\n Iniciando solver C++ (timeout: {timeout}s)...")
  *     if solver.resolver(timeout):
  *         print(" Solucin encontrada!")             # <<<<<<<<<<<<<<
  *         solucion = solver.obtenerSolucion()
  * 
 */
-    __pyx_t_16 = NULL;
+    __pyx_t_18 = NULL;
     __pyx_t_3 = 1;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_16, __pyx_mstate_global->__pyx_kp_u_Solucin_encontrada};
-      __pyx_t_1 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
-      if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_1);
+      PyObject *__pyx_callargs[2] = {__pyx_t_18, __pyx_mstate_global->__pyx_kp_u_Solucin_encontrada};
+      __pyx_t_6 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+      __Pyx_XDECREF(__pyx_t_18); __pyx_t_18 = 0;
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 126, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
     }
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "timetable_wrapper.pyx":106
+    /* "timetable_wrapper.pyx":127
  *     if solver.resolver(timeout):
  *         print(" Solucin encontrada!")
  *         solucion = solver.obtenerSolucion()             # <<<<<<<<<<<<<<
@@ -4189,7 +4356,7 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
 */
     __pyx_v_solucion = __pyx_v_solver.obtenerSolucion();
 
-    /* "timetable_wrapper.pyx":109
+    /* "timetable_wrapper.pyx":130
  * 
  *         # Crear mapas de bsqueda
  *         prof_map = {p['id']: p['name'] for p in professors}             # <<<<<<<<<<<<<<
@@ -4197,79 +4364,79 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
  *         timeslot_map = {ts['id']: ts['display'] for ts in timeslots}
 */
     { /* enter inner scope */
-      __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L28_error)
-      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_6 = PyDict_New(); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 130, __pyx_L31_error)
+      __Pyx_GOTREF(__pyx_t_6);
       if (likely(PyList_CheckExact(__pyx_v_professors)) || PyTuple_CheckExact(__pyx_v_professors)) {
-        __pyx_t_16 = __pyx_v_professors; __Pyx_INCREF(__pyx_t_16);
+        __pyx_t_18 = __pyx_v_professors; __Pyx_INCREF(__pyx_t_18);
         __pyx_t_4 = 0;
         __pyx_t_5 = NULL;
       } else {
-        __pyx_t_4 = -1; __pyx_t_16 = PyObject_GetIter(__pyx_v_professors); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 109, __pyx_L28_error)
-        __Pyx_GOTREF(__pyx_t_16);
-        __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_16); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 109, __pyx_L28_error)
+        __pyx_t_4 = -1; __pyx_t_18 = PyObject_GetIter(__pyx_v_professors); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 130, __pyx_L31_error)
+        __Pyx_GOTREF(__pyx_t_18);
+        __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_18); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 130, __pyx_L31_error)
       }
       for (;;) {
         if (likely(!__pyx_t_5)) {
-          if (likely(PyList_CheckExact(__pyx_t_16))) {
+          if (likely(PyList_CheckExact(__pyx_t_18))) {
             {
-              Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_16);
+              Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_18);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 109, __pyx_L28_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 130, __pyx_L31_error)
               #endif
               if (__pyx_t_4 >= __pyx_temp) break;
             }
-            __pyx_t_6 = __Pyx_PyList_GetItemRefFast(__pyx_t_16, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+            __pyx_t_1 = __Pyx_PyList_GetItemRefFast(__pyx_t_18, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
             ++__pyx_t_4;
           } else {
             {
-              Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_16);
+              Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_18);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 109, __pyx_L28_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 130, __pyx_L31_error)
               #endif
               if (__pyx_t_4 >= __pyx_temp) break;
             }
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_6 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_16, __pyx_t_4));
+            __pyx_t_1 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_18, __pyx_t_4));
             #else
-            __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_16, __pyx_t_4);
+            __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_18, __pyx_t_4);
             #endif
             ++__pyx_t_4;
           }
-          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 109, __pyx_L28_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L31_error)
         } else {
-          __pyx_t_6 = __pyx_t_5(__pyx_t_16);
-          if (unlikely(!__pyx_t_6)) {
+          __pyx_t_1 = __pyx_t_5(__pyx_t_18);
+          if (unlikely(!__pyx_t_1)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
-              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 109, __pyx_L28_error)
+              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 130, __pyx_L31_error)
               PyErr_Clear();
             }
             break;
           }
         }
-        __Pyx_GOTREF(__pyx_t_6);
-        __Pyx_XDECREF_SET(__pyx_8genexpr1__pyx_v_p, __pyx_t_6);
-        __pyx_t_6 = 0;
-        __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr1__pyx_v_p, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 109, __pyx_L28_error)
-        __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr1__pyx_v_p, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 109, __pyx_L28_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_XDECREF_SET(__pyx_8genexpr1__pyx_v_p, __pyx_t_1);
+        __pyx_t_1 = 0;
+        __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr1__pyx_v_p, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L31_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr1__pyx_v_p, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 130, __pyx_L31_error)
         __Pyx_GOTREF(__pyx_t_13);
-        if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_t_6, (PyObject*)__pyx_t_13))) __PYX_ERR(0, 109, __pyx_L28_error)
-        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        if (unlikely(PyDict_SetItem(__pyx_t_6, (PyObject*)__pyx_t_1, (PyObject*)__pyx_t_13))) __PYX_ERR(0, 130, __pyx_L31_error)
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       }
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
       __Pyx_XDECREF(__pyx_8genexpr1__pyx_v_p); __pyx_8genexpr1__pyx_v_p = 0;
-      goto __pyx_L32_exit_scope;
-      __pyx_L28_error:;
+      goto __pyx_L35_exit_scope;
+      __pyx_L31_error:;
       __Pyx_XDECREF(__pyx_8genexpr1__pyx_v_p); __pyx_8genexpr1__pyx_v_p = 0;
       goto __pyx_L1_error;
-      __pyx_L32_exit_scope:;
+      __pyx_L35_exit_scope:;
     } /* exit inner scope */
-    __pyx_v_prof_map = ((PyObject*)__pyx_t_1);
-    __pyx_t_1 = 0;
+    __pyx_v_prof_map = ((PyObject*)__pyx_t_6);
+    __pyx_t_6 = 0;
 
-    /* "timetable_wrapper.pyx":110
+    /* "timetable_wrapper.pyx":131
  *         # Crear mapas de bsqueda
  *         prof_map = {p['id']: p['name'] for p in professors}
  *         course_map = {c['id']: {'name': c['name'], 'code': c['code']} for c in courses}             # <<<<<<<<<<<<<<
@@ -4277,51 +4444,51 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
  * 
 */
     { /* enter inner scope */
-      __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 110, __pyx_L35_error)
-      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_6 = PyDict_New(); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 131, __pyx_L38_error)
+      __Pyx_GOTREF(__pyx_t_6);
       if (likely(PyList_CheckExact(__pyx_v_courses)) || PyTuple_CheckExact(__pyx_v_courses)) {
-        __pyx_t_16 = __pyx_v_courses; __Pyx_INCREF(__pyx_t_16);
+        __pyx_t_18 = __pyx_v_courses; __Pyx_INCREF(__pyx_t_18);
         __pyx_t_4 = 0;
         __pyx_t_5 = NULL;
       } else {
-        __pyx_t_4 = -1; __pyx_t_16 = PyObject_GetIter(__pyx_v_courses); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 110, __pyx_L35_error)
-        __Pyx_GOTREF(__pyx_t_16);
-        __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_16); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 110, __pyx_L35_error)
+        __pyx_t_4 = -1; __pyx_t_18 = PyObject_GetIter(__pyx_v_courses); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 131, __pyx_L38_error)
+        __Pyx_GOTREF(__pyx_t_18);
+        __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_18); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 131, __pyx_L38_error)
       }
       for (;;) {
         if (likely(!__pyx_t_5)) {
-          if (likely(PyList_CheckExact(__pyx_t_16))) {
+          if (likely(PyList_CheckExact(__pyx_t_18))) {
             {
-              Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_16);
+              Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_18);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 110, __pyx_L35_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 131, __pyx_L38_error)
               #endif
               if (__pyx_t_4 >= __pyx_temp) break;
             }
-            __pyx_t_13 = __Pyx_PyList_GetItemRefFast(__pyx_t_16, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+            __pyx_t_13 = __Pyx_PyList_GetItemRefFast(__pyx_t_18, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
             ++__pyx_t_4;
           } else {
             {
-              Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_16);
+              Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_18);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 110, __pyx_L35_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 131, __pyx_L38_error)
               #endif
               if (__pyx_t_4 >= __pyx_temp) break;
             }
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_13 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_16, __pyx_t_4));
+            __pyx_t_13 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_18, __pyx_t_4));
             #else
-            __pyx_t_13 = __Pyx_PySequence_ITEM(__pyx_t_16, __pyx_t_4);
+            __pyx_t_13 = __Pyx_PySequence_ITEM(__pyx_t_18, __pyx_t_4);
             #endif
             ++__pyx_t_4;
           }
-          if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 110, __pyx_L35_error)
+          if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 131, __pyx_L38_error)
         } else {
-          __pyx_t_13 = __pyx_t_5(__pyx_t_16);
+          __pyx_t_13 = __pyx_t_5(__pyx_t_18);
           if (unlikely(!__pyx_t_13)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
-              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 110, __pyx_L35_error)
+              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 131, __pyx_L38_error)
               PyErr_Clear();
             }
             break;
@@ -4330,34 +4497,34 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
         __Pyx_GOTREF(__pyx_t_13);
         __Pyx_XDECREF_SET(__pyx_8genexpr2__pyx_v_c, __pyx_t_13);
         __pyx_t_13 = 0;
-        __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr2__pyx_v_c, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 110, __pyx_L35_error)
+        __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr2__pyx_v_c, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 131, __pyx_L38_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_6 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 110, __pyx_L35_error)
-        __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr2__pyx_v_c, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L35_error)
+        __pyx_t_1 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 131, __pyx_L38_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr2__pyx_v_c, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 131, __pyx_L38_error)
         __Pyx_GOTREF(__pyx_t_2);
-        if (PyDict_SetItem(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_name, __pyx_t_2) < (0)) __PYX_ERR(0, 110, __pyx_L35_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_name, __pyx_t_2) < (0)) __PYX_ERR(0, 131, __pyx_L38_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr2__pyx_v_c, __pyx_mstate_global->__pyx_n_u_code); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 110, __pyx_L35_error)
+        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr2__pyx_v_c, __pyx_mstate_global->__pyx_n_u_code); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 131, __pyx_L38_error)
         __Pyx_GOTREF(__pyx_t_2);
-        if (PyDict_SetItem(__pyx_t_6, __pyx_mstate_global->__pyx_n_u_code, __pyx_t_2) < (0)) __PYX_ERR(0, 110, __pyx_L35_error)
+        if (PyDict_SetItem(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_code, __pyx_t_2) < (0)) __PYX_ERR(0, 131, __pyx_L38_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_t_13, (PyObject*)__pyx_t_6))) __PYX_ERR(0, 110, __pyx_L35_error)
+        if (unlikely(PyDict_SetItem(__pyx_t_6, (PyObject*)__pyx_t_13, (PyObject*)__pyx_t_1))) __PYX_ERR(0, 131, __pyx_L38_error)
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       }
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
       __Pyx_XDECREF(__pyx_8genexpr2__pyx_v_c); __pyx_8genexpr2__pyx_v_c = 0;
-      goto __pyx_L39_exit_scope;
-      __pyx_L35_error:;
+      goto __pyx_L42_exit_scope;
+      __pyx_L38_error:;
       __Pyx_XDECREF(__pyx_8genexpr2__pyx_v_c); __pyx_8genexpr2__pyx_v_c = 0;
       goto __pyx_L1_error;
-      __pyx_L39_exit_scope:;
+      __pyx_L42_exit_scope:;
     } /* exit inner scope */
-    __pyx_v_course_map = ((PyObject*)__pyx_t_1);
-    __pyx_t_1 = 0;
+    __pyx_v_course_map = ((PyObject*)__pyx_t_6);
+    __pyx_t_6 = 0;
 
-    /* "timetable_wrapper.pyx":111
+    /* "timetable_wrapper.pyx":132
  *         prof_map = {p['id']: p['name'] for p in professors}
  *         course_map = {c['id']: {'name': c['name'], 'code': c['code']} for c in courses}
  *         timeslot_map = {ts['id']: ts['display'] for ts in timeslots}             # <<<<<<<<<<<<<<
@@ -4365,91 +4532,91 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
  *         resultado = []
 */
     { /* enter inner scope */
-      __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L42_error)
-      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_6 = PyDict_New(); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 132, __pyx_L45_error)
+      __Pyx_GOTREF(__pyx_t_6);
       if (likely(PyList_CheckExact(__pyx_v_timeslots)) || PyTuple_CheckExact(__pyx_v_timeslots)) {
-        __pyx_t_16 = __pyx_v_timeslots; __Pyx_INCREF(__pyx_t_16);
+        __pyx_t_18 = __pyx_v_timeslots; __Pyx_INCREF(__pyx_t_18);
         __pyx_t_4 = 0;
         __pyx_t_5 = NULL;
       } else {
-        __pyx_t_4 = -1; __pyx_t_16 = PyObject_GetIter(__pyx_v_timeslots); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 111, __pyx_L42_error)
-        __Pyx_GOTREF(__pyx_t_16);
-        __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_16); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 111, __pyx_L42_error)
+        __pyx_t_4 = -1; __pyx_t_18 = PyObject_GetIter(__pyx_v_timeslots); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 132, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_18);
+        __pyx_t_5 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_18); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 132, __pyx_L45_error)
       }
       for (;;) {
         if (likely(!__pyx_t_5)) {
-          if (likely(PyList_CheckExact(__pyx_t_16))) {
+          if (likely(PyList_CheckExact(__pyx_t_18))) {
             {
-              Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_16);
+              Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_18);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 111, __pyx_L42_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 132, __pyx_L45_error)
               #endif
               if (__pyx_t_4 >= __pyx_temp) break;
             }
-            __pyx_t_6 = __Pyx_PyList_GetItemRefFast(__pyx_t_16, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
+            __pyx_t_1 = __Pyx_PyList_GetItemRefFast(__pyx_t_18, __pyx_t_4, __Pyx_ReferenceSharing_OwnStrongReference);
             ++__pyx_t_4;
           } else {
             {
-              Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_16);
+              Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_18);
               #if !CYTHON_ASSUME_SAFE_SIZE
-              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 111, __pyx_L42_error)
+              if (unlikely((__pyx_temp < 0))) __PYX_ERR(0, 132, __pyx_L45_error)
               #endif
               if (__pyx_t_4 >= __pyx_temp) break;
             }
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_6 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_16, __pyx_t_4));
+            __pyx_t_1 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_18, __pyx_t_4));
             #else
-            __pyx_t_6 = __Pyx_PySequence_ITEM(__pyx_t_16, __pyx_t_4);
+            __pyx_t_1 = __Pyx_PySequence_ITEM(__pyx_t_18, __pyx_t_4);
             #endif
             ++__pyx_t_4;
           }
-          if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 111, __pyx_L42_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L45_error)
         } else {
-          __pyx_t_6 = __pyx_t_5(__pyx_t_16);
-          if (unlikely(!__pyx_t_6)) {
+          __pyx_t_1 = __pyx_t_5(__pyx_t_18);
+          if (unlikely(!__pyx_t_1)) {
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
-              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 111, __pyx_L42_error)
+              if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(0, 132, __pyx_L45_error)
               PyErr_Clear();
             }
             break;
           }
         }
-        __Pyx_GOTREF(__pyx_t_6);
-        __Pyx_XDECREF_SET(__pyx_8genexpr3__pyx_v_ts, __pyx_t_6);
-        __pyx_t_6 = 0;
-        __pyx_t_6 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr3__pyx_v_ts, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 111, __pyx_L42_error)
-        __Pyx_GOTREF(__pyx_t_6);
-        __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr3__pyx_v_ts, __pyx_mstate_global->__pyx_n_u_display); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 111, __pyx_L42_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_XDECREF_SET(__pyx_8genexpr3__pyx_v_ts, __pyx_t_1);
+        __pyx_t_1 = 0;
+        __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr3__pyx_v_ts, __pyx_mstate_global->__pyx_n_u_id); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L45_error)
+        __Pyx_GOTREF(__pyx_t_1);
+        __pyx_t_13 = __Pyx_PyObject_Dict_GetItem(__pyx_8genexpr3__pyx_v_ts, __pyx_mstate_global->__pyx_n_u_display); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 132, __pyx_L45_error)
         __Pyx_GOTREF(__pyx_t_13);
-        if (unlikely(PyDict_SetItem(__pyx_t_1, (PyObject*)__pyx_t_6, (PyObject*)__pyx_t_13))) __PYX_ERR(0, 111, __pyx_L42_error)
-        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+        if (unlikely(PyDict_SetItem(__pyx_t_6, (PyObject*)__pyx_t_1, (PyObject*)__pyx_t_13))) __PYX_ERR(0, 132, __pyx_L45_error)
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       }
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
       __Pyx_XDECREF(__pyx_8genexpr3__pyx_v_ts); __pyx_8genexpr3__pyx_v_ts = 0;
-      goto __pyx_L46_exit_scope;
-      __pyx_L42_error:;
+      goto __pyx_L49_exit_scope;
+      __pyx_L45_error:;
       __Pyx_XDECREF(__pyx_8genexpr3__pyx_v_ts); __pyx_8genexpr3__pyx_v_ts = 0;
       goto __pyx_L1_error;
-      __pyx_L46_exit_scope:;
+      __pyx_L49_exit_scope:;
     } /* exit inner scope */
-    __pyx_v_timeslot_map = ((PyObject*)__pyx_t_1);
-    __pyx_t_1 = 0;
+    __pyx_v_timeslot_map = ((PyObject*)__pyx_t_6);
+    __pyx_t_6 = 0;
 
-    /* "timetable_wrapper.pyx":113
+    /* "timetable_wrapper.pyx":134
  *         timeslot_map = {ts['id']: ts['display'] for ts in timeslots}
  * 
  *         resultado = []             # <<<<<<<<<<<<<<
  *         for asig in solucion:
  *             # Manejar profesores no asignados
 */
-    __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_v_resultado = ((PyObject*)__pyx_t_1);
-    __pyx_t_1 = 0;
+    __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 134, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_v_resultado = ((PyObject*)__pyx_t_6);
+    __pyx_t_6 = 0;
 
-    /* "timetable_wrapper.pyx":114
+    /* "timetable_wrapper.pyx":135
  * 
  *         resultado = []
  *         for asig in solucion:             # <<<<<<<<<<<<<<
@@ -4461,68 +4628,98 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
       __pyx_t_27 = *__pyx_t_26;
       __pyx_v_asig = __PYX_STD_MOVE_IF_SUPPORTED(__pyx_t_27);
 
-      /* "timetable_wrapper.pyx":116
+      /* "timetable_wrapper.pyx":137
  *         for asig in solucion:
  *             # Manejar profesores no asignados
  *             nombre_prof = "Sin Asignar"             # <<<<<<<<<<<<<<
- *             if asig.id_profesor > 0:
- *                 nombre_prof = prof_map.get(asig.id_profesor, f"Profesor {asig.id_profesor}")
+ *             if asig.id_profesor == 99999:
+ *                 nombre_prof = "" # No mostrar nombre para Estada
 */
       __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_Sin_Asignar);
       __Pyx_XDECREF_SET(__pyx_v_nombre_prof, __pyx_mstate_global->__pyx_kp_u_Sin_Asignar);
 
-      /* "timetable_wrapper.pyx":117
+      /* "timetable_wrapper.pyx":138
  *             # Manejar profesores no asignados
  *             nombre_prof = "Sin Asignar"
- *             if asig.id_profesor > 0:             # <<<<<<<<<<<<<<
+ *             if asig.id_profesor == 99999:             # <<<<<<<<<<<<<<
+ *                 nombre_prof = "" # No mostrar nombre para Estada
+ *             elif asig.id_profesor > 0:
+*/
+      __pyx_t_16 = (__pyx_v_asig.id_profesor == 0x1869F);
+      if (__pyx_t_16) {
+
+        /* "timetable_wrapper.pyx":139
+ *             nombre_prof = "Sin Asignar"
+ *             if asig.id_profesor == 99999:
+ *                 nombre_prof = "" # No mostrar nombre para Estada             # <<<<<<<<<<<<<<
+ *             elif asig.id_profesor > 0:
+ *                 nombre_prof = prof_map.get(asig.id_profesor, f"Profesor {asig.id_profesor}")
+*/
+        __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_);
+        __Pyx_DECREF_SET(__pyx_v_nombre_prof, __pyx_mstate_global->__pyx_kp_u_);
+
+        /* "timetable_wrapper.pyx":138
+ *             # Manejar profesores no asignados
+ *             nombre_prof = "Sin Asignar"
+ *             if asig.id_profesor == 99999:             # <<<<<<<<<<<<<<
+ *                 nombre_prof = "" # No mostrar nombre para Estada
+ *             elif asig.id_profesor > 0:
+*/
+        goto __pyx_L52;
+      }
+
+      /* "timetable_wrapper.pyx":140
+ *             if asig.id_profesor == 99999:
+ *                 nombre_prof = "" # No mostrar nombre para Estada
+ *             elif asig.id_profesor > 0:             # <<<<<<<<<<<<<<
  *                 nombre_prof = prof_map.get(asig.id_profesor, f"Profesor {asig.id_profesor}")
  *             elif asig.id_profesor == 0:
 */
-      __pyx_t_21 = (__pyx_v_asig.id_profesor > 0);
-      if (__pyx_t_21) {
+      __pyx_t_16 = (__pyx_v_asig.id_profesor > 0);
+      if (__pyx_t_16) {
 
-        /* "timetable_wrapper.pyx":118
- *             nombre_prof = "Sin Asignar"
- *             if asig.id_profesor > 0:
+        /* "timetable_wrapper.pyx":141
+ *                 nombre_prof = "" # No mostrar nombre para Estada
+ *             elif asig.id_profesor > 0:
  *                 nombre_prof = prof_map.get(asig.id_profesor, f"Profesor {asig.id_profesor}")             # <<<<<<<<<<<<<<
  *             elif asig.id_profesor == 0:
  *                 nombre_prof = "N/A"  # Cursos sin profesor
 */
-        __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_asig.id_profesor); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 118, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_16 = __Pyx_PyUnicode_From_int(__pyx_v_asig.id_profesor, 0, ' ', 'd'); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 118, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_16);
-        __pyx_t_13 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Profesor, __pyx_t_16); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 118, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyLong_From_int(__pyx_v_asig.id_profesor); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 141, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_6);
+        __pyx_t_18 = __Pyx_PyUnicode_From_int(__pyx_v_asig.id_profesor, 0, ' ', 'd'); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 141, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_18);
+        __pyx_t_13 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Profesor, __pyx_t_18); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 141, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
-        __pyx_t_16 = __Pyx_PyDict_GetItemDefault(__pyx_v_prof_map, __pyx_t_1, __pyx_t_13); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 118, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_16);
-        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+        __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
+        __pyx_t_18 = __Pyx_PyDict_GetItemDefault(__pyx_v_prof_map, __pyx_t_6, __pyx_t_13); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 141, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_18);
+        __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-        __Pyx_DECREF_SET(__pyx_v_nombre_prof, __pyx_t_16);
-        __pyx_t_16 = 0;
+        __Pyx_DECREF_SET(__pyx_v_nombre_prof, __pyx_t_18);
+        __pyx_t_18 = 0;
 
-        /* "timetable_wrapper.pyx":117
- *             # Manejar profesores no asignados
- *             nombre_prof = "Sin Asignar"
- *             if asig.id_profesor > 0:             # <<<<<<<<<<<<<<
+        /* "timetable_wrapper.pyx":140
+ *             if asig.id_profesor == 99999:
+ *                 nombre_prof = "" # No mostrar nombre para Estada
+ *             elif asig.id_profesor > 0:             # <<<<<<<<<<<<<<
  *                 nombre_prof = prof_map.get(asig.id_profesor, f"Profesor {asig.id_profesor}")
  *             elif asig.id_profesor == 0:
 */
-        goto __pyx_L49;
+        goto __pyx_L52;
       }
 
-      /* "timetable_wrapper.pyx":119
- *             if asig.id_profesor > 0:
+      /* "timetable_wrapper.pyx":142
+ *             elif asig.id_profesor > 0:
  *                 nombre_prof = prof_map.get(asig.id_profesor, f"Profesor {asig.id_profesor}")
  *             elif asig.id_profesor == 0:             # <<<<<<<<<<<<<<
  *                 nombre_prof = "N/A"  # Cursos sin profesor
  * 
 */
-      __pyx_t_21 = (__pyx_v_asig.id_profesor == 0);
-      if (__pyx_t_21) {
+      __pyx_t_16 = (__pyx_v_asig.id_profesor == 0);
+      if (__pyx_t_16) {
 
-        /* "timetable_wrapper.pyx":120
+        /* "timetable_wrapper.pyx":143
  *                 nombre_prof = prof_map.get(asig.id_profesor, f"Profesor {asig.id_profesor}")
  *             elif asig.id_profesor == 0:
  *                 nombre_prof = "N/A"  # Cursos sin profesor             # <<<<<<<<<<<<<<
@@ -4532,166 +4729,166 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
         __Pyx_INCREF(__pyx_mstate_global->__pyx_kp_u_N_A);
         __Pyx_DECREF_SET(__pyx_v_nombre_prof, __pyx_mstate_global->__pyx_kp_u_N_A);
 
-        /* "timetable_wrapper.pyx":119
- *             if asig.id_profesor > 0:
+        /* "timetable_wrapper.pyx":142
+ *             elif asig.id_profesor > 0:
  *                 nombre_prof = prof_map.get(asig.id_profesor, f"Profesor {asig.id_profesor}")
  *             elif asig.id_profesor == 0:             # <<<<<<<<<<<<<<
  *                 nombre_prof = "N/A"  # Cursos sin profesor
  * 
 */
       }
-      __pyx_L49:;
+      __pyx_L52:;
 
-      /* "timetable_wrapper.pyx":122
+      /* "timetable_wrapper.pyx":145
  *                 nombre_prof = "N/A"  # Cursos sin profesor
  * 
  *             info_curso = course_map.get(asig.id_curso, {'name': f"Curso {asig.id_curso}", 'code': '???'})             # <<<<<<<<<<<<<<
  *             display_bloque = timeslot_map.get(asig.id_bloque, f"Bloque {asig.id_bloque}")
  * 
 */
-      __pyx_t_16 = __Pyx_PyLong_From_int(__pyx_v_asig.id_curso); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 122, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_16);
-      __pyx_t_13 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 122, __pyx_L1_error)
+      __pyx_t_18 = __Pyx_PyLong_From_int(__pyx_v_asig.id_curso); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_18);
+      __pyx_t_13 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 145, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_1 = __Pyx_PyUnicode_From_int(__pyx_v_asig.id_curso, 0, ' ', 'd'); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 122, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyUnicode_From_int(__pyx_v_asig.id_curso, 0, ' ', 'd'); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Curso, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Curso, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 122, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_name, __pyx_t_6) < (0)) __PYX_ERR(0, 122, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_code, __pyx_mstate_global->__pyx_kp_u_) < (0)) __PYX_ERR(0, 122, __pyx_L1_error)
-      __pyx_t_6 = __Pyx_PyDict_GetItemDefault(__pyx_v_course_map, __pyx_t_16, __pyx_t_13); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 122, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_name, __pyx_t_1) < (0)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_code, __pyx_mstate_global->__pyx_kp_u__2) < (0)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_course_map, __pyx_t_18, __pyx_t_13); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __Pyx_XDECREF_SET(__pyx_v_info_curso, __pyx_t_6);
-      __pyx_t_6 = 0;
+      __Pyx_XDECREF_SET(__pyx_v_info_curso, __pyx_t_1);
+      __pyx_t_1 = 0;
 
-      /* "timetable_wrapper.pyx":123
+      /* "timetable_wrapper.pyx":146
  * 
  *             info_curso = course_map.get(asig.id_curso, {'name': f"Curso {asig.id_curso}", 'code': '???'})
  *             display_bloque = timeslot_map.get(asig.id_bloque, f"Bloque {asig.id_bloque}")             # <<<<<<<<<<<<<<
  * 
  *             resultado.append({
 */
-      __pyx_t_6 = __Pyx_PyLong_From_int(__pyx_v_asig.id_bloque); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 123, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_13 = __Pyx_PyUnicode_From_int(__pyx_v_asig.id_bloque, 0, ' ', 'd'); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 123, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_asig.id_bloque); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_13 = __Pyx_PyUnicode_From_int(__pyx_v_asig.id_bloque, 0, ' ', 'd'); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_16 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Bloque, __pyx_t_13); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 123, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_16);
+      __pyx_t_18 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Bloque, __pyx_t_13); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 146, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_18);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_13 = __Pyx_PyDict_GetItemDefault(__pyx_v_timeslot_map, __pyx_t_6, __pyx_t_16); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 123, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyDict_GetItemDefault(__pyx_v_timeslot_map, __pyx_t_1, __pyx_t_18); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 146, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
       __Pyx_XDECREF_SET(__pyx_v_display_bloque, __pyx_t_13);
       __pyx_t_13 = 0;
 
-      /* "timetable_wrapper.pyx":126
+      /* "timetable_wrapper.pyx":149
  * 
  *             resultado.append({
  *                 'group_id': asig.id_grupo,             # <<<<<<<<<<<<<<
  *                 'course_id': asig.id_curso,
  *                 'course_name': info_curso['name'],
 */
-      __pyx_t_13 = __Pyx_PyDict_NewPresized(8); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 126, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyDict_NewPresized(8); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 149, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_16 = __Pyx_PyLong_From_int(__pyx_v_asig.id_grupo); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 126, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_16);
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_group_id, __pyx_t_16) < (0)) __PYX_ERR(0, 126, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __pyx_t_18 = __Pyx_PyLong_From_int(__pyx_v_asig.id_grupo); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_18);
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_group_id, __pyx_t_18) < (0)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
 
-      /* "timetable_wrapper.pyx":127
+      /* "timetable_wrapper.pyx":150
  *             resultado.append({
  *                 'group_id': asig.id_grupo,
  *                 'course_id': asig.id_curso,             # <<<<<<<<<<<<<<
  *                 'course_name': info_curso['name'],
  *                 'course_code': info_curso['code'],
 */
-      __pyx_t_16 = __Pyx_PyLong_From_int(__pyx_v_asig.id_curso); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 127, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_16);
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_course_id, __pyx_t_16) < (0)) __PYX_ERR(0, 126, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __pyx_t_18 = __Pyx_PyLong_From_int(__pyx_v_asig.id_curso); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 150, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_18);
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_course_id, __pyx_t_18) < (0)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
 
-      /* "timetable_wrapper.pyx":128
+      /* "timetable_wrapper.pyx":151
  *                 'group_id': asig.id_grupo,
  *                 'course_id': asig.id_curso,
  *                 'course_name': info_curso['name'],             # <<<<<<<<<<<<<<
  *                 'course_code': info_curso['code'],
  *                 'professor_id': asig.id_profesor,
 */
-      __pyx_t_16 = __Pyx_PyObject_Dict_GetItem(__pyx_v_info_curso, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 128, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_16);
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_course_name, __pyx_t_16) < (0)) __PYX_ERR(0, 126, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_v_info_curso, __pyx_mstate_global->__pyx_n_u_name); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 151, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_18);
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_course_name, __pyx_t_18) < (0)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
 
-      /* "timetable_wrapper.pyx":129
+      /* "timetable_wrapper.pyx":152
  *                 'course_id': asig.id_curso,
  *                 'course_name': info_curso['name'],
  *                 'course_code': info_curso['code'],             # <<<<<<<<<<<<<<
  *                 'professor_id': asig.id_profesor,
  *                 'professor_name': nombre_prof,
 */
-      __pyx_t_16 = __Pyx_PyObject_Dict_GetItem(__pyx_v_info_curso, __pyx_mstate_global->__pyx_n_u_code); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 129, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_16);
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_course_code, __pyx_t_16) < (0)) __PYX_ERR(0, 126, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __pyx_t_18 = __Pyx_PyObject_Dict_GetItem(__pyx_v_info_curso, __pyx_mstate_global->__pyx_n_u_code); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 152, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_18);
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_course_code, __pyx_t_18) < (0)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
 
-      /* "timetable_wrapper.pyx":130
+      /* "timetable_wrapper.pyx":153
  *                 'course_name': info_curso['name'],
  *                 'course_code': info_curso['code'],
  *                 'professor_id': asig.id_profesor,             # <<<<<<<<<<<<<<
  *                 'professor_name': nombre_prof,
  *                 'timeslot_id': asig.id_bloque,
 */
-      __pyx_t_16 = __Pyx_PyLong_From_int(__pyx_v_asig.id_profesor); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 130, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_16);
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_professor_id, __pyx_t_16) < (0)) __PYX_ERR(0, 126, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __pyx_t_18 = __Pyx_PyLong_From_int(__pyx_v_asig.id_profesor); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 153, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_18);
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_professor_id, __pyx_t_18) < (0)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
 
-      /* "timetable_wrapper.pyx":131
+      /* "timetable_wrapper.pyx":154
  *                 'course_code': info_curso['code'],
  *                 'professor_id': asig.id_profesor,
  *                 'professor_name': nombre_prof,             # <<<<<<<<<<<<<<
  *                 'timeslot_id': asig.id_bloque,
  *                 'timeslot_display': display_bloque
 */
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_professor_name, __pyx_v_nombre_prof) < (0)) __PYX_ERR(0, 126, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_professor_name, __pyx_v_nombre_prof) < (0)) __PYX_ERR(0, 149, __pyx_L1_error)
 
-      /* "timetable_wrapper.pyx":132
+      /* "timetable_wrapper.pyx":155
  *                 'professor_id': asig.id_profesor,
  *                 'professor_name': nombre_prof,
  *                 'timeslot_id': asig.id_bloque,             # <<<<<<<<<<<<<<
  *                 'timeslot_display': display_bloque
  *             })
 */
-      __pyx_t_16 = __Pyx_PyLong_From_int(__pyx_v_asig.id_bloque); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 132, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_16);
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_timeslot_id, __pyx_t_16) < (0)) __PYX_ERR(0, 126, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __pyx_t_18 = __Pyx_PyLong_From_int(__pyx_v_asig.id_bloque); if (unlikely(!__pyx_t_18)) __PYX_ERR(0, 155, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_18);
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_timeslot_id, __pyx_t_18) < (0)) __PYX_ERR(0, 149, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
 
-      /* "timetable_wrapper.pyx":133
+      /* "timetable_wrapper.pyx":156
  *                 'professor_name': nombre_prof,
  *                 'timeslot_id': asig.id_bloque,
  *                 'timeslot_display': display_bloque             # <<<<<<<<<<<<<<
  *             })
  * 
 */
-      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_timeslot_display, __pyx_v_display_bloque) < (0)) __PYX_ERR(0, 126, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_13, __pyx_mstate_global->__pyx_n_u_timeslot_display, __pyx_v_display_bloque) < (0)) __PYX_ERR(0, 149, __pyx_L1_error)
 
-      /* "timetable_wrapper.pyx":125
+      /* "timetable_wrapper.pyx":148
  *             display_bloque = timeslot_map.get(asig.id_bloque, f"Bloque {asig.id_bloque}")
  * 
  *             resultado.append({             # <<<<<<<<<<<<<<
  *                 'group_id': asig.id_grupo,
  *                 'course_id': asig.id_curso,
 */
-      __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_resultado, __pyx_t_13); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 125, __pyx_L1_error)
+      __pyx_t_28 = __Pyx_PyList_Append(__pyx_v_resultado, __pyx_t_13); if (unlikely(__pyx_t_28 == ((int)-1))) __PYX_ERR(0, 148, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-      /* "timetable_wrapper.pyx":114
+      /* "timetable_wrapper.pyx":135
  * 
  *         resultado = []
  *         for asig in solucion:             # <<<<<<<<<<<<<<
@@ -4700,32 +4897,32 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
 */
     }
 
-    /* "timetable_wrapper.pyx":136
+    /* "timetable_wrapper.pyx":159
  *             })
  * 
  *         print(f" Total de asignaciones: {len(resultado)}")             # <<<<<<<<<<<<<<
  *         return resultado
  *     else:
 */
-    __pyx_t_16 = NULL;
-    __pyx_t_4 = __Pyx_PyList_GET_SIZE(__pyx_v_resultado); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 136, __pyx_L1_error)
-    __pyx_t_6 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_4, 0, ' ', 'd'); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 136, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_1 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Total_de_asignaciones, __pyx_t_6); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
+    __pyx_t_18 = NULL;
+    __pyx_t_4 = __Pyx_PyList_GET_SIZE(__pyx_v_resultado); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 159, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyUnicode_From_Py_ssize_t(__pyx_t_4, 0, ' ', 'd'); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_6 = __Pyx_PyUnicode_Concat(__pyx_mstate_global->__pyx_kp_u_Total_de_asignaciones, __pyx_t_1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_3 = 1;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_16, __pyx_t_1};
+      PyObject *__pyx_callargs[2] = {__pyx_t_18, __pyx_t_6};
       __pyx_t_13 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_18); __pyx_t_18 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 159, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
     }
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-    /* "timetable_wrapper.pyx":137
+    /* "timetable_wrapper.pyx":160
  * 
  *         print(f" Total de asignaciones: {len(resultado)}")
  *         return resultado             # <<<<<<<<<<<<<<
@@ -4737,7 +4934,7 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
     __pyx_r = __pyx_v_resultado;
     goto __pyx_L0;
 
-    /* "timetable_wrapper.pyx":104
+    /* "timetable_wrapper.pyx":125
  *     # 5. Resolver
  *     print(f"\n Iniciando solver C++ (timeout: {timeout}s)...")
  *     if solver.resolver(timeout):             # <<<<<<<<<<<<<<
@@ -4746,25 +4943,25 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
 */
   }
 
-  /* "timetable_wrapper.pyx":139
+  /* "timetable_wrapper.pyx":162
  *         return resultado
  *     else:
  *         print(" No se encontr solucin completa")             # <<<<<<<<<<<<<<
  *         return None
 */
   /*else*/ {
-    __pyx_t_1 = NULL;
+    __pyx_t_6 = NULL;
     __pyx_t_3 = 1;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_1, __pyx_mstate_global->__pyx_kp_u_No_se_encontr_solucin_completa};
+      PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_mstate_global->__pyx_kp_u_No_se_encontr_solucin_completa};
       __pyx_t_13 = __Pyx_PyObject_FastCall((PyObject*)__pyx_builtin_print, __pyx_callargs+__pyx_t_3, (2-__pyx_t_3) | (__pyx_t_3*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 139, __pyx_L1_error)
+      __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
+      if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 162, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
     }
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-    /* "timetable_wrapper.pyx":140
+    /* "timetable_wrapper.pyx":163
  *     else:
  *         print(" No se encontr solucin completa")
  *         return None             # <<<<<<<<<<<<<<
@@ -4788,7 +4985,7 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_XDECREF(__pyx_t_16);
+  __Pyx_XDECREF(__pyx_t_18);
   __Pyx_AddTraceback("timetable_wrapper.solve_timetable", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -4797,7 +4994,11 @@ static PyObject *__pyx_pf_17timetable_wrapper_solve_timetable(CYTHON_UNUSED PyOb
   __Pyx_XDECREF(__pyx_v_dia_num);
   __Pyx_XDECREF(__pyx_v_p);
   __Pyx_XDECREF(__pyx_v_codigos);
+  __Pyx_XDECREF(__pyx_v_virtual_prof_name);
+  __Pyx_XDECREF(__pyx_v_virtual_timeslots);
+  __Pyx_XDECREF(__pyx_v_virtual_courses);
   __Pyx_XDECREF(__pyx_v_c);
+  __Pyx_XDECREF(__pyx_v_semestre);
   __Pyx_XDECREF(__pyx_v_creditos);
   __Pyx_XDECREF(__pyx_v_g);
   __Pyx_XDECREF(__pyx_v_prof_map);
@@ -5176,7 +5377,7 @@ __Pyx_RefNannySetupContext("PyInit_timetable_wrapper", 0);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[2]);
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_2, __pyx_mstate_global->__pyx_tuple[3]);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_solve_timetable, __pyx_t_2) < (0)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
@@ -5248,27 +5449,38 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "timetable_wrapper.pyx":82
+  /* "timetable_wrapper.pyx":81
+ *     virtual_prof_name = b"Estadia"
+ *     # Disponibilidad total (todos los bloques del 1 al 500)
+ *     virtual_timeslots = list(range(1, 500))             # <<<<<<<<<<<<<<
+ *     # Materias que puede dar
+ *     virtual_courses = [b"EDSM", b"LITIID"]
+*/
+  __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_int_1, __pyx_mstate_global->__pyx_int_500); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(0, 81, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[0]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[0]);
+
+  /* "timetable_wrapper.pyx":95
+ *     print(" Agregando cursos...")
+ *     for c in courses:
+ *         semestre = c.get('semester', c.get('cuatrimestre', 1))             # <<<<<<<<<<<<<<
  * 
- *         # Usar 'credits' si existe, sino 'weekly_hours' (compatibilidad)
+ *         # EXCLUIR SEMESTRES 6 y 10 (Estadas)
+*/
+  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_n_u_cuatrimestre, __pyx_mstate_global->__pyx_int_1); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 95, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
+
+  /* "timetable_wrapper.pyx":103
+ *         # Determinar si requiere profesor
+ *         requires_prof = True
  *         creditos = c.get('credits', c.get('weekly_hours', 0))             # <<<<<<<<<<<<<<
  * 
  *         solver.agregarCurso(
 */
-  __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_n_u_weekly_hours, __pyx_mstate_global->__pyx_int_0); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(0, 82, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[0]);
-  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[0]);
-
-  /* "timetable_wrapper.pyx":89
- *             c['code'].encode('utf-8'),
- *             creditos,
- *             c.get('semester', c.get('cuatrimestre', 1)),             # <<<<<<<<<<<<<<
- *             requires_prof
- *         )
-*/
-  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_n_u_cuatrimestre, __pyx_mstate_global->__pyx_int_1); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 89, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
-  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
+  __pyx_mstate_global->__pyx_tuple[2] = PyTuple_Pack(2, __pyx_mstate_global->__pyx_n_u_weekly_hours, __pyx_mstate_global->__pyx_int_0); if (unlikely(!__pyx_mstate_global->__pyx_tuple[2])) __PYX_ERR(0, 103, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[2]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[2]);
 
   /* "timetable_wrapper.pyx":25
  *         vector[Asignacion] obtenerSolucion()
@@ -5277,13 +5489,13 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
  *     """
  *     Resuelve el problema de horarios usando el solver greedy en C++
 */
-  __pyx_mstate_global->__pyx_tuple[2] = PyTuple_Pack(1, ((PyObject*)__pyx_mstate_global->__pyx_float_60_0)); if (unlikely(!__pyx_mstate_global->__pyx_tuple[2])) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[2]);
-  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[2]);
+  __pyx_mstate_global->__pyx_tuple[3] = PyTuple_Pack(1, ((PyObject*)__pyx_mstate_global->__pyx_float_60_0)); if (unlikely(!__pyx_mstate_global->__pyx_tuple[3])) __PYX_ERR(0, 25, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[3]);
+  __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[3]);
   #if CYTHON_IMMORTAL_CONSTANTS
   {
     PyObject **table = __pyx_mstate->__pyx_tuple;
-    for (Py_ssize_t i=0; i<3; ++i) {
+    for (Py_ssize_t i=0; i<4; ++i) {
       #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
       Py_SET_REFCNT(table[i], _Py_IMMORTAL_REFCNT_LOCAL);
       #else
@@ -5303,34 +5515,34 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 10; } index[] = {{3},{33},{24},{24},{35},{7},{6},{37},{3},{38},{9},{11},{27},{28},{1},{28},{5},{5},{4},{6},{6},{5},{6},{10},{20},{7},{4},{18},{17},{19},{1},{18},{4},{7},{11},{9},{10},{10},{11},{7},{8},{7},{12},{3},{7},{7},{7},{14},{6},{8},{10},{8},{1},{3},{8},{6},{2},{10},{13},{5},{8},{10},{4},{8},{11},{1},{3},{5},{8},{12},{14},{10},{12},{13},{9},{8},{12},{10},{8},{15},{6},{10},{12},{8},{7},{16},{11},{12},{9},{17},{2},{6},{12},{698}};
-    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1220 bytes) */
-const char* const cstring = "BZh91AY&SY\363\303\347\323\000\000\241\377\377\367\377\377\377\376\377\247\326\277\367}\376\277\357\377\363\302V\350V\342hH@X@@@P\000@\000P\003\336'j\355Z\233\267s\203CSD\215\245OD\332\233f\223\324\230\325\017(\311\275Hi\241\247\224i\240\014\200\r\000\321\352f\246\201\223\010\375P\323LOQ\372Hd\3754PjhCT\375L\322\236LQ\223jO\024\320\320\323\023L&\t\240\310i\352\003@\3100&\230\023C#M=#\020\r4\000\3212h\203QOS1A\372\211\223A\352i\241\240\000\000\000\320\000\320\000i\240\000\320h4\000\000A\200LF\t\223\0100\230\230\023\000C\010\300C\002`L&\010\300\000\004\320\302bi\201\002I4\200\210\324\364\032\230\324i\2104\006\200\320\r\000\000\000\000\000\000\000\014\203@\003\322\t\226\013L\255q\375y\031'\316\321\367\213\021\203e!\244\214\225Q\216\277\311\253\300?\264\014\30330\3033\014\341M6\262\250U\362\327h\304z\211\005F\006\030\202\262%*\275\202q4R+\005\315\310A\255\3534\t\224\343D{\201\3500#\001\331\250\236\244T\343`\002x\346\0325:K\332\334\213R\014\373\t\205\210d]2P\035\010\325!h\245\331u\305\320\000\353\010\024\306\225\373R'\024\231\354=*\224\264\325Jh\370\322\367\311\254\2227d\031S\316\005{\356B\345\031kt\340\215{\220R\027\022\305|\234L8d\342\324fA')\n\311B\255\342\361\221Z\313\242:\275,\2533\267:H\260\356vg\217j\307Z\367\274\344\2736\321@\252\221lRN9\004\367E\210\226j\323j\274$\242s;H<o.3\225\364\326\227\275\302\301\340a\371\325\304g\2411\n\234\247qb=\016g\373b\3458A\331\233\267\314r\r$\317+\322\342\201U\211\246\366\230\244\025\022\343\301\362O\2042^Q{\302\211I\206\031\301M\266J\245\300\220\363\010Ji\302y\251 \210\034\200@#\224\333\031\014$d\327\005X\030\344h\353\004y\274\252\037+r@\27045\333\252z\240\221\244p\252\234V\214Z\360\252K\332U\022\3151\0130[fr\234\372\222C\013\364\030\001\320\202\016\220\215\024HW\250)\243o-;D\220\027\014\307Oh\033\347#\225\246\272D\245\363\251\265uA@\230\202\337\020d\r\026e'_\256\262\022\264f\212\214^8V\235\340\274\2415\305\306\022\315\305\346XR\227\226\332\031\n\354\261\340\245\277)J\303,$\205\265\014\326\305$\353pyY1\203r\004\264Z\025\024\330""\000f\215 \336U\031r\020\020'\262\303\267D#\024R3\"\243\004\206,\261\262I\266#\002\376b\303(S\207B*\"by.\334\304\242Gb\020+X\014\026|(\335\205\355 A\313,\257\337\3439\002\372\351J\232$\202\tj)^Q\256\010:\026\263\030\204h\005\024a\320\361\253N\224\210\":YL\357\2560\3238S\230\335\032M0\373\341\364a\244\037\001\224\220!,a\003\332\3400\261<\013\331l\320u\2259v|\206\025$\352\221\0221*\204fw\3244\251\221}\230\252\3414\227\317\007\263*\035\212\304\250\032H\220x\214o\315E\3503}$\2008\033\0303\212e\253\335F\263\314\034\010_\"\2048\026\206\337K\\Md\274\210Q\r\352\321X&B\202L\007cO\235\365K@R\276\211F9\212\251\340c\031C\232\373\344`:\016\203\231\261\3059\224+\0364\352\210\214W\204\315\242\245\020q\323\246sbN1v\362\356E\224\007T\303\300\005h<Y\2060\356e\230\375\024\033d\306\254@\034WQ\002\021Zz9\2318\371\336\300\337\270A\357\305u\217\311\306\2061c\230\202\254\350\203\351:\t\260&i\325\031\277d\035Z\237\037\326@\233\010\037M\262uK\232mS\227\227bn\260\377\034\363\206\271\020\300\276\340\2150n\370\243g+\026\203\345G^\035\267\354\025+\022lA\374e\354\342\257\rkv\333\343D5\224\356\"\"G\243\030\014E\251\276\037/\004W\301Sw.87#F\361\264\336$\331\273Q\354\325\217\177n\246\373\251\241\206^\322\r\310U0\344\312\002<\312]\321\275\266\343\034z\227W\340\023\267\215\"\221\032L\200\325\304|\223VW\316\321\375\244X\037Z3\244\003\030Y\226\023\275\225\021\314\363\351\376\026\200\222\273h\231E\314\361(\253\177\305\334\221N\024$<\360\371\364\300";
-    PyObject *data = __Pyx_DecompressString(cstring, 1220, 2);
+    const struct { const unsigned int length: 10; } index[] = {{0},{33},{24},{24},{35},{7},{6},{37},{3},{38},{9},{11},{27},{28},{3},{1},{5},{21},{5},{4},{6},{6},{5},{6},{10},{20},{7},{4},{18},{17},{19},{1},{18},{4},{7},{11},{9},{10},{10},{11},{7},{8},{7},{12},{3},{7},{7},{7},{14},{6},{8},{10},{8},{1},{3},{8},{6},{2},{10},{13},{5},{8},{10},{4},{8},{11},{1},{3},{5},{8},{12},{14},{10},{12},{13},{9},{8},{8},{12},{10},{8},{15},{6},{10},{12},{8},{7},{16},{11},{12},{9},{17},{2},{6},{15},{15},{17},{17},{12},{780},{4},{7},{6}};
+    #if (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (1259 bytes) */
+const char* const cstring = "BZh91AY&SY\025\367\323\276\000\003\224\377\377\377\367\377\377\376\377\257\376\277w\177\276\277\357\377\363\302V\350V\342hH@X@@@P\000@\000P\004\0369U*\202\224\301\203HT\000\320\321\200\021\223 \006\232\000hh\000\000\032h4\003@\006M\003@d1\006\214\321\020d\3014\310\302dbi\246\002`L\000\230M0\004\304\311\200\001\030\214\000\214\215\014\021\246F\2314\300\324\301\023D\325<\214\232\232x\215\023G\251\223\3244\000\r\000\000\000\003@h\001\240h\320\320\r\032\000h\020d\3014\310\302dbi\246\002`L\000\230M0\004\304\311\200\001\030\214\000\214\215\014\021\246F\2314\300\222A\032\023M\t\231S\364\232iO\321OSM\r\000\000\320\320\000\310\000\000\000\000\0007\252\033(\000\364\215$\2651 \341\362\273]f\371\372p\237\304\032\003\223s\221\376\214\317|\321\232\261s\0277\236\016\312\344T\252a\230d\303\014\231\207\205Up\363\251\014\210\306\\\211u\024\244\212\230\030l\363\255\000\022Orx\230\202C1`l\0036\033\030q2'h? I\005\370\234\306qM\0059%\236g\213\302a~Dw\306\035\342\330o+}\077\077\274\214\234|\2713\0271\250@\262M\023(\206iR\371\324\273\262/\200J\344\252-\017\036\014XV'\246\004mQ\206\306\027\367\275\003\263\346\227\200\313\224+t8=\235\354J\333\226d\3461\020\207/\r\365\353\345\345\352h\352\325\342qPVaDAY8\310\324\337\001\215\325\031qs/\267\027\267ut\303\034w\005\007\347mvk\343\205\017\332\023\314L\344bX\214\324\020OP!t4`)\341\306:\2117C*A\257\336\231\323D\301\206\276\007\030\333\017\017\322\246\342 \037`\320\265\030M \3128?\337l\326\241\311!\326V\2110&\203+\345\r4\004\347\265lQ\370R\304G*f\3469\346\371\315v\372\0372_\220Q18\303NnM\207jT\343\201^\0266\225\341\234gja\354\017\035\264\3676]7\"\3532\316k\311d\366\274\356\\V2\346i\356\347@\266\346}\321\3362\222\t\310\344\261\021< \327\216\260\215{3*T\232\"\224Je;\\_\341f\307\216\315\234++>\020b\266\"\375\266.\221(\256\na\367\264\002\234\223\n\007T\023J\342\236\255\314\021(4\252MEPL\"\034\266\\\036\216|\217\017W\035\362\247_=v\246dT\307\021\341e\017r\372B|\2315-\307N\265Eq+\343D\310\301\255\312m&\000-e\322\276{\240M5\246\004\353\257\tL\255c\215\305""\222\206\004\\hT\356\206\313>y\276\270\033\002\234\235E\227E\205\016\204\021H\314*\206\007D\353\246\216\202nH\306\334\345\314\016\247\213$T\211\312ck\316=\021{\016qe\241\270\317\335\206`\317H\207<\320\313m\363\214_\260\242\270\032\003\020\216]5\311uL\260\024\322\003\031\2366\\\306\002\265H\325E\305CZ\224K\001)L\2420\267Yes\364\"\335\273i\207!\221aBB!Hi\001\346\246\363^h\014\230\247\332\272{sV\345\255\205I%J\"\302f&N\240#\216\210\307y\244\231\031\364P\360\2369\336\347\354\314\207\260b0\324q\344(\222\226\246\201\244f\216\004\360k\220\034\t\304@\242\227:\232\261\242\304\nG\004\317\251\204\200\231\037I[\302\2240i\2452\300\225\324\025l=\240cv\030\330\353\032N\013\264\356\342\016\307-\t\311\265\273%\226Y\247\260\305c\010\344\340\034\246/r\221Ej\367\030\035\340\276\322\3706]TP\304\354\374\373\323\034N\215\271^\207?\207\311\016\365\007`i\215\262!\231\252Gr\202\206D\360\300\034n\2511\030H\222\305$\356\252\270\007\027\0216\203\026b\"\004>uw\200\356H\304\2521\272_\030\034\352\310\306P\006\220\334~\341\007:<\220w\301\374\001\216 AZO\315\037\271S\005\205\336c<W\004\277\216u\236&0\256]X\037\002t\030\340\306ut\305\343#\375yE\216!3oP\326\024\340k\r\244\3531\360\365\224M9R\2267\220<\326\257^\211\032\243$\005\253\225\251mJ<\024RK\227K\035$Q'M6[\321R\205'\031*\211I2\306\351nl\343\005\023*\232\005*\030\004\236\3544v\031\312EM\263\204\310\003\000\322K=q+\007\231\232W@Jn(\026+1\261\314\212\367\305\216\003\277,\262\262I\002\006\260g\231\024_\000\310\220b\306\332\326IJ3\211\345\2127\373 P*\237\361w$S\205\t\001_};\340";
+    PyObject *data = __Pyx_DecompressString(cstring, 1259, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (1072 bytes) */
-const char* const cstring = "x\332uS\317o\033E\024\216+\267l\203\233\306\220@Z\332\262N\212 \264$\262\024\240\212@\321\266\346GP\032\325$\002J\251V\343\335\2613\352zg\2753\233\306H@.H+\004\352\".\243\n\224\345\200\264\210\213\245^|\254\310\305G\037\367\030\345/\360\237\300\233\335\265c\251\305\322\316{\363\346\233\367\343\233\317kkk\307\217:\252\326pq\003\331&Uk\026my\230\251;\324E.\241liiip\360\333\3431\204\341\271,\213\377\372\327X\274\341z\3160\036\035\357\37728x\364\317\330\261\343\322:f\324\305\022r3\251\242\336\222\251\324\311\301\301\343}u\335&\006I\220\214Z\273\330Uo]\273\246\276\305I\023S\217\257\252\233\313\332\361\037?\253\233p\214Ul\033\324\346\356\341\023\211\365\014r\370\304V\r\332t,\314\321\235\254\216\272ElUc\244a#\367\370\367\037\325\177\377\334\032a\263\373\310D%\030\356'u\233rd\251&VQ\2027\010\2651[U\327\2146\337\241\366\262l\202\243\232\205\365\207.r\034\354.9\355=\266\010sx\274\376\316\215\217*[\267?\363\360.f\033\353\333\353\353\225\r\017n\337F.\207\225\034\376\355\032\324\302L\327\357\264\367\340\253\020\203\353\233x\217\177\216\353_\020\354\002T\026E\254mC\331%\203\2720.\221\321]D\254\244\250A\201\246\361\200\354\207Y\2243\303\260\000\252\023[\207a\014\\C\306\003\203\232\030>\322\240,\275\247\247\221\304%\346\310\031\2366\221\223y6jf8f\270\330$\234f\226\031\036\342\256\254\311a\217\332&A\362\2324\266\3274\ts,\031L\214\236\352G\022l\302j\352;\220Q\332&\261=\216u\275\356\331\206\2567\032\2307`R\007:I,#&\261\353TO\304\245\023\246\217\210 \0347\201\275&\202)\341\327\244\246\007\024$\335\216V\332\254\271X\227\ns\034\3528.\261\271\334\310.S\331\201\036\240\322\211/\357\215v\220\275\345!+\315\345\342\226G@\244I6\260\236\305\221I\031\226\323cW\327\031\346YU\360L\\G\000HEH\355D\270\372H-\251\216\031\007%$4\244\336\220\010P\007\327\365L\337\303\027\3253\032G{b\216\\\030f\364\360\317(\222\263]d\301\377\366!\306\017\254vZ\256?\361AW\033\314O\234\236\364\213~)\316+\376\031\037\035)g\343\302lP\215\013\257\004(.\\\020\305\314{5h\035)/\005o\212\031Q\025\2650\027\316E\305#e\252?\265\020""\226\343\302\224\217\374V\\8\227z?$\200b\272\371N\334\024H\264\006\312X\241\323~U&+\005\345\340\023Q\026\353\341v4\033\241\250\325\311\3052\345\025\001\005\317\371U?3\215\340K\241\211\352I\354\331ds\002\256\276\350\227\375J\220\013\346\240\311\257B\300_\022\332\340\314\304\331\031\250S\0219\361Z\250A\245b\377\355\325n\tz\367\233\242\374\377uN6r\277\035\024\203\3530\007\017\313\375\253+\035\3559M\304\317\31184\031\266?\271\234\014\231\177a\177\327\277\033\240\240\025+)Ly9x\257\177a1*\016\373\325\202j\320\000\252\221\330\013y\364\256d\006\236E^\021J\250D\271\250\030-vnt\313]\255{\367\251\331{\243\007\251\340\215\304)Q\022\357\207\3630\351\275N\276\363\261\034t&\320b\245\340\177\032hG\205\213\242\024\027\316\373<\3700<\025\226\342\351+b'4\243R\264\022}\337\275\327\313\365fz\325\2708\033\334\017\027\200?8EG\240\201\213\341J\330\212\362\321FWy\252$\240\373\375\257k\375\232\021\027.\213o\242\231\250\032\231\235\353]\362\264\325\313\367\240\310\254\244.\236\276$*a.\236\276,\266A\013\323\257\213o\241\347\322\230\243\206\371\020`\363a\022\004f\343\351\253a\362`S~\265?\005dD\013\220\032\3109\357\203\3702\242\300\377\0176+\241T";
-    PyObject *data = __Pyx_DecompressString(cstring, 1072, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (1134 bytes) */
+const char* const cstring = "x\332uT\317o\033E\024\216\251S\266\221ImHhRZX' \010\201T\021\005J\000!\267)\"(\215j\022\250J\251V\343\335\2613\352zg=;\353\306H@.H+\004\352\".\243\n\224\345\200\264\210\213\245^|\214\310\305G\037\367h\345/\360\237\300\233\335\265c\210\260\354\235\367\336|\363~|\363y\217\037\265\325R\215\341\032\262\014\252VL\332p\261\243\356R\206\030\241\316\312\312\312\340\340\227\307c\010\335eN\032\377\371\217\261x\215\271\3660\036\036\357\37748x\364\327\330\266\315h\025;\224a\t\271\036WQo\310T\352\324\340\340\361\276\272a\021\235\304H\207\232M\314\324\033\313\313\352k\234\3241u\371\232\272u\245t\374\333\217\352\026lc\025[:\2658;z\"\261\256N\216\236X\252N\353\266\2119\272\235\326Q\267\211\245\226\034R\263\020;\376\365{\365\357\337\267G\330\364<2P\021\206\373A\335\241\034\231\252\201U\024\343uB-\354\254\251\037\301\307Y\202ve\027\034UL\254=d\310\2661[\261[{.\257\276y\355\346\372\366\255O]\334\304\316\346\306\316\306\306\372\246\013'o!\306\341I\216\376d:5\261\243i\267[{\360[':\327\266\360\036\377\014W\277 \230\001T\026DN\313\202\222+:e0*\221\321&\"f\\O\247@\321x@\266\342\230\224;\272n\002T#\226\006\203\350\270\202\364\007:50\374H\215:\3119-\211\304&1F\306p\267\216\354\324\262P=\3059:\303\006\3414]\035\335E\234\311\232\034|\3242\010\222\307\344b\271u\2038\266)\203\361\242%\332\221\344\032\3604\264]\310(\327:\261\\\2165\255\352Z\272\246\325j\230\327`R\033:\211W\207\030\304\252R-\026\226F\034mD\004\341\270\016\354\325\021L\t\237:5\\\240 \356v\364\244\365\n\303\232T\227mS\333f\304\342\322\221]&\222\003-@\245\023[\236\033y\220\275\341\"3\311\305p\303% \3208\033\254\256\311\221A\035,\247\307,Y\241\226\346`\236V\007\313\300U\004\300D\210\324\212\305\253\215\004\223h\331\341\240\210\230\216\304\032\022\002*\341\232\226j|x\263ZJ\347\310'\306\310\204\241F\0028%J\3564\221\t\377\335&a\034f\032jg\350\306\254\020\343_\256\234b\030\030%~\210\361\003\263\225\264\333\233\370\240S\032,LLNy\005\257\030e\025\357\254\207\372\312\271(7\353\227\243\334\363>\212r\363\242\220Z\027\374F_y\326\177U\314\210""\262\250\004\231`.,\364\225\351\336\364b\260\032\345\246=\3445\242\3343\211\365]\014($\3167\342\272@\2421P\306\nMze\231\254\010'\274;~I\226\313\373\223~\331G>d9\3571\177N\314\005I\376\027\005\222\260\262\227.5\377\216(\211\362ILf\276\000-f\347D\246\017\217,l\177\036\024\203\267\002\324\317B\357~+\200\370To\352\242(F0\336\360\373\337\216\"\3459\177\325_\027\031q)(\007FX\354-\277\337Y\035\234\2358\227\363\336\203\370\031\261*\253\201?/2'\340\027\202R\260\023\026z\257\257u\212\320\260W\217a\377\323\357\211\223|O\367p:\301pI\261\275\251+a\243\235\211\262O\3577\275\2731cJ\002\203\226\336\351\315/\205\005\331\343\014\264\007\304\3725\270.$\366\002\036\276\r\207\224\331\204d\241\004J\230\t\013\341R\373Zg\265S\352\334=4\272\257t!\025\334\263xJ\024\305\273\301\002\014v\257\235m\177,\347\232\361K\221\222\363>\361K\375\234\344\021.\211\373\037\006g\340\362\363\362\206\n\263\376}yBz\273\222\274\360j\370m\347^7\323\235\351\226\223\335\305\240\034c\373\240\252\213\301\325\240\021f\303\315\216r\250\304\240\373\275/+\275\212\036\345.\213\257\302\231\260\034\032\3557:\344\260\321\315v\241\344\254\344-\312_\022\353A&\312_\026;\240\256\374K\342k\230\2408f\250AV\266\260\020\304A.\233{9(I:\246\275ro\032\250\t\027!5Pu\336\0039\247\264\201-\337\3657\341\017\014/\277\344e\377\017\3753\336*";
+    PyObject *data = __Pyx_DecompressString(cstring, 1134, 1);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (1686 bytes) */
-const char* const bytes = "\077\077?\342\217\260 Agregando bloques horarios...\360\237\223\232 Agregando cursos...\360\237\221\245 Agregando grupos...\360\237\221\250\342\200\215\360\237\217\253 Agregando profesores...Bloque Curso \n\360\237\232\200 Iniciando solver C++ (timeout: N/A\342\235\214 No se encontr\303\263 soluci\303\263n completaProfesor Sin Asignar\342\234\205 \302\241Soluci\303\263n encontrada!\360\237\223\212 Total de asignaciones: ?cython/timetable_wrapper.pyxs)...utf-8EDSMJuevesLITIIDLunesMartesMi\303\251rcoles__Pyx_PyDict_NextRefViernesasigasyncio.coroutinesavailable_coursesavailable_timeslotsccline_in_tracebackcodecodigoscourse_codecourse_idcourse_idscourse_mapcourse_namecoursescreditoscreditscuatrimestredaydia_mapdia_numdisplaydisplay_bloqueencodeend_hourend_minute__func__ggetgroup_idgroupsidinfo_curso_is_coroutineitems__main____module__name__name__nombre_profppopprintprof_mapprofessor_idprofessor_nameprofessors__qualname__requires_profresultadosemester__set_name__setdefaultsolucionsolve_timetablesolverstart_hourstart_minute__test__timeouttimeslot_displaytimeslot_idtimeslot_maptimeslotstimetable_wrappertsvaluesweekly_hours\320\000<\270A\360\"\000\005\n\210\021\210!\330\004\010\210\006\210a\340\010\t\330\014\025\220Q\330\014\026\220a\330\014\031\230\021\330\014\026\220a\330\014\027\220q\340\010\022\220'\230\024\230Q\230b\240\001\240\030\250\021\340\010\016\320\016#\2401\330\014\016\210a\210q\330\014\r\330\014\016\210a\210\177\230b\240\001\240\021\330\014\016\210a\210}\230B\230a\230q\360\010\000\005\n\210\021\210!\330\004\010\210\005\210Q\340\010\022\220!\2201\220G\2301\230I\240T\250\025\250a\250q\260\001\330\010\016\320\016\036\230a\330\014\r\210Q\210a\330\014\r\210Q\210g\220W\230A\230Q\330\014\r\210Q\210a\330\014\r\360\010\000\005\n\210\021\210!\330\004\010\210\005\210Q\340\010\030\230\001\330\010\013\2101\210D\220\001\220\030\230\024\230X\240Q\330\014\034\230A\360\006\000\t\024\2201\220D\230\001\230\033\240A\240T\250\021\320*:\270!\340\010\016\210m\2301\330\014\r\210Q""\210a\330\014\r\210Q\210g\220W\230A\230Q\330\014\r\210Q\210g\220W\230A\230Q\330\014\r\330\014\r\210T\220\021\220,\230a\230t\2401\320$4\260A\330\014\r\360\010\000\005\n\210\021\210!\330\004\010\210\005\210Q\330\010\016\210m\2301\330\014\r\210Q\210a\330\014\r\210Q\210a\330\014\r\210Q\210a\360\010\000\005\n\210\021\320\n/\250q\260\001\330\004\007\200v\210Y\220a\220q\330\010\r\210Q\210a\330\010\023\2206\320\031)\250\021\360\006\000\t\024\2201\220A\220Q\220g\230Q\230a\230x\240t\2505\260\001\330\010\025\220Q\220a\220q\230\010\240\010\250\001\250\021\250)\2608\2701\270A\270Y\300d\310%\310q\330\010\027\220q\230\002\230!\2307\240\"\240A\240[\260\004\260F\270!\340\010\024\220A\330\010\014\210H\220A\340\014\032\230!\330\014\017\210t\220=\240\002\240!\330\020\036\230h\240d\250!\2504\250~\270[\310\001\310\024\310Q\330\021\025\220]\240#\240Q\330\020\036\230a\340\014\031\230\032\2404\240q\250\004\250L\270\010\300\010\310\001\310\024\310]\320Zb\320bc\330\014\035\230\\\250\024\250Q\250d\260,\270i\300q\310\004\310A\340\014\025\220W\230A\330\020\034\230D\240\001\330\020\035\230T\240\021\330\020\037\230z\250\021\250!\330\020\037\230z\250\021\250!\330\020 \240\004\240A\330\020\"\240!\330\020\037\230t\2401\330\020$\240A\360\006\000\t\016\210Q\320\016)\250\021\250#\250Q\250a\330\010\017\210q\340\010\r\210Q\210a\330\010\017\210q";
+    #else /* compression: none (1850 bytes) */
+const char* const bytes = "\342\217\260 Agregando bloques horarios...\360\237\223\232 Agregando cursos...\360\237\221\245 Agregando grupos...\360\237\221\250\342\200\215\360\237\217\253 Agregando profesores...Bloque Curso \n\360\237\232\200 Iniciando solver C++ (timeout: N/A\342\235\214 No se encontr\303\263 soluci\303\263n completaProfesor Sin Asignar\342\234\205 \302\241Soluci\303\263n encontrada!\360\237\223\212 Total de asignaciones: \077\077\077\077s)...timetable_wrapper.pyxutf-8EDSMJuevesLITIIDLunesMartesMi\303\251rcoles__Pyx_PyDict_NextRefViernesasigasyncio.coroutinesavailable_coursesavailable_timeslotsccline_in_tracebackcodecodigoscourse_codecourse_idcourse_idscourse_mapcourse_namecoursescreditoscreditscuatrimestredaydia_mapdia_numdisplaydisplay_bloqueencodeend_hourend_minute__func__ggetgroup_idgroupsidinfo_curso_is_coroutineitems__main____module__name__name__nombre_profppopprintprof_mapprofessor_idprofessor_nameprofessors__qualname__requires_profresultadosemestersemestre__set_name__setdefaultsolucionsolve_timetablesolverstart_hourstart_minute__test__timeouttimeslot_displaytimeslot_idtimeslot_maptimeslotstimetable_wrappertsvaluesvirtual_coursesvirtual_prof_idvirtual_prof_namevirtual_timeslotsweekly_hours\320\000<\270A\360\"\000\005\n\210\021\210!\330\004\010\210\006\210a\340\010\t\330\014\025\220Q\330\014\026\220a\330\014\031\230\021\330\014\026\220a\330\014\027\220q\340\010\022\220'\230\024\230Q\230b\240\001\240\030\250\021\340\010\016\320\016#\2401\330\014\016\210a\210q\330\014\r\330\014\016\210a\210\177\230b\240\001\240\021\330\014\016\210a\210}\230B\230a\230q\360\010\000\005\n\210\021\210!\330\004\010\210\005\210Q\340\010\022\220!\330\014\r\210W\220A\220Q\330\014\020\220\005\220Q\220a\220q\330\014\017\210r\220\030\230\030\240\021\340\010\016\320\016\036\230a\330\014\r\210Q\210a\330\014\r\210Q\210g\220W\230A\230Q\330\014\r\210Q\210a\330\014\r\360\010\000\005\027\220a\330\004\030\230\001\340\004\030\230\004\230A\230U\240!\2403\240a\340\004\026\220a\220y\240\001\340\004\n\320\n\032""\230!\330\010\t\330\010\t\330\010\t\330\010\t\360\010\000\005\n\210\021\210!\330\004\010\210\005\210Q\330\010\023\2201\220D\230\001\230\034\240Q\240d\250!\320+;\2701\360\006\000\t\014\2109\220D\230\003\2301\330\014\r\360\006\000\t\031\230\001\330\010\023\2201\220D\230\001\230\033\240A\240T\250\021\320*:\270!\340\010\016\210m\2301\330\014\r\210Q\210a\330\014\r\210Q\210g\220W\230A\230Q\330\014\r\210Q\210g\220W\230A\230Q\330\014\r\330\014\r\330\014\r\360\010\000\005\n\210\021\210!\330\004\010\210\005\210Q\330\010\016\210m\2301\330\014\r\210Q\210a\330\014\r\210Q\210a\330\014\r\210Q\210a\360\010\000\005\n\210\021\320\n/\250q\260\001\330\004\007\200v\210Y\220a\220q\330\010\r\210Q\210a\330\010\023\2206\320\031)\250\021\360\006\000\t\024\2201\220A\220Q\220g\230Q\230a\230x\240t\2505\260\001\330\010\025\220Q\220a\220q\230\010\240\010\250\001\250\021\250)\2608\2701\270A\270Y\300d\310%\310q\330\010\027\220q\230\002\230!\2307\240\"\240A\240[\260\004\260F\270!\340\010\024\220A\330\010\014\210H\220A\340\014\032\230!\330\014\017\210t\220=\240\003\2401\330\020\036\230a\330\021\025\220]\240\"\240A\330\020\036\230h\240d\250!\2504\250~\270[\310\001\310\024\310Q\330\021\025\220]\240#\240Q\330\020\036\230a\340\014\031\230\032\2404\240q\250\004\250L\270\010\300\010\310\001\310\024\310]\320Zb\320bc\330\014\035\230\\\250\024\250Q\250d\260,\270i\300q\310\004\310A\340\014\025\220W\230A\330\020\034\230D\240\001\330\020\035\230T\240\021\330\020\037\230z\250\021\250!\330\020\037\230z\250\021\250!\330\020 \240\004\240A\330\020\"\240!\330\020\037\230t\2401\330\020$\240A\360\006\000\t\016\210Q\320\016)\250\021\250#\250Q\250a\330\010\017\210q\340\010\r\210Q\210a\330\010\017\210qEDSMEstadiaLITIID";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 93; i++) {
+    for (int i = 0; i < 99; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
-      if (likely(string) && i >= 18) PyUnicode_InternInPlace(&string);
+      if (likely(string) && i >= 19) PyUnicode_InternInPlace(&string);
       if (unlikely(!string)) {
         Py_XDECREF(data);
         __PYX_ERR(0, 1, __pyx_L1_error)
@@ -5338,7 +5550,7 @@ const char* const bytes = "\077\077?\342\217\260 Agregando bloques horarios...\3
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 93; i < 94; i++) {
+    for (int i = 99; i < 103; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -5349,15 +5561,15 @@ const char* const bytes = "\077\077?\342\217\260 Agregando bloques horarios...\3
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 94; i++) {
+    for (Py_ssize_t i = 0; i < 103; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 93;
-      for (Py_ssize_t i=0; i<1; ++i) {
+      PyObject **table = stringtab + 99;
+      for (Py_ssize_t i=0; i<4; ++i) {
         #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
         Py_SET_REFCNT(table[i], _Py_IMMORTAL_REFCNT_LOCAL);
         #else
@@ -5377,16 +5589,17 @@ const char* const bytes = "\077\077?\342\217\260 Agregando bloques horarios...\3
   }
   {
     PyObject **numbertab = __pyx_mstate->__pyx_number_tab + 1;
-    int8_t const cint_constants_1[] = {0,1,2,3,4,5};
-    for (int i = 0; i < 6; i++) {
-      numbertab[i] = PyLong_FromLong(cint_constants_1[i - 0]);
+    int8_t const cint_constants_1[] = {0,1,2,3,4,5,6,10};
+    int16_t const cint_constants_2[] = {500};
+    for (int i = 0; i < 9; i++) {
+      numbertab[i] = PyLong_FromLong((i < 8 ? cint_constants_1[i - 0] : cint_constants_2[i - 8]));
       if (unlikely(!numbertab[i])) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #if CYTHON_IMMORTAL_CONSTANTS
   {
     PyObject **table = __pyx_mstate->__pyx_number_tab;
-    for (Py_ssize_t i=0; i<7; ++i) {
+    for (Py_ssize_t i=0; i<10; ++i) {
       #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
       Py_SET_REFCNT(table[i], _Py_IMMORTAL_REFCNT_LOCAL);
       #else
@@ -5404,7 +5617,7 @@ typedef struct {
     unsigned int argcount : 3;
     unsigned int num_posonly_args : 1;
     unsigned int num_kwonly_args : 1;
-    unsigned int nlocals : 5;
+    unsigned int nlocals : 6;
     unsigned int flags : 10;
     unsigned int first_line : 5;
 } __Pyx_PyCode_New_function_description;
@@ -5423,9 +5636,9 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {5, 0, 0, 28, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 25};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_professors, __pyx_mstate->__pyx_n_u_courses, __pyx_mstate->__pyx_n_u_timeslots, __pyx_mstate->__pyx_n_u_groups, __pyx_mstate->__pyx_n_u_timeout, __pyx_mstate->__pyx_n_u_solver, __pyx_mstate->__pyx_n_u_ts, __pyx_mstate->__pyx_n_u_dia_map, __pyx_mstate->__pyx_n_u_dia_num, __pyx_mstate->__pyx_n_u_p, __pyx_mstate->__pyx_n_u_codigos, __pyx_mstate->__pyx_n_u_c, __pyx_mstate->__pyx_n_u_requires_prof, __pyx_mstate->__pyx_n_u_creditos, __pyx_mstate->__pyx_n_u_g, __pyx_mstate->__pyx_n_u_solucion, __pyx_mstate->__pyx_n_u_prof_map, __pyx_mstate->__pyx_n_u_course_map, __pyx_mstate->__pyx_n_u_timeslot_map, __pyx_mstate->__pyx_n_u_resultado, __pyx_mstate->__pyx_n_u_asig, __pyx_mstate->__pyx_n_u_nombre_prof, __pyx_mstate->__pyx_n_u_info_curso, __pyx_mstate->__pyx_n_u_display_bloque, __pyx_mstate->__pyx_n_u_c, __pyx_mstate->__pyx_n_u_p, __pyx_mstate->__pyx_n_u_c, __pyx_mstate->__pyx_n_u_ts};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_cython_timetable_wrapper_pyx, __pyx_mstate->__pyx_n_u_solve_timetable, __pyx_mstate->__pyx_kp_b_iso88591_A_a_Q_a_a_q_Qb_1_aq_a_b_a_Baq_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {5, 0, 0, 33, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 25};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_professors, __pyx_mstate->__pyx_n_u_courses, __pyx_mstate->__pyx_n_u_timeslots, __pyx_mstate->__pyx_n_u_groups, __pyx_mstate->__pyx_n_u_timeout, __pyx_mstate->__pyx_n_u_solver, __pyx_mstate->__pyx_n_u_ts, __pyx_mstate->__pyx_n_u_dia_map, __pyx_mstate->__pyx_n_u_dia_num, __pyx_mstate->__pyx_n_u_p, __pyx_mstate->__pyx_n_u_codigos, __pyx_mstate->__pyx_n_u_virtual_prof_id, __pyx_mstate->__pyx_n_u_virtual_prof_name, __pyx_mstate->__pyx_n_u_virtual_timeslots, __pyx_mstate->__pyx_n_u_virtual_courses, __pyx_mstate->__pyx_n_u_c, __pyx_mstate->__pyx_n_u_semestre, __pyx_mstate->__pyx_n_u_requires_prof, __pyx_mstate->__pyx_n_u_creditos, __pyx_mstate->__pyx_n_u_g, __pyx_mstate->__pyx_n_u_solucion, __pyx_mstate->__pyx_n_u_prof_map, __pyx_mstate->__pyx_n_u_course_map, __pyx_mstate->__pyx_n_u_timeslot_map, __pyx_mstate->__pyx_n_u_resultado, __pyx_mstate->__pyx_n_u_asig, __pyx_mstate->__pyx_n_u_nombre_prof, __pyx_mstate->__pyx_n_u_info_curso, __pyx_mstate->__pyx_n_u_display_bloque, __pyx_mstate->__pyx_n_u_c, __pyx_mstate->__pyx_n_u_p, __pyx_mstate->__pyx_n_u_c, __pyx_mstate->__pyx_n_u_ts};
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_timetable_wrapper_pyx, __pyx_mstate->__pyx_n_u_solve_timetable, __pyx_mstate->__pyx_kp_b_iso88591_A_a_Q_a_a_q_Qb_1_aq_a_b_a_Baq_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;
@@ -6802,6 +7015,67 @@ static PyObject *__Pyx_PyObject_FastCallMethod(PyObject *name, PyObject *const *
     return result;
 }
 #endif
+
+/* PyLongCompare */
+static CYTHON_INLINE int __Pyx_PyLong_BoolEqObjC(PyObject *op1, PyObject *op2, long intval, long inplace) {
+    CYTHON_MAYBE_UNUSED_VAR(intval);
+    CYTHON_UNUSED_VAR(inplace);
+    if (op1 == op2) {
+        return 1;
+    }
+    #if CYTHON_USE_PYLONG_INTERNALS
+    if (likely(PyLong_CheckExact(op1))) {
+        int unequal;
+        unsigned long uintval;
+        Py_ssize_t size = __Pyx_PyLong_DigitCount(op1);
+        const digit* digits = __Pyx_PyLong_Digits(op1);
+        if (intval == 0) {
+            return (__Pyx_PyLong_IsZero(op1) == 1);
+        } else if (intval < 0) {
+            if (__Pyx_PyLong_IsNonNeg(op1))
+                return 0;
+            intval = -intval;
+        } else {
+            if (__Pyx_PyLong_IsNeg(op1))
+                return 0;
+        }
+        uintval = (unsigned long) intval;
+#if PyLong_SHIFT * 4 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 4)) {
+            unequal = (size != 5) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[3] != ((uintval >> (3 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[4] != ((uintval >> (4 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+#if PyLong_SHIFT * 3 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 3)) {
+            unequal = (size != 4) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[3] != ((uintval >> (3 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+#if PyLong_SHIFT * 2 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 2)) {
+            unequal = (size != 3) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK)) | (digits[2] != ((uintval >> (2 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+#if PyLong_SHIFT * 1 < SIZEOF_LONG*8
+        if (uintval >> (PyLong_SHIFT * 1)) {
+            unequal = (size != 2) || (digits[0] != (uintval & (unsigned long) PyLong_MASK))
+                 | (digits[1] != ((uintval >> (1 * PyLong_SHIFT)) & (unsigned long) PyLong_MASK));
+        } else
+#endif
+            unequal = (size != 1) || (((unsigned long) digits[0]) != (uintval & (unsigned long) PyLong_MASK));
+        return (unequal == 0);
+    }
+    #endif
+    if (PyFloat_CheckExact(op1)) {
+        const long b = intval;
+        double a = __Pyx_PyFloat_AS_DOUBLE(op1);
+        return ((double)a == (double)b);
+    }
+    return __Pyx_PyObject_IsTrueAndDecref(
+        PyObject_RichCompare(op1, op2, Py_EQ));
+}
 
 /* JoinPyUnicode */
 static PyObject* __Pyx_PyUnicode_Join(PyObject** values, Py_ssize_t value_count, Py_ssize_t result_ulength,
@@ -9483,7 +9757,7 @@ __Pyx_PyType_GetFullyQualifiedName(PyTypeObject* tp)
         result = name;
         name = NULL;
     } else {
-        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__2);
+        result = __Pyx_NewRef(__pyx_mstate_global->__pyx_kp_u__3);
     }
     goto done;
 }

@@ -61,8 +61,12 @@ def solve_timetable(professors, courses, timeslots, groups, timeout=60.0):
     # 2. Agregar profesores
     print("👨‍🏫 Agregando profesores...")
     for p in professors:
-        # Convertir códigos de cursos a bytes
-        codigos = [c.encode('utf-8') for c in p['available_courses']]
+        # Convertir códigos de cursos a bytes, EXCLUYENDO Estadías
+        codigos = [
+            c.encode('utf-8') 
+            for c in p['available_courses'] 
+            if c not in ['EDSM', 'LITIID']
+        ]
         solver.agregarProfesor(
             p['id'],
             p['name'].encode('utf-8'),
@@ -70,15 +74,32 @@ def solve_timetable(professors, courses, timeslots, groups, timeout=60.0):
             codigos
         )
     
+    # Agregar Profesor Virtual para Estadías
+    virtual_prof_id = 99999
+    virtual_prof_name = b"Estadia"
+    # Disponibilidad total (todos los bloques del 1 al 500)
+    virtual_timeslots = list(range(1, 500)) 
+    # Materias que puede dar
+    virtual_courses = [b"EDSM", b"LITIID"]
+    
+    solver.agregarProfesor(
+        virtual_prof_id,
+        virtual_prof_name,
+        virtual_timeslots,
+        virtual_courses
+    )
+    
     # 3. Agregar cursos
     print("📚 Agregando cursos...")
     for c in courses:
+        semestre = c.get('semester', c.get('cuatrimestre', 1))
+        
+        # EXCLUIR SEMESTRES 6 y 10 (Estadías)
+        if semestre in [6, 10]:
+            continue
+
         # Determinar si requiere profesor
         requires_prof = True
-        if c.get('code') in ['EDSM', 'LITIID']:
-            requires_prof = False
-        
-        # Usar 'credits' si existe, sino 'weekly_hours' (compatibilidad)
         creditos = c.get('credits', c.get('weekly_hours', 0))
         
         solver.agregarCurso(
@@ -86,7 +107,7 @@ def solve_timetable(professors, courses, timeslots, groups, timeout=60.0):
             c['name'].encode('utf-8'),
             c['code'].encode('utf-8'),
             creditos,
-            c.get('semester', c.get('cuatrimestre', 1)),
+            semestre,
             requires_prof
         )
     
@@ -114,7 +135,9 @@ def solve_timetable(professors, courses, timeslots, groups, timeout=60.0):
         for asig in solucion:
             # Manejar profesores no asignados
             nombre_prof = "Sin Asignar"
-            if asig.id_profesor > 0:
+            if asig.id_profesor == 99999:
+                nombre_prof = "" # No mostrar nombre para Estadía
+            elif asig.id_profesor > 0:
                 nombre_prof = prof_map.get(asig.id_profesor, f"Profesor {asig.id_profesor}")
             elif asig.id_profesor == 0:
                 nombre_prof = "N/A"  # Cursos sin profesor

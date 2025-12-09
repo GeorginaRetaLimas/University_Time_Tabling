@@ -8,6 +8,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeLimitSelect = document.querySelector('select:nth-of-type(1)');
     const loadingModal = document.getElementById('loading-modal');
 
+    // Tab Elements
+    const tabStudents = document.getElementById('tab-students');
+    const tabProfessors = document.getElementById('tab-professors');
+    const displayStudents = document.getElementById('timetable-display');
+    const displayProfessors = document.getElementById('professor-timetable-display');
+
+    // Tab Switching Logic
+    if (tabStudents && tabProfessors) {
+        tabStudents.addEventListener('click', () => {
+            tabStudents.classList.add('active');
+            tabProfessors.classList.remove('active');
+
+            // Style updates
+            tabStudents.style.background = 'var(--primary)';
+            tabStudents.style.color = 'white';
+            tabProfessors.style.background = 'transparent';
+            tabProfessors.style.color = 'var(--primary)';
+
+            displayStudents.style.display = 'block';
+            displayProfessors.style.display = 'none';
+        });
+
+        tabProfessors.addEventListener('click', () => {
+            tabProfessors.classList.add('active');
+            tabStudents.classList.remove('active');
+
+            // Style updates
+            tabProfessors.style.background = 'var(--primary)';
+            tabProfessors.style.color = 'white';
+            tabStudents.style.background = 'transparent';
+            tabStudents.style.color = 'var(--primary)';
+
+            displayProfessors.style.display = 'block';
+            displayStudents.style.display = 'none';
+        });
+    }
+
     // Update Info Panel on Period Change
     function updatePeriodInfo() {
         const selectedPeriod = periodSelect.value;
@@ -64,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     statusMsg.textContent = "Horario generado con éxito!";
                     statusMsg.style.color = "#4ade80";
                     renderTimetable(data.solution);
+                    renderProfessorTimetable(data.solution);
                     resultsSection.classList.remove('results-hidden');
                 } else {
                     statusMsg.textContent = "Error: " + data.message;
@@ -169,6 +207,105 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         timetableDisplay.innerHTML = html;
+    }
+
+
+
+    function renderProfessorTimetable(solution) {
+        // Agrupar por Profesor ID
+        const professors = {};
+
+        solution.forEach(item => {
+            // Filtrar profesor virtual de Estadía
+            if (item.professor_id === 99999) return;
+
+            if (!professors[item.professor_id]) {
+                professors[item.professor_id] = {
+                    name: item.professor_name,
+                    items: []
+                };
+            }
+            professors[item.professor_id].items.push(item);
+        });
+
+        let html = '';
+
+        // Ordenar alfabéticamente por nombre de profesor
+        const sortedProfIds = Object.keys(professors).sort((a, b) => {
+            return professors[a].name.localeCompare(professors[b].name);
+        });
+
+        sortedProfIds.forEach(profId => {
+            const profData = professors[profId];
+            const items = profData.items;
+
+            html += `<div class="card" style="margin-bottom: 48px; border-top: 4px solid var(--secondary, #64748b);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h3 style="color: var(--secondary, #64748b); margin: 0;">
+                        <i class="fas fa-chalkboard-teacher"></i> ${profData.name}
+                    </h3>
+                    <span class="badge" style="font-size: 1rem; background: var(--secondary, #64748b);">Profesor</span>
+                </div>`;
+
+            html += `<div style="overflow-x: auto;">
+                <table class="timetable-grid">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">Horario</th>
+                            <th>Lunes</th>
+                            <th>Martes</th>
+                            <th>Miércoles</th>
+                            <th>Jueves</th>
+                            <th>Viernes</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            const hours = [
+                "7:00-7:55", "7:55-8:50", "8:50-9:45", "9:45-10:40",
+                "11:10-12:05", "12:05-13:00", "13:00-13:55", "14:00-14:55", "14:55-15:50"
+            ];
+
+            const dayOffsets = [0, 100, 200, 300, 400];
+
+            hours.forEach((timeRange, index) => {
+                html += `<tr>
+                    <td style="font-weight: 600; color: var(--text-gray); font-size: 0.8rem;">${timeRange}</td>`;
+
+                for (let day = 0; day < 5; day++) {
+                    const targetId = (index + 1) + dayOffsets[day];
+                    const cellItems = items.filter(i => i.timeslot_id === targetId);
+
+                    html += `<td style="vertical-align: top; height: 80px;">`;
+                    if (cellItems.length > 0) {
+                        cellItems.forEach(ci => {
+                            // Color basado en el grupo (para distinguir grupos)
+                            // Usamos una lógica simple de hash para color consistente
+                            const hue = (ci.group_id * 137) % 360;
+                            const bg = `hsl(${hue}, 70%, 95%)`;
+                            const border = `hsl(${hue}, 70%, 60%)`;
+                            const text = `hsl(${hue}, 70%, 30%)`;
+
+                            html += `<div class="session-block" style="background: ${bg}; border-left: 3px solid ${border}; padding: 6px 8px; margin-bottom: 4px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                <div style="font-weight: 700; color: ${text}; font-size: 0.85rem;">${ci.course_name}</div>
+                                <div style="color: var(--text-gray); font-size: 0.75rem; margin-top: 2px;">
+                                    <i class="fas fa-users"></i> Grupo ${ci.group_id}
+                                </div>
+                            </div>`;
+                        });
+                    }
+                    html += `</td>`;
+                }
+                html += `</tr>`;
+            });
+
+            html += `</tbody></table></div></div>`;
+        });
+
+        const displayProfessors = document.getElementById('professor-timetable-display');
+        if (displayProfessors) {
+            displayProfessors.innerHTML = html;
+        }
     }
 
 });
