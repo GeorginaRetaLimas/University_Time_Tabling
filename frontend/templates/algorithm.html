@@ -142,7 +142,9 @@
 
     <div id="loading-msg" style="display: none; text-align: center; padding: 40px;">
         <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
-        <p style="margin-top: 16px; color: var(--text-gray);">Construyendo grafos y analizando estructura...</p>
+        <p style="margin-top: 16px; color: var(--text-gray);"><strong>Generando análisis completo...</strong></p>
+        <p style="color: var(--text-gray); font-size: 0.9rem;">Construyendo grafos, generando solución y creando
+            visualizaciones...</p>
     </div>
 
     <!-- Sección: Representación con Grafos -->
@@ -250,6 +252,58 @@
         </div>
 
         <div id="matrix-info" style="margin-top: 16px;"></div>
+
+        <h4 style="margin-top: 32px;"><i class="fas fa-project-diagram"></i> Visualización de Matriz como Grafo</h4>
+        <p style="color: var(--text-gray); margin-bottom: 16px;">
+            Representación de la matriz 3D como un <strong>grafo dirigido</strong> donde cada asignación conecta:
+            Profesor → Curso → Bloque → Grupo
+        </p>
+
+        <div id="solution-info"
+            style="background: #dbeafe; border-left: 4px solid #2563eb; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; display: none;">
+            <strong style="color: #1e40af;">📊 Datos Reales:</strong>
+            <span style="color: #1e3a8a;" id="solution-count"></span>
+        </div>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+            <strong>Controles de visualización:</strong>
+            <div style="display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="show-matrix-professors" checked>
+                    <span class="graph-node node-professor">Dimensión: Profesores</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="show-matrix-timeslots" checked>
+                    <span class="graph-node node-timeslot">Dimensión: Bloques</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="show-matrix-groups" checked>
+                    <span class="graph-node node-group">Dimensión: Grupos</span>
+                </label>
+            </div>
+            <button id="update-matrix-graph-btn" class="btn-primary"
+                style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">
+                <i class="fas fa-sync"></i> Actualizar Grafo de Matriz
+            </button>
+        </div>
+
+        <div id="matrix-graph-canvas"
+            style="width: 100%; height: 700px; border: 2px solid var(--border); border-radius: 8px; background: white;">
+        </div>
+
+        <div style="margin-top: 16px; background: #f8fafc; padding: 12px; border-radius: 8px;">
+            <strong>Interpretación del Grafo:</strong>
+            <ul style="margin: 8px 0 0 0; font-size: 0.9rem;">
+                <li>📦 Cada <strong>nodo</strong> representa una celda de la matriz: <code>matriz[P][T][G]</code></li>
+                <li>🟢 <strong>Verde</strong>: Celda ocupada (tiene asignación de curso)</li>
+                <li>⚪ <strong>Gris</strong>: Celda vacía (valor = 0)</li>
+                <li>🔵 <strong>Líneas azules</strong>: Conexiones en dimensión PROFESOR (P → P+1)</li>
+                <li>🟠 <strong>Líneas naranjas</strong>: Conexiones en dimensión BLOQUE (T → T+1)</li>
+                <li>🟣 <strong>Líneas moradas</strong>: Conexiones en dimensión GRUPO (G → G+1)</li>
+                <li>🔢 <strong>Etiqueta [P][T][G]</strong>: Índices en la matriz 3D</li>
+                <li>📊 Se muestra una <strong>muestra</strong> de la matriz completa para visualización</li>
+            </ul>
+        </div>
     </div>
 
     <!-- Sección: Pasos del Algoritmo Greedy -->
@@ -295,10 +349,23 @@
                 if (data.status === 'success') {
                     graphData = data.graph;  // Guardar datos para visualización
 
+                    // Mostrar info de solución generada
+                    if (data.solution_generated) {
+                        console.log(`✅ Solución generada con ${data.total_assignments} asignaciones`);
+                        const infoDiv = document.getElementById('solution-info');
+                        const countSpan = document.getElementById('solution-count');
+                        if (infoDiv && countSpan) {
+                            countSpan.textContent = `El heatmap muestra ${data.total_assignments} asignaciones reales generadas por el solver.`;
+                            infoDiv.style.display = 'block';
+                        }
+                    }
+
                     renderGraphStats(data.graph.stats);
                     renderConflictGraph(data.graph.stats);
                     renderProfessorNeighborhood(data.sample_neighborhood);
                     renderMatrix3D(data.matrix_3d);
+                    renderMatrixVisual(data.matrix_visual);
+                    renderMatrixStructureGraph(data.matrix_structure_graph);  // Grafo de estructura 3D
                     renderAlgorithmSteps(data.algorithm_steps);
                     renderGraphVisualization(data.graph);  // Nueva visualización
 
@@ -446,6 +513,132 @@ matriz[idx_profesor][idx_bloque][idx_grupo] = id_curso;
 
             html += '</div>';
             return html;
+        }
+
+
+        let matrixVisualData = null;
+        let matrixStructureGraph = null;
+        let matrixNetwork = null;
+
+        function renderMatrixVisual(matrixData) {
+            matrixVisualData = matrixData;
+        }
+
+        function renderMatrixStructureGraph(structureData) {
+            matrixStructureGraph = structureData;
+            renderMatrixAsGraph();
+
+            // Configurar botón de actualización
+            document.getElementById('update-matrix-graph-btn')?.addEventListener('click', () => {
+                renderMatrixAsGraph();
+            });
+        }
+
+        function renderMatrixAsGraph() {
+            if (!matrixStructureGraph || !matrixStructureGraph.nodes) return;
+
+            const container = document.getElementById('matrix-graph-canvas');
+            const showProfs = document.getElementById('show-matrix-professors')?.checked ?? true;
+            const showSlots = document.getElementById('show-matrix-timeslots')?.checked ?? true;
+            const showGroups = document.getElementById('show-matrix-groups')?.checked ?? true;
+
+            const nodes = [];
+            const edges = [];
+
+            // Procesar nodos (celdas de la matriz)
+            matrixStructureGraph.nodes.forEach(cell => {
+                // Filtrar según dimensiones seleccionadas
+                const includeProf = !showProfs || cell.professor_idx < 4; // Mostrar primeros 4 profesores
+                const includeSlot = !showSlots || cell.timeslot_idx < 8; // Mostrar primeros 8 bloques
+                const includeGroup = !showGroups || true; // Mostrar todos los grupos
+
+                if (includeProf && includeSlot && includeGroup) {
+                    const isOccupied = cell.is_occupied;
+
+                    nodes.push({
+                        id: cell.id,
+                        label: cell.label,
+                        title: `${cell.professor_name}\n${cell.timeslot_label}\n${cell.group_label}\nValor: ${cell.value}`,
+                        color: {
+                            background: isOccupied ? '#10b981' : '#e5e7eb',
+                            border: isOccupied ? '#059669' : '#d1d5db'
+                        },
+                        shape: 'box',
+                        size: isOccupied ? 20 : 12,
+                        font: {
+                            size: 8,
+                            color: isOccupied ? 'white' : '#6b7280'
+                        },
+                        borderWidth: 2
+                    });
+                }
+            });
+
+            // Procesar aristas (conexiones entre celdas)
+            const nodeIds = new Set(nodes.map(n => n.id));
+            matrixStructureGraph.edges.forEach(edge => {
+                if (nodeIds.has(edge.from) && nodeIds.has(edge.to)) {
+                    edges.push({
+                        from: edge.from,
+                        to: edge.to,
+                        color: {
+                            color: edge.color,
+                            opacity: 0.3
+                        },
+                        width: 1,
+                        arrows: {
+                            to: {
+                                enabled: false
+                            }
+                        },
+                        smooth: {
+                            enabled: false
+                        }
+                    });
+                }
+            });
+
+            // Crear grafo con vis-network
+            const data = {
+                nodes: new vis.DataSet(nodes),
+                edges: new vis.DataSet(edges)
+            };
+
+            const options = {
+                nodes: {
+                    chosen: true
+                },
+                edges: {
+                    smooth: false
+                },
+                layout: {
+                    hierarchical: {
+                        enabled: true,
+                        direction: 'LR',
+                        sortMethod: 'directed',
+                        nodeSpacing: 100,
+                        levelSeparation: 150,
+                        treeSpacing: 200
+                    }
+                },
+                physics: {
+                    enabled: false
+                },
+                interaction: {
+                    hover: true,
+                    tooltipDelay: 100,
+                    navigationButtons: true,
+                    keyboard: true,
+                    zoomView: true,
+                    dragView: true
+                }
+            };
+
+            matrixNetwork = new vis.Network(container, data, options);
+
+            console.log(`📊 Estructura de matriz 3D: ${nodes.length} celdas, ${edges.length} conexiones`);
+            console.log(`   Dimensiones completas: ${matrixStructureGraph.dimensions.professors} × ${matrixStructureGraph.dimensions.timeslots} × ${matrixStructureGraph.dimensions.groups}`);
+            console.log(`   Muestra visualizada: ${matrixStructureGraph.dimensions.sampled_professors} × ${matrixStructureGraph.dimensions.sampled_timeslots} × ${matrixStructureGraph.dimensions.sampled_groups}`);
         }
 
         function renderGraphVisualization(graph) {

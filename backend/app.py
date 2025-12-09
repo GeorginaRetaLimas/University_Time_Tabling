@@ -162,9 +162,20 @@ def get_graph_structure():
     graph.build_from_data(profs, crs, slots, groups)
     graph.build_conflict_graph(profs, slots)
     
+    # Generar solución real para visualización de matrices
+    solution_data = None
+    try:
+        solution = timetable_wrapper.solve_timetable(profs, crs, slots, groups, 30.0)
+        if solution:
+            solution_data = solution
+    except Exception as e:
+        print(f"Error generando solución: {e}")
+    
     # Obtener estadísticas y visualización
     graph_data = graph.export_for_visualization()
     matrix_3d = graph.visualize_matrix_3d(profs, slots, groups)
+    matrix_visual = graph.get_matrix_visual_data(profs, slots, groups, solution_data)
+    matrix_structure_graph = graph.get_matrix_structure_graph(profs, slots, groups, solution_data)
     algorithm_steps = demonstrate_algorithm_steps(profs, crs, slots, groups)
     
     # Ejemplo de vecindario de un profesor
@@ -176,8 +187,12 @@ def get_graph_structure():
         'status': 'success',
         'graph': graph_data,
         'matrix_3d': matrix_3d,
+        'matrix_visual': matrix_visual,
+        'matrix_structure_graph': matrix_structure_graph,
         'algorithm_steps': algorithm_steps,
-        'sample_neighborhood': sample_neighborhood
+        'sample_neighborhood': sample_neighborhood,
+        'solution_generated': solution_data is not None,
+        'total_assignments': len(solution_data) if solution_data else 0
     })
 
 if __name__ == '__main__':

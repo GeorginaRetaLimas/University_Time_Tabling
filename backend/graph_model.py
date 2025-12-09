@@ -215,6 +215,213 @@ class TimetableGraph:
         
         return matrix_structure
     
+    def get_matrix_visual_data(self, professors, timeslots, groups, solution_data=None):
+        """
+        Genera datos para visualización gráfica de la matriz 3D
+        Retorna cortes de la matriz para diferentes vistas
+        """
+        # Crear estructura vacía
+        prof_count = len(professors)
+        slot_count = len(timeslots)
+        group_count = len(groups)
+        
+        # Mapas de IDs
+        prof_map = {p['id']: idx for idx, p in enumerate(professors)}
+        slot_map = {t['id']: idx for idx, t in enumerate(timeslots)}
+        group_map = {g['id']: idx for idx, g in enumerate(groups)}
+        
+        # Inicializar matriz
+        matrix_3d = [[[0 for _ in range(group_count)] 
+                      for _ in range(slot_count)] 
+                     for _ in range(prof_count)]
+        
+        # Si hay solución, llenar la matriz
+        if solution_data:
+            for assignment in solution_data:
+                # Los datos vienen del solver con estos nombres de campos
+                p_id = assignment.get('professor_id')
+                t_id = assignment.get('timeslot_id')
+                g_id = assignment.get('group_id')
+                c_id = assignment.get('course_id')
+                
+                p_idx = prof_map.get(p_id)
+                t_idx = slot_map.get(t_id)
+                g_idx = group_map.get(g_id)
+                
+                if p_idx is not None and t_idx is not None and g_idx is not None:
+                    matrix_3d[p_idx][t_idx][g_idx] = c_id
+        
+        # Generar vistas 2D (cortes de la matriz 3D)
+        views = {
+            'by_professor': [],  # Para cada profesor: [timeslot][group]
+            'by_timeslot': [],   # Para cada timeslot: [professor][group]
+            'by_group': []       # Para cada grupo: [professor][timeslot]
+        }
+        
+        # Vista por profesor
+        for p_idx, prof in enumerate(professors):
+            view_data = {
+                'id': prof['id'],
+                'name': prof['name'],
+                'matrix': matrix_3d[p_idx],
+                'occupancy': sum(1 for t in range(slot_count) for g in range(group_count) 
+                               if matrix_3d[p_idx][t][g] != 0),
+                'total_cells': slot_count * group_count
+            }
+            views['by_professor'].append(view_data)
+        
+        # Vista por timeslot
+        for t_idx, slot in enumerate(timeslots):
+            matrix_slice = [[matrix_3d[p][t_idx][g] 
+                           for g in range(group_count)] 
+                          for p in range(prof_count)]
+            view_data = {
+                'id': slot['id'],
+                'day': slot['day'],
+                'time': f"{slot['start_hour']}:{slot['start_minute']:02d}",
+                'matrix': matrix_slice,
+                'occupancy': sum(1 for p in range(prof_count) for g in range(group_count) 
+                               if matrix_3d[p][t_idx][g] != 0),
+                'total_cells': prof_count * group_count
+            }
+            views['by_timeslot'].append(view_data)
+        
+        # Vista por grupo
+        for g_idx, group in enumerate(groups):
+            matrix_slice = [[matrix_3d[p][t][g_idx] 
+                           for t in range(slot_count)] 
+                          for p in range(prof_count)]
+            view_data = {
+                'id': group['id'],
+                'semester': group['semester'],
+                'matrix': matrix_slice,
+                'occupancy': sum(1 for p in range(prof_count) for t in range(slot_count) 
+                               if matrix_3d[p][t][g_idx] != 0),
+                'total_cells': prof_count * slot_count
+            }
+            views['by_group'].append(view_data)
+        
+        return {
+            'dimensions': {
+                'professors': prof_count,
+                'timeslots': slot_count,
+                'groups': group_count
+            },
+            'views': views,
+            'labels': {
+                'professors': [p['name'] for p in professors],
+                'timeslots': [f"{t['day']} {t['start_hour']}:{t['start_minute']:02d}" for t in timeslots],
+                'groups': [f"Grupo {g['id']}" for g in groups]
+            }
+        }
+    
+    def get_matrix_structure_graph(self, professors, timeslots, groups, solution_data=None, max_cells=500):
+        """
+        Genera un grafo que representa la estructura de la matriz 3D
+        Cada celda de la matriz es un nodo, conectado según las dimensiones
+        """
+        prof_count = len(professors)
+        slot_count = len(timeslots)
+        group_count = len(groups)
+        
+        total_cells = prof_count * slot_count * group_count
+        
+        # Si hay demasiadas celdas, tomar una muestra
+        sample_profs = min(8, prof_count)
+        sample_slots = min(10, slot_count)
+        sample_groups = group_count
+        
+        # Mapas de IDs
+        prof_map = {p['id']: idx for idx, p in enumerate(professors)}
+        slot_map = {t['id']: idx for idx, t in enumerate(timeslots)}
+        group_map = {g['id']: idx for idx, g in enumerate(groups)}
+        
+        # Inicializar matriz
+        matrix_3d = [[[0 for _ in range(group_count)] 
+                      for _ in range(slot_count)] 
+                     for _ in range(prof_count)]
+        
+        # Llenar con solución si existe
+        if solution_data:
+            for assignment in solution_data:
+                p_id = assignment.get('professor_id')
+                t_id = assignment.get('timeslot_id')
+                g_id = assignment.get('group_id')
+                c_id = assignment.get('course_id')
+                
+                p_idx = prof_map.get(p_id)
+                t_idx = slot_map.get(t_id)
+                g_idx = group_map.get(g_id)
+                
+                if p_idx is not None and t_idx is not None and g_idx is not None:
+                    matrix_3d[p_idx][t_idx][g_idx] = c_id
+        
+        nodes = []
+        edges = []
+        
+        # Generar nodos para cada celda de la matriz (muestra)
+        for p in range(sample_profs):
+            for t in range(sample_slots):
+                for g in range(sample_groups):
+                    cell_id = f"cell_{p}_{t}_{g}"
+                    value = matrix_3d[p][t][g]
+                    is_occupied = value != 0
+                    
+                    nodes.append({
+                        'id': cell_id,
+                        'label': f"[{p}][{t}][{g}]",
+                        'value': value,
+                        'is_occupied': is_occupied,
+                        'professor_idx': p,
+                        'timeslot_idx': t,
+                        'group_idx': g,
+                        'professor_name': professors[p]['name'] if p < len(professors) else '',
+                        'timeslot_label': f"{timeslots[t]['day']} {timeslots[t]['start_hour']}:{timeslots[t]['start_minute']:02d}" if t < len(timeslots) else '',
+                        'group_label': f"Grupo {groups[g]['id']}" if g < len(groups) else ''
+                    })
+                    
+                    # Conectar con celda adyacente en dimensión profesor (mismo t, g, p+1)
+                    if p < sample_profs - 1:
+                        edges.append({
+                            'from': cell_id,
+                            'to': f"cell_{p+1}_{t}_{g}",
+                            'dimension': 'professor',
+                            'color': '#1565C0'
+                        })
+                    
+                    # Conectar con celda adyacente en dimensión timeslot (mismo p, g, t+1)
+                    if t < sample_slots - 1:
+                        edges.append({
+                            'from': cell_id,
+                            'to': f"cell_{p}_{t+1}_{g}",
+                            'dimension': 'timeslot',
+                            'color': '#E65100'
+                        })
+                    
+                    # Conectar con celda adyacente en dimensión grupo (mismo p, t, g+1)
+                    if g < sample_groups - 1:
+                        edges.append({
+                            'from': cell_id,
+                            'to': f"cell_{p}_{t}_{g+1}",
+                            'dimension': 'group',
+                            'color': '#6A1B9A'
+                        })
+        
+        return {
+            'nodes': nodes,
+            'edges': edges,
+            'dimensions': {
+                'professors': prof_count,
+                'timeslots': slot_count,
+                'groups': group_count,
+                'sampled_professors': sample_profs,
+                'sampled_timeslots': sample_slots,
+                'sampled_groups': sample_groups
+            },
+            'total_cells': total_cells,
+            'sampled_cells': len(nodes)
+        }
+    
     def export_for_visualization(self) -> Dict:
         """Exporta el grafo en formato JSON para visualización web"""
         nodes = []
