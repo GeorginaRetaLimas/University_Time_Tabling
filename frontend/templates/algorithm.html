@@ -1,0 +1,626 @@
+{% extends "layout.html" %}
+{% set active_page = "algorithm" %}
+
+{% block content %}
+<!-- Vis-Network para visualización de grafos -->
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+    .algorithm-section {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .step-card {
+        background: #f8fafc;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border-left: 4px solid var(--primary);
+    }
+
+    .graph-node {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 4px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .node-professor {
+        background: #E3F2FD;
+        color: #1565C0;
+    }
+
+    .node-course {
+        background: #E8F5E9;
+        color: #2E7D32;
+    }
+
+    .node-timeslot {
+        background: #FFF3E0;
+        color: #E65100;
+    }
+
+    .node-group {
+        background: #F3E5F5;
+        color: #6A1B9A;
+    }
+
+    .matrix-3d {
+        font-family: 'Courier New', monospace;
+        background: #1e293b;
+        color: #10b981;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .highlight {
+        color: #fbbf24;
+        font-weight: bold;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+    }
+
+    .stat-box {
+        background: linear-gradient(135deg, var(--primary), #1e40af);
+        color: white;
+        padding: 16px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .stat-box h3 {
+        font-size: 2rem;
+        margin: 0 0 8px 0;
+    }
+
+    .stat-box p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .code-block {
+        background: #f1f5f9;
+        padding: 12px;
+        border-radius: 6px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.85rem;
+        margin: 8px 0;
+        border-left: 3px solid var(--primary);
+    }
+
+    .graph-visual {
+        min-height: 300px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 20px;
+        background: #f8fafc;
+        border-radius: 8px;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<div class="dashboard-container">
+    <h2 class="header-title">
+        <i class="fas fa-project-diagram"></i> Visualización del Algoritmo y Estructura de Grafos
+    </h2>
+
+    <p style="color: var(--text-gray); margin-bottom: 24px;">
+        Demostración de cómo el sistema usa <strong>grafos</strong> y una <strong>matriz 3D</strong> para resolver el
+        problema de horarios.
+    </p>
+
+    <!-- Selección de Período -->
+    <div class="algorithm-section">
+        <h3><i class="fas fa-calendar-alt"></i> Seleccionar Período para Análisis</h3>
+        <div style="display: flex; gap: 16px; align-items: center; margin-top: 16px;">
+            <select id="period-select-algo"
+                style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+                <option value="may-aug">Mayo - Agosto</option>
+                <option value="sept-dec">Septiembre - Diciembre</option>
+                <option value="jan-apr">Enero - Abril</option>
+            </select>
+            <button id="analyze-btn" class="btn-primary">
+                <i class="fas fa-chart-line"></i> Analizar Estructura
+            </button>
+        </div>
+    </div>
+
+    <div id="loading-msg" style="display: none; text-align: center; padding: 40px;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
+        <p style="margin-top: 16px; color: var(--text-gray);">Construyendo grafos y analizando estructura...</p>
+    </div>
+
+    <!-- Sección: Representación con Grafos -->
+    <div id="graph-section" class="algorithm-section" style="display: none;">
+        <h3><i class="fas fa-sitemap"></i> Representación Explícita con GRAFOS</h3>
+        <p style="color: var(--text-gray); margin-bottom: 16px;">
+            El problema de horarios se modela usando <strong>NetworkX</strong> con los siguientes elementos:
+        </p>
+
+        <div class="stats-grid" id="graph-stats"></div>
+
+        <h4 style="margin-top: 24px;"><i class="fas fa-bezier-curve"></i> Tipos de Nodos</h4>
+        <div class="graph-visual" id="node-types">
+            <div class="graph-node node-professor"><i class="fas fa-chalkboard-teacher"></i> Profesores</div>
+            <div class="graph-node node-course"><i class="fas fa-book"></i> Cursos</div>
+            <div class="graph-node node-timeslot"><i class="fas fa-clock"></i> Bloques Horarios</div>
+            <div class="graph-node node-group"><i class="fas fa-users"></i> Grupos</div>
+        </div>
+
+        <h4 style="margin-top: 24px;"><i class="fas fa-link"></i> Tipos de Aristas (Relaciones)</h4>
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px;">
+            <ul style="margin: 0;">
+                <li><strong>Profesor → Curso:</strong> "puede impartir" (capacitación)</li>
+                <li><strong>Profesor → Bloque:</strong> "está disponible" (horario)</li>
+                <li><strong>Grupo → Curso:</strong> "debe tomar" (currícula)</li>
+                <li><strong>Curso → Bloque:</strong> "asignado en" (solución)</li>
+            </ul>
+        </div>
+
+        <h4 style="margin-top: 24px;"><i class="fas fa-exclamation-triangle"></i> Grafo de Conflictos</h4>
+        <p style="color: var(--text-gray);">
+            Modelamos conflictos como un grafo donde cada nodo es <code>(Profesor, Bloque)</code> y existe arista entre
+            dos nodos si NO pueden ocurrir simultáneamente.
+        </p>
+        <div id="conflict-graph-info" class="code-block"></div>
+
+        <h4 style="margin-top: 24px;"><i class="fas fa-network-wired"></i> Ejemplo: Vecindario de un Profesor</h4>
+        <div id="professor-neighborhood" style="background: #f8fafc; padding: 16px; border-radius: 8px;"></div>
+    </div>
+
+    <!-- Sección: Visualización Interactiva del Grafo -->
+    <div id="graph-visualization-section" class="algorithm-section" style="display: none;">
+        <h3><i class="fas fa-share-alt"></i> Visualización Interactiva del Grafo</h3>
+        <p style="color: var(--text-gray); margin-bottom: 16px;">
+            Representación visual del grafo con nodos y aristas. Puedes hacer zoom, arrastrar nodos y explorar las
+            conexiones.
+        </p>
+
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+            <strong>Filtros de visualización:</strong>
+            <div style="display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="show-professors" checked>
+                    <span class="graph-node node-professor">Profesores</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="show-courses" checked>
+                    <span class="graph-node node-course">Cursos</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="show-timeslots">
+                    <span class="graph-node node-timeslot">Bloques</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="show-groups" checked>
+                    <span class="graph-node node-group">Grupos</span>
+                </label>
+            </div>
+            <button id="update-graph-btn" class="btn-primary"
+                style="margin-top: 12px; padding: 8px 16px; font-size: 0.9rem;">
+                <i class="fas fa-sync"></i> Actualizar Visualización
+            </button>
+        </div>
+
+        <div id="graph-canvas"
+            style="width: 100%; height: 600px; border: 2px solid var(--border); border-radius: 8px; background: white;">
+        </div>
+
+        <div style="margin-top: 16px; background: #f8fafc; padding: 12px; border-radius: 8px;">
+            <strong>Interacciones:</strong>
+            <ul style="margin: 8px 0 0 0; font-size: 0.9rem;">
+                <li>🖱️ Click y arrastra para mover nodos</li>
+                <li>🔍 Scroll para hacer zoom</li>
+                <li>👆 Click en un nodo para ver detalles</li>
+                <li>↔️ Arrastra el fondo para desplazarte</li>
+            </ul>
+        </div>
+
+        <div id="node-info"
+            style="margin-top: 16px; padding: 16px; background: white; border-left: 4px solid var(--primary); border-radius: 8px; display: none;">
+            <h4 style="margin: 0 0 8px 0;">Información del Nodo</h4>
+            <div id="node-details"></div>
+        </div>
+    </div>
+
+    <!-- Sección: Matriz 3D -->
+    <div id="matrix-section" class="algorithm-section" style="display: none;">
+        <h3><i class="fas fa-cube"></i> Estructura de la Matriz 3D</h3>
+        <p style="color: var(--text-gray); margin-bottom: 16px;">
+            El solver usa una matriz tridimensional para asignaciones con acceso O(1):
+        </p>
+
+        <div class="matrix-3d" id="matrix-visualization">
+            <!-- Se llenará dinámicamente -->
+        </div>
+
+        <div id="matrix-info" style="margin-top: 16px;"></div>
+    </div>
+
+    <!-- Sección: Pasos del Algoritmo Greedy -->
+    <div id="algorithm-section" class="algorithm-section" style="display: none;">
+        <h3><i class="fas fa-tasks"></i> Pasos del Algoritmo Greedy</h3>
+        <p style="color: var(--text-gray); margin-bottom: 16px;">
+            Demostración del proceso que sigue el solver para generar horarios:
+        </p>
+
+        <div id="algorithm-steps">
+            <!-- Se llenará dinámicamente -->
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const periodSelect = document.getElementById('period-select-algo');
+        const loadingMsg = document.getElementById('loading-msg');
+
+        let graphData = null;  // Almacenar datos del grafo
+        let network = null;    // Instancia de vis-network
+
+        analyzeBtn.addEventListener('click', async () => {
+            loadingMsg.style.display = 'block';
+            document.getElementById('graph-section').style.display = 'none';
+            document.getElementById('graph-visualization-section').style.display = 'none';
+            document.getElementById('matrix-section').style.display = 'none';
+            document.getElementById('algorithm-section').style.display = 'none';
+
+            const period = periodSelect.value;
+
+            try {
+                const response = await fetch('/api/graph/structure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ period: period })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    graphData = data.graph;  // Guardar datos para visualización
+
+                    renderGraphStats(data.graph.stats);
+                    renderConflictGraph(data.graph.stats);
+                    renderProfessorNeighborhood(data.sample_neighborhood);
+                    renderMatrix3D(data.matrix_3d);
+                    renderAlgorithmSteps(data.algorithm_steps);
+                    renderGraphVisualization(data.graph);  // Nueva visualización
+
+                    document.getElementById('graph-section').style.display = 'block';
+                    document.getElementById('graph-visualization-section').style.display = 'block';
+                    document.getElementById('matrix-section').style.display = 'block';
+                    document.getElementById('algorithm-section').style.display = 'block';
+                }
+            } catch (error) {
+                alert('Error al analizar: ' + error);
+            } finally {
+                loadingMsg.style.display = 'none';
+            }
+        });
+
+        function renderGraphStats(stats) {
+            const container = document.getElementById('graph-stats');
+            container.innerHTML = `
+            <div class="stat-box">
+                <h3>${stats.total_nodes}</h3>
+                <p>Nodos Totales</p>
+            </div>
+            <div class="stat-box">
+                <h3>${stats.total_edges}</h3>
+                <p>Aristas Totales</p>
+            </div>
+            <div class="stat-box">
+                <h3>${stats.nodes_by_type.professors}</h3>
+                <p>Profesores</p>
+            </div>
+            <div class="stat-box">
+                <h3>${stats.nodes_by_type.courses}</h3>
+                <p>Cursos</p>
+            </div>
+            <div class="stat-box">
+                <h3>${stats.nodes_by_type.timeslots}</h3>
+                <p>Bloques Horarios</p>
+            </div>
+            <div class="stat-box">
+                <h3>${stats.nodes_by_type.groups}</h3>
+                <p>Grupos</p>
+            </div>
+        `;
+        }
+
+        function renderConflictGraph(stats) {
+            const container = document.getElementById('conflict-graph-info');
+            container.innerHTML = `
+            Grafo de Conflictos:<br>
+            - Nodos: <span class="highlight">${stats.conflict_graph_nodes}</span> combinaciones (Profesor, Bloque)<br>
+            - Aristas de conflicto: <span class="highlight">${stats.conflict_graph_edges}</span><br>
+            - Interpretación: Dos nodos conectados NO pueden asignarse simultáneamente
+        `;
+        }
+
+        function renderProfessorNeighborhood(neighborhood) {
+            if (!neighborhood) return;
+
+            const container = document.getElementById('professor-neighborhood');
+            container.innerHTML = `
+            <strong>Profesor:</strong> ${neighborhood.professor}<br>
+            <strong>Conexiones totales:</strong> ${neighborhood.total_connections}<br><br>
+            
+            <strong>Puede impartir (${neighborhood.can_teach.length} cursos):</strong><br>
+            ${neighborhood.can_teach.slice(0, 5).map(c => `<span class="graph-node node-course">${c}</span>`).join(' ')}<br><br>
+            
+            <strong>Disponible en (${neighborhood.available_slots.length} bloques):</strong><br>
+            ${neighborhood.available_slots.slice(0, 8).map(t => `<span class="graph-node node-timeslot">${t}</span>`).join(' ')}
+        `;
+        }
+
+        function renderMatrix3D(matrix) {
+            const viz = document.getElementById('matrix-visualization');
+            const info = document.getElementById('matrix-info');
+
+            viz.innerHTML = `
+<span class="highlight">// Estructura de la Matriz 3D</span>
+vector&lt;vector&lt;vector&lt;int&gt;&gt;&gt; matriz_asignaciones;
+
+<span class="highlight">// Dimensiones:</span>
+[${matrix.dimensions.professors}]     // Profesores
+[${matrix.dimensions.timeslots}]    // Bloques Horarios
+[${matrix.dimensions.groups}]      // Grupos
+
+<span class="highlight">// Total de celdas en memoria:</span> ${matrix.total_cells.toLocaleString()}
+<span class="highlight">// Memoria aproximada:</span> ${matrix.memory_mb.toFixed(2)} MB
+
+<span class="highlight">// Acceso O(1) - Ejemplos:</span>
+${matrix.sample_indices.slice(0, 6).map(idx =>
+                `${idx.address} = 0  // Profesor ${idx.professor_idx}, Bloque ${idx.timeslot_idx}, Grupo ${idx.group_idx}`
+            ).join('\n')}
+
+<span class="highlight">// Asignación:</span>
+matriz[idx_profesor][idx_bloque][idx_grupo] = id_curso;
+        `;
+
+            info.innerHTML = `
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>${matrix.total_cells.toLocaleString()}</h3>
+                    <p>Celdas Totales</p>
+                </div>
+                <div class="stat-box">
+                    <h3>${matrix.memory_mb.toFixed(2)} MB</h3>
+                    <p>Memoria Usada</p>
+                </div>
+                <div class="stat-box">
+                    <h3>O(1)</h3>
+                    <p>Complejidad de Acceso</p>
+                </div>
+            </div>
+        `;
+        }
+
+        function renderAlgorithmSteps(steps) {
+            const container = document.getElementById('algorithm-steps');
+            container.innerHTML = steps.map(step => `
+            <div class="step-card">
+                <h4 style="margin: 0 0 8px 0; color: var(--primary);">
+                    <i class="fas fa-arrow-right"></i> Paso ${step.step}: ${step.name}
+                </h4>
+                <p style="margin: 0 0 12px 0; color: var(--text-gray);">${step.description}</p>
+                <div class="code-block">${step.action}</div>
+                ${renderStepState(step.state)}
+            </div>
+        `).join('');
+        }
+
+        function renderStepState(state) {
+            let html = '<div style="margin-top: 12px;">';
+
+            for (const [key, value] of Object.entries(state)) {
+                if (Array.isArray(value)) {
+                    html += `<strong>${key}:</strong><ul style="margin: 4px 0;">`;
+                    value.forEach(item => {
+                        html += `<li style="font-size: 0.85rem;">${item}</li>`;
+                    });
+                    html += `</ul>`;
+                } else if (typeof value === 'object') {
+                    html += `<strong>${key}:</strong> <pre style="margin: 4px 0; font-size: 0.85rem;">${JSON.stringify(value, null, 2)}</pre>`;
+                } else {
+                    html += `<strong>${key}:</strong> ${value}<br>`;
+                }
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function renderGraphVisualization(graph) {
+            const container = document.getElementById('graph-canvas');
+
+            // Colores por tipo de nodo
+            const nodeColors = {
+                'professor': { background: '#E3F2FD', border: '#1565C0', font: '#1565C0' },
+                'course': { background: '#E8F5E9', border: '#2E7D32', font: '#2E7D32' },
+                'timeslot': { background: '#FFF3E0', border: '#E65100', font: '#E65100' },
+                'group': { background: '#F3E5F5', border: '#6A1B9A', font: '#6A1B9A' }
+            };
+
+            // Preparar nodos
+            const nodes = graph.nodes.map(node => ({
+                id: node.id,
+                label: node.label,
+                title: `${node.type}: ${node.label}`,
+                color: nodeColors[node.type] || { background: '#f0f0f0', border: '#999', font: '#333' },
+                shape: node.type === 'professor' ? 'box' :
+                    node.type === 'course' ? 'ellipse' :
+                        node.type === 'timeslot' ? 'diamond' : 'dot',
+                size: node.type === 'professor' ? 25 :
+                    node.type === 'course' ? 20 :
+                        node.type === 'group' ? 30 : 15,
+                font: { color: nodeColors[node.type]?.font || '#333', size: 12 },
+                nodeType: node.type  // Para filtrado
+            }));
+
+            // Preparar aristas
+            const edges = graph.edges.map((edge, idx) => ({
+                id: idx,
+                from: edge.source,
+                to: edge.target,
+                title: edge.relation,
+                color: edge.relation === 'can_teach' ? '#1565C0' :
+                    edge.relation === 'available' ? '#E65100' :
+                        edge.relation === 'must_take' ? '#2E7D32' : '#999',
+                width: 1,
+                arrows: 'to',
+                smooth: { type: 'continuous' }
+            }));
+
+            // Datos para vis-network
+            const data = {
+                nodes: new vis.DataSet(nodes),
+                edges: new vis.DataSet(edges)
+            };
+
+            // Opciones de visualización
+            const options = {
+                nodes: {
+                    borderWidth: 2,
+                    borderWidthSelected: 4
+                },
+                edges: {
+                    width: 1,
+                    selectionWidth: 3
+                },
+                physics: {
+                    enabled: true,
+                    barnesHut: {
+                        gravitationalConstant: -2000,
+                        centralGravity: 0.3,
+                        springLength: 95,
+                        springConstant: 0.04,
+                        damping: 0.09,
+                        avoidOverlap: 0.5
+                    },
+                    maxVelocity: 50,
+                    minVelocity: 0.1,
+                    solver: 'barnesHut',
+                    stabilization: {
+                        enabled: true,
+                        iterations: 100,
+                        updateInterval: 25
+                    }
+                },
+                interaction: {
+                    hover: true,
+                    tooltipDelay: 200,
+                    navigationButtons: true,
+                    keyboard: true
+                }
+            };
+
+            // Crear red
+            network = new vis.Network(container, data, options);
+
+            // Evento de click en nodo
+            network.on('click', function (params) {
+                if (params.nodes.length > 0) {
+                    const nodeId = params.nodes[0];
+                    const node = graph.nodes.find(n => n.id === nodeId);
+                    showNodeInfo(node, graph);
+                }
+            });
+
+            // Estabilización completada
+            network.on('stabilizationIterationsDone', function () {
+                network.setOptions({ physics: false });
+            });
+        }
+
+        function showNodeInfo(node, graph) {
+            const infoDiv = document.getElementById('node-info');
+            const detailsDiv = document.getElementById('node-details');
+
+            if (!node) {
+                infoDiv.style.display = 'none';
+                return;
+            }
+
+            // Encontrar conexiones
+            const connections = graph.edges.filter(e =>
+                e.source === node.id || e.target === node.id
+            );
+
+            let html = `
+            <div style="display: grid; grid-template-columns: auto 1fr; gap: 8px 16px;">
+                <strong>ID:</strong> <span>${node.id}</span>
+                <strong>Tipo:</strong> <span class="graph-node node-${node.type}">${node.type}</span>
+                <strong>Etiqueta:</strong> <span>${node.label}</span>
+                <strong>Conexiones:</strong> <span>${connections.length}</span>
+            </div>
+        `;
+
+            if (connections.length > 0) {
+                html += `<h5 style="margin: 16px 0 8px 0;">Conexiones:</h5><ul style="margin: 0; max-height: 200px; overflow-y: auto;">`;
+                connections.slice(0, 20).forEach(conn => {
+                    const otherNode = conn.source === node.id ? conn.target : conn.source;
+                    html += `<li style="font-size: 0.85rem;">${conn.relation} → ${otherNode}</li>`;
+                });
+                if (connections.length > 20) {
+                    html += `<li style="color: var(--text-gray);"><em>... y ${connections.length - 20} más</em></li>`;
+                }
+                html += `</ul>`;
+            }
+
+            detailsDiv.innerHTML = html;
+            infoDiv.style.display = 'block';
+        }
+
+        // Actualizar visualización con filtros
+        document.getElementById('update-graph-btn')?.addEventListener('click', () => {
+            if (!graphData || !network) return;
+
+            const showProfs = document.getElementById('show-professors').checked;
+            const showCourses = document.getElementById('show-courses').checked;
+            const showSlots = document.getElementById('show-timeslots').checked;
+            const showGroups = document.getElementById('show-groups').checked;
+
+            // Filtrar nodos
+            const filteredNodes = graphData.nodes.filter(node => {
+                if (node.type === 'professor' && !showProfs) return false;
+                if (node.type === 'course' && !showCourses) return false;
+                if (node.type === 'timeslot' && !showSlots) return false;
+                if (node.type === 'group' && !showGroups) return false;
+                return true;
+            });
+
+            const filteredNodeIds = new Set(filteredNodes.map(n => n.id));
+
+            // Filtrar aristas (solo si ambos nodos están visibles)
+            const filteredEdges = graphData.edges.filter(edge =>
+                filteredNodeIds.has(edge.source) && filteredNodeIds.has(edge.target)
+            );
+
+            // Recrear visualización con datos filtrados
+            renderGraphVisualization({
+                nodes: filteredNodes,
+                edges: filteredEdges,
+                stats: graphData.stats
+            });
+        });
+    });
+</script>
+{% endblock %}

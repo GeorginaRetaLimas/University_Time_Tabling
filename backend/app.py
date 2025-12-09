@@ -136,5 +136,49 @@ def get_timeslots():
     slots = load_timeslots(os.path.join(DATA_DIR, 'timeslots.json'))
     return jsonify(slots)
 
+@app.route('/algorithm')
+def algorithm_visualization():
+    """Página de visualización del algoritmo y grafos"""
+    return render_template('algorithm.html')
+
+@app.route('/api/graph/structure', methods=['POST'])
+def get_graph_structure():
+    """Retorna la estructura del grafo del sistema"""
+    from graph_model import TimetableGraph, demonstrate_algorithm_steps
+    
+    data = request.json
+    period = data.get('period', 'sept-dec')
+    
+    # Cargar datos
+    professors = load_professors(os.path.join(DATA_DIR, 'professors.json'))
+    timeslots = load_timeslots(os.path.join(DATA_DIR, 'timeslots.json'))
+    courses = load_courses(os.path.join(DATA_DIR, 'courses.csv'))
+    
+    # Preparar datos
+    profs, crs, slots, groups = prepare_data_for_solver(professors, courses, timeslots, period)
+    
+    # Crear grafo
+    graph = TimetableGraph()
+    graph.build_from_data(profs, crs, slots, groups)
+    graph.build_conflict_graph(profs, slots)
+    
+    # Obtener estadísticas y visualización
+    graph_data = graph.export_for_visualization()
+    matrix_3d = graph.visualize_matrix_3d(profs, slots, groups)
+    algorithm_steps = demonstrate_algorithm_steps(profs, crs, slots, groups)
+    
+    # Ejemplo de vecindario de un profesor
+    sample_neighborhood = None
+    if len(profs) > 0:
+        sample_neighborhood = graph.get_professor_neighborhood(profs[0]['id'])
+    
+    return jsonify({
+        'status': 'success',
+        'graph': graph_data,
+        'matrix_3d': matrix_3d,
+        'algorithm_steps': algorithm_steps,
+        'sample_neighborhood': sample_neighborhood
+    })
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

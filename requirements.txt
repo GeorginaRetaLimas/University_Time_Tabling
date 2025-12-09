@@ -2,3 +2,4 @@ flask
 cython
 pandas
 numpy
+networkx
