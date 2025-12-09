@@ -53,16 +53,6 @@ def professors_page():
     profs = load_professors(os.path.join(DATA_DIR, 'professors.json'))
     return render_template('professors.html', professors=profs)
 
-@app.route('/availability')
-def availability_page():
-    profs = load_professors(os.path.join(DATA_DIR, 'professors.json'))
-    slots = load_timeslots(os.path.join(DATA_DIR, 'timeslots.json'))
-    return render_template('availability.html', professors=profs, timeslots=slots)
-
-@app.route('/timetable')
-def timetable_page():
-    return render_template('timetable.html')
-
 @app.route('/api/professors', methods=['GET'])
 def get_professors():
     profs = load_professors(os.path.join(DATA_DIR, 'professors.json'))
