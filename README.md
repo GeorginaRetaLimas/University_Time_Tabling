@@ -126,6 +126,22 @@ struct BloqueHorario {
 - `301-309`: Jueves
 - `401-409`: Viernes
 
+##### 4. Generación de Horarios (Frontend)
+El frontend recibe la solución cruda (lista de asignaciones) y la procesa para dos vistas:
+- **Vista Estudiantes**: Agrupa por `group_id` para mostrar el horario de cada cuatrimestre.
+- **Vista Profesores**: Agrupa por `professor_id`, ordenando alfabéticamente a los docentes y mostrando su carga semanal consolidada.
+
+### 5. Simulación de Algoritmos en Grafos
+La sección `/algorithm` visualiza el proceso interno:
+- Construye un grafo donde Nodos = Sesiones y Aristas = Conflictos.
+- Muestra paso a paso cómo el algoritmo Greedy selecciona un nodo y le asigna un "color" (bloque horario) válido.
+- Permite ver las matrices de adyacencia y la estructura 3D subyacente.
+
+Para detalles profundos sobre la lógica (Matrices 3D, Greedy, Grafos), consulta:
+[📄 Lógica del Algoritmo](instructions/ALGORITHM_LOGIC.md)
+
+## Estructura del Proyector
+
 #### Estructura `Profesor`
 
 ```cpp
