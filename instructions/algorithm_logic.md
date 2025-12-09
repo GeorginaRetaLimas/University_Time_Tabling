@@ -6,11 +6,13 @@ Este documento detalla el funcionamiento interno del sistema de generación de h
 
 El núcleo del solver C++ utiliza una representación de matriz 3D para gestionar la disponibilidad y asignaciones.
 
+**Implementación**: `cpp/timetable_solver.cpp` (Clase `Solver`, vectores `ocupacion_profesor`, `ocupacion_grupo`)
+
 ### Dimensiones
 La matriz se define como `Horario[Día][Hora][Recurso]`:
 - **Día**: Índice del día de la semana (0-4 para Lunes-Viernes).
 - **Hora**: Índice del bloque horario (0-13, representando bloques de 55 min).
-- **Recurso**: Puede ser un Profesor, un Grupo o un Aula.
+- **Recurso**: Puede ser un Profesor o un Grupo.
 
 ### Uso
 - **Matriz de Disponibilidad**: `bool disponible[profesor_id][dia][hora]`. Indica si un profesor puede dar clase en ese momento.
@@ -21,6 +23,10 @@ Esta estructura permite verificaciones de conflictos en tiempo constante O(1), l
 ## 2. Grafos de Conflictos (NeuroNet)
 
 El sistema modela el problema como un **Problema de Coloreado de Grafos** (Graph Coloring Problem).
+
+**Implementación**: 
+- Lógica de conflictos: `cpp/timetable_solver.cpp`
+- Visualización y Simulación: `backend/graph_model.py` (Clase `TimetableGraph`)
 
 ### Nodos y Aristas
 - **Nodos**: Cada nodo representa una *Sesión* de una materia que debe impartirse (ej. "Matemáticas - Grupo A - Sesión 1").
@@ -34,6 +40,8 @@ En la visualización (`/algorithm`), se muestra cómo el algoritmo "colorea" est
 ## 3. Algoritmo Greedy (Voraz)
 
 El solver utiliza una estrategia Greedy con heurísticas para asignar horarios.
+
+**Implementación**: `cpp/timetable_solver.cpp` (Función `solve` y `asignarSesionGreedy`)
 
 ### Flujo Principal
 1.  **Generación de Sesiones**: Se desglosan todas las materias en sesiones individuales necesarias (basado en créditos).
